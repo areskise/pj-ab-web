@@ -1,0 +1,96 @@
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+header .select-company {
+  padding: 0 12px;
+  height: 38px;
+  width: 218px;    
+  border: 2px solid #D8E2E9;
+  border-radius: 20px;
+  margin-left: 16px;
+}
+
+header .select-company:hover {
+  cursor: pointer;
+}
+
+header .select-company:focus-visible {
+  outline-offset: 0;
+  outline: none;
+}
+
+header .notify-icon {
+  padding: 8px;
+  font-size: 26px;
+}
+
+header .menu-icon {
+  margin: 0 4px;
+  font-size: 26px;
+}
+
+header .close-icon {
+  margin: 0 8px;
+  font-size: 26px;
+}
+
+header .menu-avatar {
+  display: none;
+}
+
+header .form-control-dark {
+  border-color: var(--bs-gray);
+}
+header .form-control-dark:focus {
+  border-color: #fff;
+  box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
+}
+
+header .dropdown-toggle {
+  outline: 0;
+}
+
+.modal-logout {
+  height: 100%;
+  width: 100%;
+  max-width: 380px;
+  margin: auto;
+  align-items: center;
+  display: flex;
+}
+
+.modal-menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: auto;
+  margin: 0;
+  height: 100%;
+  transition: none !important;
+  transform: none !important;
+}
+
+.sibar-menu {
+  width: 260px;
+}
+
+@media screen and (max-width: 992px) {
+  header .logo-img, .avatar {
+    display: none;
+  }
+
+  header .menu-avatar {
+    display: flex;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  header .select-company {
+    margin-left: 0 !important;
+  }
+}

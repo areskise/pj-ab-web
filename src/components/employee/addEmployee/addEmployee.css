@@ -1,0 +1,119 @@
+.add-employee {
+    height: 100%;
+    width: 100%;
+    max-width: 805px;
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.add-employee>.modal-content {
+    width: auto;
+    border-radius: 40px;
+
+}
+
+.add-employee .modal-body {
+    padding: 8px;
+}
+
+.add-employee .form-container {
+    display: flex;
+}
+
+.add-employee .form-control {
+    height: 38px;
+    padding: 10px 15px;
+    border: 2px solid #D8E2E9;
+    border-radius: 20px;
+}
+
+.add-employee .select-company {
+    padding: 0 12px;
+    height: 38px;    
+    width: 100%;
+    border: 2px solid #D8E2E9;
+    border-radius: 20px;
+  }
+
+.add-employee .form-money {
+    padding-right: 38px !important;
+}
+
+.add-employee .money {
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    background-color: #D8E2E9;
+    margin-left: -1px;
+    border: 2px solid #D8E2E9;
+    border-radius: 20px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    line-height: 34px;
+}
+
+.add-employee .form-check {
+    border: 1px solid #D8E2E9;
+    border-radius: 20px;
+    margin: 16px 16px 0 16px;
+    padding-right: 1.5em;
+    padding-bottom: 1rem;
+}
+
+.add-employee .form-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #454545;
+    border-radius: 2px;
+    margin-right: 12px;
+}
+
+.add-employee .label {
+    width: 250px;
+    height: 20px;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    color: #454545;
+    display: flex;
+    text-align: start;
+}
+
+.add-employee .toggle-password {
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    background-color: #D8E2E9;
+    margin-left: -1px;
+    border: 2px solid #D8E2E9;
+    border-radius: 20px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    line-height: 36px;
+    opacity: 0.8;
+}
+
+.add-employee .toggle-password:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
+@media screen and (max-width: 992px) {
+    .add-employee .form-container {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .add-employee .form-control,
+    .add-employee .select-company {
+        width: 100%;
+        max-width: 240px;
+    }
+
+    .add-employee .label {
+        width: 160px;
+    }
+}

@@ -1,0 +1,88 @@
+.modal-add {
+    min-height: 100%;
+    width: 100%;
+    max-width: 805px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    margin: auto;
+}
+
+.modal-add>.modal-content {
+    width: auto;
+    border-radius: 40px;
+
+}
+
+.modal-add .modal-body {
+    padding: 8px;
+}
+
+.modal-add .form-control {
+    width: 242px;
+    height: 38px;
+    padding: 10px 15px;
+    border: 2px solid #D8E2E9;
+    border-radius: 20px;
+}
+
+.modal-add .form-container {
+    display: flex;
+}
+
+.modal-add .form-money {
+    padding-right: 38px !important;
+}
+
+.modal-add .money {
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    background-color: #D8E2E9;
+    margin-left: -1px;
+    border: 2px solid #D8E2E9;
+    border-radius: 20px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    line-height: 34px;
+}
+
+.modal-add .form-check {
+    border: 1px solid #D8E2E9;
+    border-radius: 20px;
+    margin: 16px 16px 0 16px;
+    padding-right: 1.5em;
+    padding-bottom: 1rem;
+}
+
+.modal-add .form-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #454545;
+    border-radius: 2px;
+    margin-right: 12px;
+}
+
+.modal-add .label {
+    width: 125px;
+    height: 20px;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    color: #454545;
+    display: flex;
+    text-align: start;
+}
+
+@media screen and (max-width: 992px) {
+    .modal-add .form-container {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .modal-add .form-control {
+        width: 100%;
+        max-width: 240px;
+    }
+}

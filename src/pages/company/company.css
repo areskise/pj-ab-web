@@ -1,0 +1,169 @@
+.company .plus {
+  position: absolute;
+  font-size: 32px;
+  right: 50px;
+}
+
+.company .sort-container {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  margin: 0 8px;
+}
+.company .btn-sort-container {
+  display: flex;
+}
+
+.company .btn-sort {
+  width: 95%;
+  height: 38px;
+  border: 2px solid #D8E2E9;
+  border-radius: 20px;
+  margin: 8px;
+  text-align: start;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+}
+
+.company-container {
+  padding: 2rem;
+}
+
+.company-container .table {
+  margin-bottom: 0;
+}
+
+.company-container td {
+  border: 0;
+  background-color: #F7F7F7 !important;
+  max-width: 132px;
+  align-items: center;
+  padding: 12px !important;
+}
+
+.company-word {
+  word-break: break-word;
+}
+
+.company-center {
+  text-align: center;
+}
+
+.company-container th {
+  position: relative;
+  padding: 12px !important;
+
+}
+
+.company-container tbody, thead, tfoot, tr {
+  border: 16px solid white;
+}
+
+.company-container .status-active {
+  font-weight: 700;
+  color: #339822;
+}
+
+.company-container .status-disable {
+  font-weight: 500;
+  color: #454545;
+}
+
+@media screen and (max-width: 1200px) {
+  .company-container .table-container {
+    padding: 0;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .company .sort-container {
+    display: block;
+  }
+
+  .company-container table {
+    border: 0;
+    border-collapse: separate;
+  }
+
+  .company-container table caption {
+    font-size: 1.3em;
+  }
+  
+  .company-container table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  
+  .company-container table tr {
+    display: block;
+    margin-bottom: .625em;
+    padding: 1em;
+  }
+  
+  .company-container table td {
+    display: block;
+    text-align: right;
+    max-width: 100%;
+    padding: 6px 12px !important;
+  }
+  
+  .company-container table td::before {
+    /*
+    * aria-label has no advantage, it won't be read inside a table
+    content: attr(aria-label);
+    */
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+  }
+  
+  .company-container table td:last-child {
+    border-bottom: 0;
+  }
+
+  .company-container tbody, thead, tfoot, tr {
+      border: none;
+  }
+
+  .company-container .table-container {
+    padding: 1rem;
+  }
+
+  .company-center {
+      text-align: right;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .company .btn-sort-container {
+    display: block;
+  }
+  
+  .company-container {
+    padding: .5rem;
+  }
+
+  .company-container table tr {
+    padding: 4px 8px !important;
+  }
+
+  .company-container table td {
+    padding: .5em;
+  }
+
+  .company .plus {
+    font-size: 24px;
+    right: 36px;
+  }
+
+  .company .title {
+    font-size: 18px;
+  }
+}

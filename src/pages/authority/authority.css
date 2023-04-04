@@ -1,0 +1,95 @@
+.authority-container {
+    padding: 2rem;
+}
+
+.authority-container .form-container {
+    display: flex;
+}
+
+.authority-container .btn-control {
+    width: 208px;
+    height: 48px;
+    border: 1px solid #D8E2E9;
+    border-radius: 20px;
+}
+
+.authority-container .title {
+    font-weight: 700;
+    margin-left: 16px;
+}
+
+.authority-container .selected {
+    background-color: #e9ecef;
+    font-weight: 600;
+}
+
+.authority-container .selected:active {
+    background-color: #e9ecef;
+}
+
+.authority-container .form-control {
+    height: 38px;
+    padding: 10px 15px;
+    border: 2px solid #D8E2E9;
+    border-radius: 20px;
+}
+
+.authority-container .select-company {
+    padding: 0 12px;
+    height: 38px;
+    width: 100%;    
+    border: 2px solid #D8E2E9;
+    border-radius: 20px;
+  }
+
+.authority-container .form-check {
+    border: 1px solid #D8E2E9;
+    border-radius: 20px;
+    margin: 16px 16px 0 16px;
+    padding-right: 1.5em;
+    padding-bottom: 1rem;
+}
+
+.authority-container .form-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #454545;
+    border-radius: 2px;
+    margin-right: 12px;
+}
+
+.authority-container .label {
+    width: 250px;
+    height: 20px;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    color: #454545;
+    display: flex;
+    text-align: start;
+}
+
+@media screen and (max-width: 992px) {
+    .authority-container .form-container {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .authority-container .btn-control {
+        height: 62px;
+    }
+
+    .authority-container .title {
+        margin-left: 0;
+        padding-top: 16px;
+    }
+
+    .authority-container .form-check {
+        margin: 16px 0 0 0;
+    }
+
+    .authority-container .label {
+        width: 132px;
+    }
+}
