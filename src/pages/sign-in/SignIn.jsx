@@ -2,6 +2,8 @@ import './sign-in.css';
 import img from '../../images/Image';
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
+import Cookies from 'universal-cookie';
+import AuthAPI from '../../API/AuthAPI';
 
 const SignIn = () => {
   const [visible, setVisible] = useState(false);
@@ -9,26 +11,41 @@ const SignIn = () => {
   const [password, setPassword] = useState(null);
   const [remember, setRemember] = useState(false);
   const [error, setError] = useState(false);
-
+  
+	const cookies = new Cookies();
   const navigate = useNavigate();
 
   useEffect(() => {
     
   }, []);
 
-  const handleSignin = (e) => {
+  const handleSignin = async (e) => {
     e.preventDefault();
     if(!userName || !password) {
       setError(true);
     } else {
       setError(false);
-      const credentials = {
+      const data = {
         userName: userName,
-        password: password,
-        remember: remember
+        password: password
       }
-      console.log(credentials);
-      navigate('/trang-chu');
+      try {
+        const res = await AuthAPI.login(data);
+        const result = res.data.ResponseResult.Result
+        if(remember) {
+          cookies.set('token', result.token, {maxAge: 604800})
+          cookies.set('userName', result.userName, {maxAge: 604800})
+          navigate('/trang-chu');
+        } else {
+          cookies.set('token', result.token)
+          cookies.set('userName', result.userName)
+          navigate('/trang-chu');
+        }
+      } 
+      catch(err) {
+        console.log(err);
+        setError(true);
+      }
     }
   }
 

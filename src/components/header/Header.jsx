@@ -3,13 +3,16 @@ import img from '../../images/Image';
 import { useEffect, useState } from 'react';
 import { useNavigate, NavLink, Link } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
+import Cookies from 'universal-cookie';
 
 const Header = () => {
     const [showModal, setShowModal] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const [navUser, setNavUser] = useState(false);
-    const [selectComany, setSelectCompany] = useState('');
+    const [selectComany, setSelectCompany] = useState([]);
 
+	const cookies = new Cookies();
+    const userName = cookies.get('userName');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -40,24 +43,25 @@ const Header = () => {
                     </div>
                     </div>
 
-
-                    <div className="d-flex dropdown text-end">
+                    <div className='d-flex'>
                         <i class="fa-regular fa-bell notify-icon"></i>
-                        <a href="#" className="avatar link-dark text-decoration-none p-1 border rounded" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src={img.avatar} alt="mdo" width="32" height="32" className="rounded-circle" />
-                            <span className='p-1'>Nguyễn Văn A</span>
-                            <i className={"fa-solid fa-chevron-down p-1"}></i>
-                        </a>
-                        <ul className="p-1 dropdown-menu text-small">
-                            <li>
-                            <button className='btn dropdown-item' onClick={() => setShowModal(true)}>
-                                Đăng xuất
-                            </button>
-                            </li>
-                        </ul>
-                        <a href="#" className="menu-avatar link-dark text-decoration-none p-1" onClick={() => setShowMenu(true)}>
-                            <i className={"menu-icon fa-solid fa-bars p-1"}></i>
-                        </a>
+                        <div className="d-flex dropdown text-end">
+                            <a href="#" className="avatar link-dark text-decoration-none p-1 border rounded" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src={img.avatar} alt="mdo" width="32" height="32" className="rounded-circle" />
+                                <span className='p-1'>{userName}</span>
+                                <i className={"fa-solid fa-chevron-down p-1"}></i>
+                            </a>
+                            <ul className="p-1 dropdown-menu text-small">
+                                <li>
+                                <button className='btn dropdown-item' onClick={() => setShowModal(true)}>
+                                    Đăng xuất
+                                </button>
+                                </li>
+                            </ul>
+                            <a href="#" className="menu-avatar link-dark text-decoration-none p-1" onClick={() => setShowMenu(true)}>
+                                <i className={"menu-icon fa-solid fa-bars p-1"}></i>
+                            </a>
+                        </div>
                     </div>
 
                     <Modal dialogClassName="modal-menu" show={showMenu} onHide={() => setShowMenu(false)}>
@@ -66,7 +70,7 @@ const Header = () => {
                             <div className='d-flex justify-content-between align-items-center'>
                                 <div>
                                     <img src={img.avatar} alt="mdo" width="32" height="32" className="rounded-circle" />
-                                    <span className='p-1'>Nguyễn Văn A</span>
+                                    <span className='p-1'>{userName}</span>
                                 </div>
                                 <a href="#" className="link-dark text-decoration-none p-1" onClick={() => setShowMenu(false)}>
                                     <i class="close-icon fa-solid fa-xmark"></i>

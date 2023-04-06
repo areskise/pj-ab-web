@@ -1,10 +1,53 @@
 import "./updateCompany.css";
 import Modal from 'react-bootstrap/Modal';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import alertify from 'alertifyjs';
+import CompanyAPI from "../../../API/CompanyAPI";
 
 const UpdateCompany = ({setShowUpdate, showUpdate}) => {
     const [subMenu, setSubMenu] = useState(false);
+    const [error, setError] = useState(false);
+    const [messErr, setMessErr] = useState(null);
+    const [formValues, setFormValues] = useState({});
+    const data = new FormData();
+    
+    const navigate = useNavigate();
+
+    // useEffect(() => {
+    //     if(!admin) {
+    //         navigate('/');
+    //     }
+    // },[admin, navigate]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormValues({...formValues, [name]: value})
+    }
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        data.append('name', formValues.name);
+        data.append('code', formValues.code);
+        data.append('phone', formValues.phone);
+        data.append('money', formValues.money);
+        data.append('date', formValues.date);
+        if(!formValues.name || !formValues.code || !formValues.phone || !formValues.money || !formValues.date) {
+            setError(true)
+        } else {
+            try {
+                const res = await CompanyAPI.create(data);
+                console.log(res);
+                alertify.set('notifier', 'position', 'top-right');
+                alertify.success(res.data);
+            }
+            catch(err) {
+                console.log(err);
+                setMessErr(err.response.data)
+            }
+        }
+    };
 
     return (
         <Modal dialogClassName="modal-update" show={showUpdate} onHide={() => setShowUpdate(false)}>

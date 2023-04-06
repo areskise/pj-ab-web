@@ -4,10 +4,52 @@ import SideBar from "../../components/sidebar/SideBar";
 import { useEffect, useState } from 'react';
 import AddCompany from "../../components/company/addCompany/AddCompany";
 import UpdateCompany from "../../components/company/updateCompany/UpdateCompany";
+import { useNavigate } from 'react-router-dom';
+import CompanyAPI from '../../API/CompanyAPI';
 
-const Company = () => {
+const Company = ({user}) => {
     const [showAdd, setShowAdd] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
+    const [companies, setCompanies] = useState([]);
+    const [page, setPage] = useState(1);
+    const [count, setCount] = useState(0);
+    const [totalPage, setTotalPage] = useState(1);
+    const limit = 5;
+
+    const navigate = useNavigate();
+    useEffect(() => {
+        if(user) {
+            try{
+                const fetchData = async () => {
+                    const res = await CompanyAPI.getAll()
+                    setCompanies(res.data.organzations)
+                    setCount(res.data.count)
+                    setTotalPage(Math.ceil(res.data.count/limit))
+                }
+                fetchData();
+            }
+            catch(err) {
+                console.log(err);
+            }
+        } else {
+            navigate('/');
+        }
+    }, [user, limit, page, navigate]);
+    const nextPage = () => {
+        if(page < totalPage) {
+            setPage(page + 1)
+        } else {
+            setPage(1)
+        }
+    }
+    
+    const prevPage = () => {
+        if(page > 1) {
+            setPage(page - 1)
+        } else {
+            setPage(totalPage)
+        }
+    }
 
 
     return(
@@ -71,38 +113,40 @@ const Company = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td scope="row" data-label="Mã CT:">CT1</td>
-                            <td data-label="Tên công ty:" className="company-word">Công ty 1 zzzzzzzzzzzz</td>
-                            <td data-label="Số điện thoại:">0123456789</td>
-                            <td data-label="Số vốn:"><div>100.000.000.000 VND</div></td>
-                            <td data-label="Ngày tạo:">03/20/2023</td>
-                            <td data-label="Trạng thái:">
-                                {true?
-                                    <div className="status-active">Hoạt động</div>
-                                :
-                                    <div className="status-disable">Không hoạt động</div>
-                                }
-                            </td>
-                            <td data-label="Chức năng:" className="company-center">
-                                <i 
-                                    class="fa-solid fa-pen-to-square p-1"  
-                                    style={{color: '#6280EB'}}
-                                    onClick={() => setShowUpdate(true)}
-                                ></i>
-                            </td>
-                        </tr>
+                            {companies && companies.map((company, i) => (
+                                <tr>
+                                    <td scope="row" data-label="Mã CT:">{company.code}</td>
+                                    <td data-label="Tên công ty:" className="company-word">{company.name}</td>
+                                    <td data-label="Số điện thoại:">{company.phone}</td>
+                                    <td data-label="Số vốn:">{company.money} VND</td>
+                                    <td data-label="Ngày tạo:">{company.date}</td>
+                                    <td data-label="Trạng thái:">
+                                        {company.active?
+                                            <div className="status-active">Hoạt động</div>
+                                        :
+                                            <div className="status-disable">Không hoạt động</div>
+                                        }
+                                    </td>
+                                    <td data-label="Chức năng:" className="company-center">
+                                        <i 
+                                            class="fa-solid fa-pen-to-square p-1"  
+                                            style={{color: '#6280EB'}}
+                                            onClick={() => setShowUpdate(true)}
+                                        ></i>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                         </table>
                         <div className="p-2 mb-4 d-flex justify-content-between">
-                            <h6 className="mx-md-2 my-0">Tìm thấy: 20 công ty</h6>
+                            <h6 className="mx-md-2 my-0">Tìm thấy: {count?count:0} công ty</h6>
                             <div className="d-flex align-items-center mx-md-4">
-                                <i class="fa-solid fa-chevron-left"></i>
+                                <i class="p-1 fa-solid fa-chevron-left" onClick={() => prevPage()}></i>
                                 <div className="d-flex mx-md-4">
-                                    <input className="input-page" defaultValue={1}></input>
-                                    <div>/ 4</div>
+                                    <input className="input-page" value={page}></input>
+                                    <div>/ {totalPage?totalPage:1}</div>
                                 </div>
-                                <i class="fa-solid fa-chevron-right"></i>
+                                <i class="p-1 fa-solid fa-chevron-right" onClick={() => nextPage()}></i>
                             </div>
                         </div>
                     </div>

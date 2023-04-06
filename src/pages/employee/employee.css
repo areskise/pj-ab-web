@@ -10,7 +10,7 @@
   justify-content: center;
 }
 
-.employee .select-company {
+.employee .select-company-container .select-company {
   padding: 0 12px;
   height: 38px;
   width: 100%;
@@ -20,11 +20,11 @@
   margin-left: 16px;
 }
 
-.employee .select-company:hover {
+.employee .select-company-container .select-company:hover {
   cursor: pointer;
 }
 
-.employee .select-company:focus-visible {
+.employee .select-company-container .select-company:focus-visible {
   outline-offset: 0;
   outline: none;
 }
@@ -59,7 +59,7 @@
 .employee-container td {
     border: 0;
     background-color: #F7F7F7 !important;
-    max-width: 132px;
+    /* max-width: 132px; */
     padding: 12px !important;
 }
   

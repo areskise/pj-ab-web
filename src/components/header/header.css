@@ -55,6 +55,10 @@ header .dropdown-toggle {
   outline: 0;
 }
 
+header .dropdown-menu {
+  --bs-dropdown-min-width: none;
+}
+
 .modal-logout {
   height: 100%;
   width: 100%;

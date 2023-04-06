@@ -39,12 +39,26 @@ code {
   margin: 0;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.btn:active,
+.btn:focus-visible {
+  border-color: #B3CAD6 !important;
+  background-color: #B3CAD6 !important;
+}
+
 .btn-cancle {
   background: #DBC898;
 }
 .btn-cancle:hover {
   background: #d1b776;
-
 }
 
 .btn-continue {
