@@ -3,27 +3,36 @@ import img from '../../images/Image';
 import { useEffect, useState } from 'react';
 import { useNavigate, NavLink, Link } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
+import EmployeeAPI from '../../API/EmployeeAPI';
+import CompanyAPI from '../../API/CompanyAPI';
+import { companyActions, selectorCompanies } from "../../redux/slice/companySlice";
 import Cookies from 'universal-cookie';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Header = () => {
     const [showModal, setShowModal] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const [navUser, setNavUser] = useState(false);
     const [selectComany, setSelectCompany] = useState([]);
+    const companies = useSelector(selectorCompanies)
 
 	const cookies = new Cookies();
-    const userName = cookies.get('userName');
+    const access_token = cookies.get('access_token');
+    const userName = access_token.userName
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        setSelectCompany('Công ty 1')
+        dispatch(companyActions.setCompanies())
     }, []);
+
     useEffect(() => {
         
     }, [selectComany]);
-    console.log(selectComany);
+
     const handleLogout = () => {
         navigate('/');
+        cookies.remove('access_token');
     }
 
     return (
@@ -36,15 +45,15 @@ const Header = () => {
                         </a>
                     <div className='d-flex'>
                         <select className='select-company' onChange={(e) => setSelectCompany(e.target.value)}>
-                            <option>Công ty 1</option>
-                            <option>Công ty 2</option>
-                            <option>Công ty 3</option>
+                            {companies?.map((company, i) => (
+                                <option key={i} value={company.name}>{company.name}</option>
+                            ))}
                         </select>
                     </div>
                     </div>
 
                     <div className='d-flex'>
-                        <i class="fa-regular fa-bell notify-icon"></i>
+                        <i className="fa-regular fa-bell notify-icon"></i>
                         <div className="d-flex dropdown text-end">
                             <a href="#" className="avatar link-dark text-decoration-none p-1 border rounded" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src={img.avatar} alt="mdo" width="32" height="32" className="rounded-circle" />
@@ -73,7 +82,7 @@ const Header = () => {
                                     <span className='p-1'>{userName}</span>
                                 </div>
                                 <a href="#" className="link-dark text-decoration-none p-1" onClick={() => setShowMenu(false)}>
-                                    <i class="close-icon fa-solid fa-xmark"></i>
+                                    <i className="close-icon fa-solid fa-xmark"></i>
                                 </a>
                             </div>
                             <hr />

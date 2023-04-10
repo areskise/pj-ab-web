@@ -1,11 +1,11 @@
 import axiosClient from './axiosClient';
 
 const ApplicationAPI = {
-    getAll() {
+    getAll: async () => {
         return axiosClient.get(`/application/all`);
     },
 
-    getById(id) {
+    getById: async (id) => {
         return axiosClient.get(`/application?id=${id}`);
     },
 }

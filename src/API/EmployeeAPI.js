@@ -1,27 +1,27 @@
 import axiosClient from "./axiosClient";
 
 const EmployeeAPI = {
-    getAll: () =>  {
+    getAll: async () =>  {
         return axiosClient.get(`/user/list`);
     },
 
-    getById: (id) => {
+    getById: async (id) => {
         return axiosClient.get(`/user/list?id=${id}`);
     },
 
-    create: (body) => {
+    create: async (body) => {
         return axiosClient.post(`/user`, body);
     },
 
-    update: (body) => {
+    update: async (body) => {
         return axiosClient.put(`/user`, body);
     },
 
-    changePass: (body) => {
+    changePass: async (body) => {
         return axiosClient.put(`/user/password`, body);
     },
 
-    setPass: (body) => {
+    setPass: async (body) => {
         return axiosClient.put(`/user/setPassword`, body);
     },
 }

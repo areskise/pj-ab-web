@@ -60,12 +60,12 @@
   border: 16px solid white;
 }
 
-.company-container .status-active {
+.company-active {
   font-weight: 700;
   color: #339822;
 }
 
-.company-container .status-disable {
+.company-disable {
   font-weight: 500;
   color: #454545;
 }

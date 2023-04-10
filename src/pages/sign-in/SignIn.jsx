@@ -27,19 +27,23 @@ const SignIn = () => {
       setError(false);
       const data = {
         userName: userName,
-        password: password
+        password: password,
       }
+      console.log(data);
       try {
         const res = await AuthAPI.login(data);
-        const result = res.data.ResponseResult.Result
-        if(remember) {
-          cookies.set('token', result.token, {maxAge: 604800})
-          cookies.set('userName', result.userName, {maxAge: 604800})
-          navigate('/trang-chu');
+        const result = res.ResponseResult.Result
+        console.log(result);
+        if(result) {
+          if(remember) {
+            cookies.set('access_token', result, {maxAge: 604800})
+            navigate('/trang-chu');
+          } else {
+            cookies.set('access_token', result)
+            navigate('/trang-chu');
+          }
         } else {
-          cookies.set('token', result.token)
-          cookies.set('userName', result.userName)
-          navigate('/trang-chu');
+          setError(true);
         }
       } 
       catch(err) {

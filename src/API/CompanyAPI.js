@@ -1,27 +1,27 @@
 import axiosClient from "./axiosClient";
 
 const CompanyAPI = {
-    getAll: () =>  {
+    getAll: async () =>  {
         return axiosClient.get(`/organization/getAll`);
     },
 
-    getById: (id) => {
+    getById: async (id) => {
         return axiosClient.get(`/organization?id=${id}`);
     },
 
-    getUsers: (id) => {
+    getUsers: async (id) => {
         return axiosClient.get(`/organization/getUsers?id=${id}`);
     },
 
-    getRoles: (id) => {
+    getRoles: async (id) => {
         return axiosClient.get(`/organization/getRoles?id=${id}`);
     },
 
-    create: (body) => {
+    create: async (body) => {
         return axiosClient.post(`/organization`, body);
     },
 
-    update: (body) => {
+    update: async (body) => {
         return axiosClient.put(`/organization`, body);
     },
 }

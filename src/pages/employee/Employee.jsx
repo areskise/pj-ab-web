@@ -2,45 +2,46 @@ import './employee.css';
 import Header from "../../components/header/Header";
 import SideBar from "../../components/sidebar/SideBar";
 import { useEffect, useState } from 'react';
-import AddEmployee from "../../components/employee/addEmployee/AddEmployee";
-import UpdateEmployee from "../../components/employee/updateEmployee/UpdateEmployee";
-import UpdatePass from '../../components/employee/updatePass/UpdatePass';
-import DetailEmployee from '../../components/employee/detailEmployee/DetailEmployee';
+import AddEmployee from "./addEmployee/AddEmployee";
+import UpdateEmployee from "./updateEmployee/UpdateEmployee";
+import UpdatePass from './updatePass/UpdatePass';
+import DetailEmployee from './detailEmployee/DetailEmployee';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'universal-cookie';
 import EmployeeAPI from '../../API/EmployeeAPI';
+import { employeeActions, selectorEmployees } from '../../redux/slice/employeeSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
-const Employee = ({user}) => {
+const Employee = () => {
     const [showAdd, setShowAdd] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
     const [updatePass, setUpdatePass] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
     const [selectComany, setSelectCompany] = useState([]);
-    const [empolyees, setEmployees] = useState([]);
+    // const [employees, setEmployees] = useState([]);
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
     const [totalPage, setTotalPage] = useState(1);
     const limit = 5;
+    const dispatch = useDispatch();
+    const employees = useSelector(selectorEmployees)
 
-    const navigate = useNavigate();
+    const navigate = useNavigate();	
+    const cookies = new Cookies();
+    const access_token = cookies.get('access_token');
+
     useEffect(() => {
-        if(user) {
-            try{
-                const fetchData = async () => {
-                    const res = await EmployeeAPI.getAll();
-                    const result = res.data.ResponseResult.Result;
-                    setEmployees(result)
-                    setCount(result.length)
-                    setTotalPage(Math.ceil(res.data.count/limit))
-                }
-                fetchData();
-            }
-            catch(err) {
-                console.log(err);
-            }
+        if(access_token) {
+            // const data = {
+            //     limit: limit,
+            //     page: page
+            // }
+            dispatch(employeeActions.setEmployees())
         } else {
             navigate('/');
         }
-    }, [user, limit, page, navigate]);
+    }, []);
+
     const nextPage = () => {
         if(page < totalPage) {
             setPage(page + 1)
@@ -68,7 +69,7 @@ const Employee = ({user}) => {
             <div className="main-container bg-light">
                 <h5 className="m-4">
                     Quản lý người dùng 
-                    <i class="mx-2 fa-solid fa-angles-right" style={{fontSize: '18px'}}></i> 
+                    <i className="mx-2 fa-solid fa-angles-right" style={{fontSize: '18px'}}></i> 
                     Nhân viên
                 </h5>
                 <div className="bg-white content">
@@ -98,7 +99,7 @@ const Employee = ({user}) => {
                             </button>
                             <button className='btn btn-sort'>
                                 Trạng thái
-                                <i class="status-icon fa-solid fa-circle"></i>
+                                <i className="status-icon fa-solid fa-circle"></i>
                             </button>
                         </div>
                     </div>
@@ -118,38 +119,38 @@ const Employee = ({user}) => {
                             <th scope="col">
                                 <div className='d-flex align-items-end'>
                                     Trạng thái 
-                                    <i class="p-1 status-icon fa-solid fa-circle"></i>
+                                    <i className="p-1 status-icon fa-solid fa-circle"></i>
                                 </div>
                             </th>
                             <th scope="col" className="employee-center">Chức năng</th>
                         </tr>
                         </thead>
                         <tbody>
-                            {empolyees && empolyees.map((employee, i) => (
+                            {employees && employees.map((employee, i) => (
                                 <tr key={i}>
                                     <td scope="row" data-label="Họ tên:" onClick={() => setShowDetail(true)}>
                                         {employee.fullName}
                                         <div  className="employee-word">({employee.userName})</div>
                                     </td>
-                                    <td data-label="Số điện thoại:">{employee.phone}</td>
+                                    <td data-label="Số điện thoại:">{employee.phoneNumber}</td>
                                     <td data-label="Email:" className="employee-word">{employee.email}</td>
-                                    <td data-label="Nhóm quyền:">{employee.role}</td>
+                                    <td data-label="Nhóm quyền:">{employee.roleId}</td>
                                     <td data-label="Trạng thái:">
-                                        {employee.active?
-                                            <div className="status-active">Hoạt động</div>
+                                        {employee.status?
+                                            <div className="employee-active">Hoạt động</div>
                                         :
-                                            <div className="status-disable">Không hoạt động</div>
+                                            <div className="employee-disable">Không hoạt động</div>
                                         }
                                     </td>
                                     <td data-label="Chức năng:" className="employee-center">
                                         <div className='func-icon'>
                                             <i 
-                                                class="fa-solid fa-pen-to-square p-1 m-1"  
+                                                className="fa-solid fa-pen-to-square p-1 m-1"  
                                                 style={{color: '#6280EB'}}
                                                 onClick={() => setShowUpdate(true)}
                                             ></i>
                                             <i 
-                                                class="fa-solid fa-key p-1 m-1"  
+                                                className="fa-solid fa-key p-1 m-1"  
                                                 onClick={() => setUpdatePass(true)}
                                             ></i>
                                         </div>
@@ -161,12 +162,12 @@ const Employee = ({user}) => {
                         <div className="p-2 mb-4 d-flex justify-content-between">
                             <h6 className="mx-md-2 my-0">Tìm thấy: {count?count:0} nhân viên</h6>
                             <div className="d-flex align-items-center mx-md-4">
-                                <i class="fa-solid fa-chevron-left" onClick={() => prevPage()}></i>
+                                <i className="fa-solid fa-chevron-left" onClick={() => prevPage()}></i>
                                 <div className="d-flex mx-md-4">
                                     <input className="input-page" value={page}></input>
                                     <div>/ {totalPage?totalPage:1}</div>
                                 </div>
-                                <i class="fa-solid fa-chevron-right" onClick={() => nextPage()}></i>
+                                <i className="fa-solid fa-chevron-right" onClick={() => nextPage()}></i>
                             </div>
                         </div>
                     </div>

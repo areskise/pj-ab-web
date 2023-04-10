@@ -2,39 +2,41 @@ import "./company.css";
 import Header from "../../components/header/Header";
 import SideBar from "../../components/sidebar/SideBar";
 import { useEffect, useState } from 'react';
-import AddCompany from "../../components/company/addCompany/AddCompany";
-import UpdateCompany from "../../components/company/updateCompany/UpdateCompany";
+import AddCompany from "./addCompany/AddCompany";
+import UpdateCompany from "./updateCompany/UpdateCompany";
 import { useNavigate } from 'react-router-dom';
-import CompanyAPI from '../../API/CompanyAPI';
+import { useDispatch, useSelector } from 'react-redux';
+import { format } from 'date-fns';
+import currencyFormatter from 'currency-formatter';
+import Cookies from 'universal-cookie';
+import { companyActions, selectorCompanies } from "../../redux/slice/companySlice";
 
-const Company = ({user}) => {
+const Company = () => {
     const [showAdd, setShowAdd] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
-    const [companies, setCompanies] = useState([]);
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
     const [totalPage, setTotalPage] = useState(1);
     const limit = 5;
+    const companies = useSelector(selectorCompanies)
 
+	const cookies = new Cookies();
+    const access_token = cookies.get('access_token');
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+
     useEffect(() => {
-        if(user) {
-            try{
-                const fetchData = async () => {
-                    const res = await CompanyAPI.getAll()
-                    setCompanies(res.data.organzations)
-                    setCount(res.data.count)
-                    setTotalPage(Math.ceil(res.data.count/limit))
-                }
-                fetchData();
-            }
-            catch(err) {
-                console.log(err);
-            }
+        if(access_token) {
+            // const data = {
+            //     limit: limit,
+            //     page: page
+            // }
+            dispatch(companyActions.setCompanies())
         } else {
             navigate('/');
         }
-    }, [user, limit, page, navigate]);
+    }, []);
+
     const nextPage = () => {
         if(page < totalPage) {
             setPage(page + 1)
@@ -80,7 +82,7 @@ const Company = ({user}) => {
                             </button>
                             <button className='btn btn-sort'>
                                 Trạng thái
-                                <i class="p-1 fa-solid fa-arrow-down-up-across-line"></i>
+                                <i className="p-1 fa-solid fa-arrow-down-up-across-line"></i>
                             </button>
                         </div>
                     </div>
@@ -114,24 +116,34 @@ const Company = ({user}) => {
                         </thead>
                         <tbody>
                             {companies && companies.map((company, i) => (
-                                <tr>
-                                    <td scope="row" data-label="Mã CT:">{company.code}</td>
+                                <tr key={i}>
+                                    <td scope="row" data-label="Mã CT:">{company.title}</td>
                                     <td data-label="Tên công ty:" className="company-word">{company.name}</td>
-                                    <td data-label="Số điện thoại:">{company.phone}</td>
-                                    <td data-label="Số vốn:">{company.money} VND</td>
-                                    <td data-label="Ngày tạo:">{company.date}</td>
+                                    <td data-label="Số điện thoại:">0{company.phone}</td>
+                                    <td data-label="Số vốn:">
+                                        {currencyFormatter.format(company.money, {
+                                        symbol: 'VND',
+                                        decimal: '*',
+                                        thousand: '.',
+                                        precision: 0,
+                                        format: '%v %s' // %s is the symbol and %v is the value
+                                        })}
+                                    </td>
+                                    <td data-label="Ngày tạo:">{format(new Date(company.createdAt), 'dd/MM/yyyy')}</td>
                                     <td data-label="Trạng thái:">
-                                        {company.active?
-                                            <div className="status-active">Hoạt động</div>
+                                        {company.status?
+                                            <div className="company-active">Hoạt động</div>
                                         :
-                                            <div className="status-disable">Không hoạt động</div>
+                                            <div className="company-disable">Không hoạt động</div>
                                         }
                                     </td>
                                     <td data-label="Chức năng:" className="company-center">
                                         <i 
-                                            class="fa-solid fa-pen-to-square p-1"  
+                                            className="fa-solid fa-pen-to-square p-1"  
                                             style={{color: '#6280EB'}}
-                                            onClick={() => setShowUpdate(true)}
+                                            onClick={() => {
+                                                setShowUpdate(company)
+                                            }}
                                         ></i>
                                     </td>
                                 </tr>
@@ -141,12 +153,12 @@ const Company = ({user}) => {
                         <div className="p-2 mb-4 d-flex justify-content-between">
                             <h6 className="mx-md-2 my-0">Tìm thấy: {count?count:0} công ty</h6>
                             <div className="d-flex align-items-center mx-md-4">
-                                <i class="p-1 fa-solid fa-chevron-left" onClick={() => prevPage()}></i>
+                                <i className="p-1 fa-solid fa-chevron-left" onClick={() => prevPage()}></i>
                                 <div className="d-flex mx-md-4">
                                     <input className="input-page" value={page}></input>
                                     <div>/ {totalPage?totalPage:1}</div>
                                 </div>
-                                <i class="p-1 fa-solid fa-chevron-right" onClick={() => nextPage()}></i>
+                                <i className="p-1 fa-solid fa-chevron-right" onClick={() => nextPage()}></i>
                             </div>
                         </div>
                     </div>
