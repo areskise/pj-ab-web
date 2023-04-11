@@ -1,4 +1,4 @@
-sidebar {
+.sidebar {
   display: flex;
   top: 65px;
   position: fixed;
@@ -95,7 +95,7 @@ sidebar {
 }
 
 @media screen and (max-width: 992px) {
-  sidebar {
+  .sidebar {
     display: none !important;
   }
 }

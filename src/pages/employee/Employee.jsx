@@ -8,24 +8,25 @@ import UpdatePass from './updatePass/UpdatePass';
 import DetailEmployee from './detailEmployee/DetailEmployee';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
-import EmployeeAPI from '../../API/EmployeeAPI';
 import { employeeActions, selectorEmployees } from '../../redux/slice/employeeSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { selectorCompanies } from '../../redux/slice/companySlice';
 
 const Employee = () => {
     const [showAdd, setShowAdd] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
     const [updatePass, setUpdatePass] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
-    const [selectComany, setSelectCompany] = useState([]);
     // const [employees, setEmployees] = useState([]);
+    const [selectComany, setSelectCompany] = useState([]);
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
     const [totalPage, setTotalPage] = useState(1);
     const limit = 5;
     const dispatch = useDispatch();
     const employees = useSelector(selectorEmployees)
-
+    const companies = useSelector(selectorCompanies)
+console.log(employees   );
     const navigate = useNavigate();	
     const cookies = new Cookies();
     const access_token = cookies.get('access_token');
@@ -82,10 +83,10 @@ const Employee = () => {
                             <label htmlFor="">Công ty:</label>
                         </div>
                         <select className='select-company' onChange={(e) => setSelectCompany(e.target.value)}>
-                            <option>Tất cả</option>
-                            <option>Công ty 1</option>
-                            <option>Công ty 2</option>
-                            <option>Công ty 3</option>
+                            <option value='all'>Tất cả</option>
+                            {companies?.map((company, i) => (
+                                <option key={i} value={company.name}>{company.name}</option>
+                            ))}
                         </select>
                     </div>
                     <div className="sort-container"> 
@@ -147,11 +148,11 @@ const Employee = () => {
                                             <i 
                                                 className="fa-solid fa-pen-to-square p-1 m-1"  
                                                 style={{color: '#6280EB'}}
-                                                onClick={() => setShowUpdate(true)}
+                                                onClick={() => setShowUpdate(employee)}
                                             ></i>
                                             <i 
                                                 className="fa-solid fa-key p-1 m-1"  
-                                                onClick={() => setUpdatePass(true)}
+                                                onClick={() => setUpdatePass(employee)}
                                             ></i>
                                         </div>
                                     </td>

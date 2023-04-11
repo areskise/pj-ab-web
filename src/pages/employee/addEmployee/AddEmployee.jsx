@@ -1,15 +1,13 @@
 import "./addEmployee.css";
 import Modal from 'react-bootstrap/Modal';
-import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
-import alertify from 'alertifyjs';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import EmployeeAPI from "../../../API/EmployeeAPI";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectorCompanies } from "../../../redux/slice/companySlice";
+import { employeeActions } from "../../../redux/slice/employeeSlice";
 
 const AddEmployee = ({setShowAdd, showAdd}) => {
-    const [selectComany, setSelectCompany] = useState('');
+    // const [selectComany, setSelectCompany] = useState('');
     const [visiblePass, setVisiblePass] = useState(false);
     const [visibleRePass, setVisibleRePass] = useState(false);
     const [error, setError] = useState(false);
@@ -18,13 +16,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
     const data = new FormData();
     
     const companies = useSelector(selectorCompanies)
-    const navigate = useNavigate();
-
-    // useEffect(() => {
-    //     if(!admin) {
-    //         navigate('/');
-    //     }
-    // },[admin, navigate]);
+    const dispatch = useDispatch();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -46,9 +38,14 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
         } else {
             try {
                 const res = await EmployeeAPI.create(data);
-                alertify.set('notifier', 'position', 'top-right');
-                alertify.success(res.data);
-                setShowAdd(false)
+                console.log(res);
+                if (res.ResponseResult.Message === 'Success') {
+                    dispatch(employeeActions.create(res.ResponseResult.Result))
+                    setShowAdd(false)
+                    setError(false)
+                } else {
+                    setError(true)
+                }
             }
             catch(err) {
                 console.log(err);

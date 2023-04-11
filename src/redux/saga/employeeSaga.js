@@ -1,4 +1,4 @@
-import { call, put, takeLatest, takeLeading } from 'redux-saga/effects';
+import { call, put, takeLeading } from 'redux-saga/effects';
 import { employeeActions } from '../slice/employeeSlice';
 import EmployeeAPI from '../../API/EmployeeAPI';
 

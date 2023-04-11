@@ -3,8 +3,6 @@ import img from '../../images/Image';
 import { useEffect, useState } from 'react';
 import { useNavigate, NavLink, Link } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
-import EmployeeAPI from '../../API/EmployeeAPI';
-import CompanyAPI from '../../API/CompanyAPI';
 import { companyActions, selectorCompanies } from "../../redux/slice/companySlice";
 import Cookies from 'universal-cookie';
 import { useDispatch, useSelector } from 'react-redux';
@@ -93,7 +91,7 @@ const Header = () => {
                                     <NavLink 
                                     to={"/trang-chu"} 
                                     className="nav-link link-color"
-                                    activeClassName="active"        
+                                    activeclassname="active"        
                                     >
                                     Trang chủ
                                     </NavLink>
@@ -104,7 +102,7 @@ const Header = () => {
                                     <NavLink 
                                     to={"/quan-ly-cong-ty"} 
                                     className="nav-link link-color"
-                                    activeClassName="active"
+                                    activeclassname="active"
                                     >
                                     Quản lý công ty
                                     </NavLink>
@@ -115,7 +113,7 @@ const Header = () => {
                                     <NavLink 
                                     to={"/quan-ly-phan-quyen"} 
                                     className="nav-link link-color"
-                                    activeClassName="active"
+                                    activeclassname="active"
                                     >
                                     Quảng lý phân quyền
                                     </NavLink>
@@ -140,7 +138,7 @@ const Header = () => {
                                         <NavLink 
                                         to={"/quan-ly-nguoi-dung/nhan-vien"} 
                                         className="nav-link link-color"
-                                        activeClassName="subActive"
+                                        activeclassname="subActive"
                                         >
                                         Nhân viên
                                         </NavLink>
@@ -151,7 +149,7 @@ const Header = () => {
                                         <NavLink 
                                         to={"/quan-ly-nguoi-dung/khach-hang"} 
                                         className="nav-link link-color"
-                                        activeClassName="subActive"
+                                        activeclassname="subActive"
                                         >
                                         Khách hàng
                                         </NavLink>
@@ -164,7 +162,7 @@ const Header = () => {
                                     <NavLink 
                                     to={"/quan-ly-hui"} 
                                     className="nav-link link-color"
-                                    activeClassName="active"
+                                    activeclassname="active"
                                     >
                                     Quản lý hụi
                                     </NavLink>
@@ -175,7 +173,7 @@ const Header = () => {
                                     <NavLink 
                                     to={"/bao-cao"} 
                                     className="nav-link link-color"
-                                    activeClassName="active"
+                                    activeclassname="active"
                                     >
                                     Báo cáo
                                     </NavLink>

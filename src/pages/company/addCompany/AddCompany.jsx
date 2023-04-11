@@ -2,8 +2,6 @@ import "./addCompany.css";
 import Modal from 'react-bootstrap/Modal';
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
-import alertify from 'alertifyjs';
 import companyCode from '../../../helpers/companyCode';
 import CompanyAPI from "../../../API/CompanyAPI";
 
@@ -15,10 +13,8 @@ const AddCompany = ({setShowAdd, showAdd}) => {
     const [formValues, setFormValues] = useState({});
     const data = new FormData();
     
-    const navigate = useNavigate();
-
     useEffect(() => {
-        setCode (companyCode(formValues.name))
+        setCode(companyCode(formValues.name))
     },[formValues.name]);
 
     const handleChange = (e) => {
@@ -29,7 +25,6 @@ const AddCompany = ({setShowAdd, showAdd}) => {
         e.preventDefault();
         data.append('name', e.target.name.value);
         data.append('title', e.target.code.value);
-        data.append('desc', e.target.desc.value);
         data.append('phone', e.target.phone.value);
         data.append('money', e.target.money.value);
         data.append('createAt', e.target.date.value);
@@ -38,11 +33,12 @@ const AddCompany = ({setShowAdd, showAdd}) => {
         } else {
             try {
                 const res = await CompanyAPI.create(data);
-                setError(false)
-
-                alertify.set('notifier', 'position', 'top-right');
-                alertify.success(res.data);
+                console.log(res);
+                
+                // alertify.set('notifier', 'position', 'top-right');
+                // alertify.success(res.data);
                 setShowAdd(false)
+                setError(false)
             }
             catch(err) {
                 console.log(err);
@@ -81,20 +77,8 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                                         type="text" 
                                         name="code"
                                         className='form-control' 
-                                        value={code}
+                                        defaultValue={code}
                                         disabled 
-                                    />
-                                </div>
-                                <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
-                                    <div className='label'>
-                                        <label htmlFor="">Mô tả</label>
-                                    </div>
-                                    <input 
-                                        type="text" 
-                                        name="desc"
-                                        className='form-control' 
-                                        placeholder='Nhập tên mô tả'
-                                        onChange={handleChange}
                                     />
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>

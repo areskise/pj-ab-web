@@ -5,30 +5,31 @@ import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import alertify from 'alertifyjs';
 import CompanyAPI from "../../../API/CompanyAPI";
+import companyCode from "../../../helpers/companyCode";
 
 const UpdateCompany = ({setShowUpdate, showUpdate}) => {
     const [subMenu, setSubMenu] = useState(false);
     const [error, setError] = useState(false);
+    const [code, setCode] = useState(null);
     const [messErr, setMessErr] = useState(null);
     const [formValues, setFormValues] = useState({});
     const data = new FormData();
     
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     if(!admin) {
-    //         navigate('/');
-    //     }
-    // },[admin, navigate]);
+    useEffect(() => {
+        setCode(companyCode(formValues.name))
+    },[formValues.name]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValues({...formValues, [name]: value})
     }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         data.append('name', e.target.name.value);
-        data.append('code', e.target.code.value);
+        data.append('title', e.target.code.value);
         data.append('phone', e.target.phone.value);
         data.append('money', e.target.money.value);
         data.append('date', e.target.date.value);
@@ -53,7 +54,11 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
     };
 
     return (
-        <Modal dialogClassName="modal-update" show={showUpdate} onHide={() => setShowUpdate(false)}>
+        <Modal dialogClassName="modal-update" show={showUpdate} onHide={() => {
+                setShowUpdate(false)
+                setCode(null)
+            }}
+        >
             <form onSubmit={handleSubmit}>
                 <Modal.Header className='justify-content-center'>
                     <Modal.Title className='title'>CẬP NHẬT CÔNG TY</Modal.Title>
@@ -84,21 +89,9 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                         name="code"
                                         className='form-control' 
                                         defaultValue={showUpdate.title}
+                                        value={code}
                                         onChange={handleChange}
                                         disabled 
-                                    />
-                                </div>
-                                <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
-                                    <div className='label'>
-                                        <label htmlFor="">Mô tả</label>
-                                    </div>
-                                    <input 
-                                        type="text" 
-                                        name="desc"
-                                        className='form-control' 
-                                        placeholder='Nhập tên mô tả'
-                                        defaultValue={showUpdate.desc}
-                                        onChange={handleChange}
                                     />
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -143,15 +136,15 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                 </div>
                                 <div className='d-flex m-3 align-items-center justify-content-center'>
                                     <div className='d-flex mx-4 align-items-center justify-content-center'>
-                                        <input type="radio" className='form-checkbox' name='company' checked/>
+                                        <input type="radio" id="Active" className='form-checkbox' name='company' checked/>
                                         <div>
-                                            <label htmlFor="" className='company-active'>Hoạt động</label>
+                                            <label htmlFor="Active" className='company-active'>Hoạt động</label>
                                         </div>
                                     </div>
                                     <div className='d-flex mx-4 align-items-center justify-content-center'>
-                                        <input type="radio" className='form-checkbox' name='company'/>
+                                        <input type="radio" id="Disable" className='form-checkbox' name='company'/>
                                         <div>
-                                            <label htmlFor="" className='company-disable'>Không hoạt động</label>
+                                            <label htmlFor="Disable" className='company-disable'>Không hoạt động</label>
                                         </div>
                                     </div>
                                 </div>
@@ -163,9 +156,9 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                     <input type="text" className='form-control' placeholder='Nhập từ khóa tìm kiếm'/>
                                 </div>
                                 <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                    <input type="checkbox" className='form-checkbox' />
+                                    <input type="checkbox" id='all' className='form-checkbox' />
                                     <div>
-                                        <label htmlFor="">Tất cả</label>
+                                        <label htmlFor="all">Tất cả</label>
                                     </div>
                                 </div>
                                 <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
@@ -269,7 +262,11 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                     </div>
                 </Modal.Body>
                 <Modal.Footer className='justify-content-center'>
-                    <button className='mx-3 btn btn-cancle' onClick={() => setShowUpdate(false)}>
+                    <button className='mx-3 btn btn-cancle' onClick={() => {
+                            setShowUpdate(false)
+                            setCode(null)
+                        }}
+                    >
                         Đóng
                     </button>
                     <button className='mx-3 btn btn-continue' type="submit">

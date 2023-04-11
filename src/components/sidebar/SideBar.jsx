@@ -6,7 +6,7 @@ const SideBar = () => {
   const [navUser, setNavUser] = useState(false);
 
   return(  
-    <sidebar className="flex-nowrap">
+    <div className="sidebar flex-nowrap">
       <div className="h-100 d-flex flex-column flex-shrink-0 p-3 bg-light sibar-container">
         <ul className="nav nav-pills flex-column mb-auto">
           <li
@@ -15,7 +15,7 @@ const SideBar = () => {
             <NavLink 
               to={"/trang-chu"} 
               className="nav-link link-color"
-              activeClassName="active"        
+              activeclassname="active"        
             >
               Trang chủ
             </NavLink>
@@ -26,7 +26,7 @@ const SideBar = () => {
             <NavLink 
               to={"/quan-ly-cong-ty"} 
               className="nav-link link-color"
-              activeClassName="active"
+              activeclassname="active"
             >
               Quản lý công ty
             </NavLink>
@@ -37,7 +37,7 @@ const SideBar = () => {
             <NavLink 
               to={"/quan-ly-phan-quyen"} 
               className="nav-link link-color"
-              activeClassName="active"
+              activeclassname="active"
             >
               Quảng lý phân quyền
             </NavLink>
@@ -62,7 +62,7 @@ const SideBar = () => {
                 <NavLink 
                 to={"/quan-ly-nguoi-dung/nhan-vien"} 
                 className="nav-link link-color"
-                activeClassName="subActive"
+                activeclassname="subActive"
                 >
                   Nhân viên
                 </NavLink>
@@ -73,7 +73,7 @@ const SideBar = () => {
                 <NavLink 
                 to={"/quan-ly-nguoi-dung/khach-hang"} 
                 className="nav-link link-color"
-                activeClassName="subActive"
+                activeclassname="subActive"
                 >
                   Khách hàng
                 </NavLink>
@@ -86,7 +86,7 @@ const SideBar = () => {
             <NavLink 
               to={"/quan-ly-hui"} 
               className="nav-link link-color"
-              activeClassName="active"
+              activeclassname="active"
             >
               Quản lý hụi
             </NavLink>
@@ -97,14 +97,14 @@ const SideBar = () => {
             <NavLink 
               to={"/bao-cao"} 
               className="nav-link link-color"
-              activeClassName="active"
+              activeclassname="active"
             >
               Báo cáo
             </NavLink>
           </li>
         </ul>
       </div>
-    </sidebar>
+    </div>
   )
 }
 
