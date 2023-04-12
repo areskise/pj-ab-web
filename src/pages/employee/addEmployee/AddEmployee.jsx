@@ -1,10 +1,10 @@
 import "./addEmployee.css";
 import Modal from 'react-bootstrap/Modal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EmployeeAPI from "../../../API/EmployeeAPI";
 import { useDispatch, useSelector } from "react-redux";
-import { selectorCompanies } from "../../../redux/slice/companySlice";
-import { employeeActions } from "../../../redux/slice/employeeSlice";
+import { companyActions, selectorCompanies, selectorRoles } from "../../../redux/slice/companySlice";
+import CompanyAPI from "../../../API/CompanyAPI";
 
 const AddEmployee = ({setShowAdd, showAdd}) => {
     // const [selectComany, setSelectCompany] = useState('');
@@ -12,11 +12,23 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
     const [visibleRePass, setVisibleRePass] = useState(false);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
+    const [roles, setRoles] = useState([]);
     const [formValues, setFormValues] = useState({});
     const data = new FormData();
     
     const companies = useSelector(selectorCompanies)
     const dispatch = useDispatch();
+    useEffect(() => {
+        const fetchRoles = async () => {
+            const res = await CompanyAPI.getRoles(formValues.company);
+            const result = res.ResponseResult.Result
+            setRoles(result)
+        }
+        if(formValues.company) {
+            fetchRoles();
+        }
+    },[formValues.company]);
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -25,27 +37,22 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        data.append('company', e.target.company.value);
+        data.append('organizationId', e.target.company.value);
         data.append('userName', e.target.userName.value);
         data.append('password', e.target.password.value);
         data.append('rePassword', e.target.rePassword.value);
         data.append('fullName', e.target.fullName.value);
         data.append('email', e.target.email.value);
-        data.append('phoneName', e.target.phoneName.value);
-        data.append('role', e.target.role.value);
+        data.append('phoneNumber', e.target.phoneNumber.value);
+        data.append('roleId', e.target.role.value);
         if(!e.target.company.value || !e.target.userName.value || !e.target.password.value || !e.target.rePassword.value || !e.target.fullName.value || !e.target.role.value) {
             setError(true)
         } else {
             try {
                 const res = await EmployeeAPI.create(data);
                 console.log(res);
-                if (res.ResponseResult.Message === 'Success') {
-                    dispatch(employeeActions.create(res.ResponseResult.Result))
-                    setShowAdd(false)
-                    setError(false)
-                } else {
-                    setError(true)
-                }
+                setShowAdd(false)
+                setError(false)
             }
             catch(err) {
                 console.log(err);
@@ -54,8 +61,19 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
         }
     };
 
+    const handleClose = (e) => {
+        e.preventDefault();
+        setError(false)
+        setShowAdd(false)
+    }
+
+    const onHide = () => {
+        setError(false)
+        setShowAdd(false)
+    }
+
     return (
-        <Modal dialogClassName="add-employee" show={showAdd} onHide={() => setShowAdd(false)}>
+        <Modal dialogClassName="add-employee" show={showAdd} onHide={onHide}>
             <form onSubmit={handleSubmit}>
                 <Modal.Header className='justify-content-center'>
                     <Modal.Title className='title'>THÊM NHÂN VIÊN</Modal.Title>
@@ -74,9 +92,10 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     name="company" 
                                     className='select-company' 
                                     onChange={handleChange}
-                                >
+                                >   
+                                    <option value={null} hidden>Chọn công ty</option>
                                     {companies?.map((company, i) => (
-                                        <option key={i} value={company.name}>{company.name}</option>
+                                        <option key={i} value={company._id}>{company.name}</option>
                                     ))}
                                 </select>
                             </div>
@@ -125,11 +144,11 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     type={ visibleRePass ? "text" : "password"} 
                                     name="rePassword"
                                     className="form-control" 
-                                    id="floatingPassword" 
+                                    id="floatingRePassword" 
                                     placeholder="Nhập lại mật khẩu"
                                     onChange={handleChange}
                                 />
-                                <span toggle="#floatingPassword" 
+                                <span toggle="#loatingRePassword" 
                                 className={ visibleRePass ? 'toggle-password fa-regular fa-eye-slash' : 'toggle-password fa-regular fa-eye' } 
                                 onClick={() => setVisibleRePass(!visibleRePass)}></span>
                             </div>
@@ -166,7 +185,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                 </div>
                                 <input 
                                     type="number" 
-                                    name="phoneName"
+                                    name="phoneNumber"
                                     className='form-control' 
                                     placeholder='Nhập SĐT' 
                                     onChange={handleChange}
@@ -184,10 +203,10 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     className='select-company'
                                     onChange={handleChange}
                                 >
-                                    <option hidden>Chọn nhóm quyền</option>
-                                    <option>Nhóm quyền 1</option>
-                                    <option>Nhóm quyền 2</option>
-                                    <option>Nhóm quyền 3</option>
+                                    <option value={null} hidden>Chọn nhóm quyền</option>
+                                    {roles && roles.map((role, i) => (
+                                        <option key={i} value={role._id}>{role.name}</option>
+                                    ))}
                                 </select>
                             </div>
                         </div>
@@ -202,7 +221,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                     </div>
                 </Modal.Body>
                 <Modal.Footer className='justify-content-center'>
-                    <button className='mx-3 btn btn-cancle' onClick={() => setShowAdd(false)}>
+                    <button className='mx-3 btn btn-cancle' onClick={handleClose}>
                         Đóng
                     </button>
                     <button className='mx-3 btn btn-continue' type="submit">

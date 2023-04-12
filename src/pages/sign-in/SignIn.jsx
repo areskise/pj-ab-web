@@ -29,11 +29,9 @@ const SignIn = () => {
         userName: userName,
         password: password,
       }
-      console.log(data);
       try {
         const res = await AuthAPI.login(data);
         const result = res.ResponseResult.Result
-        console.log(result);
         if(result) {
           if(remember) {
             cookies.set('access_token', result, {maxAge: 604800})
@@ -72,7 +70,7 @@ const SignIn = () => {
                 placeholder="Tên đăng nhập" 
                 onChange={(e) => setUserName(e.target.value.trim())}
               />
-              <label for="floatingInput">Tên đăng nhập</label>
+              <label htmlFor="floatingInput">Tên đăng nhập</label>
             </div>
             <div className="d-flex form-floating align-items-center justify-content-end">
               <input 
@@ -82,7 +80,7 @@ const SignIn = () => {
                 placeholder="Mật khẩu" 
                 onChange={(e) => setPassword(e.target.value.trim())}
               />
-              <label for="floatingPassword">Mật khẩu</label>
+              <label htmlFor="floatingPassword">Mật khẩu</label>
               <span 
                 toggle="#floatingPassword" 
                 className={ visible ? 'toggle-password fa-regular fa-eye-slash' : 'toggle-password fa-regular fa-eye' } 

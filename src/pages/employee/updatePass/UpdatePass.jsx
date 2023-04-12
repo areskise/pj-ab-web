@@ -11,7 +11,7 @@ const UpdatePass = ({setUpdatePass, updatePass}) => {
     const [messErr, setMessErr] = useState(null);
     const [formValues, setFormValues] = useState({});
     const data = new FormData();
-
+console.log(updatePass);
     useEffect(() => {
     },[formValues.name]);
 
@@ -22,39 +22,57 @@ const UpdatePass = ({setUpdatePass, updatePass}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        data.append('name', e.target.name.value);
-        data.append('title', e.target.code.value);
-        data.append('phone', e.target.phone.value);
-        data.append('money', e.target.money.value);
-        data.append('date', e.target.date.value);
+        data.append('userName', e.target.userName.value);
+        data.append('newPassword', e.target.rePassword.value);
         console.log(data);
 
-        // if(!e.target.name.value || !e.target.code.value || !e.target.phone.value || !e.target.money.value || !e.target.date.value) {
-        //     setError(true)
-        // } else {
-        //     try {
-        //         console.log();
-        //         const res = await CompanyAPI.update(data);
-        //         console.log(res);
-        //         alertify.set('notifier', 'position', 'top-right');
-        //         alertify.success(res.data);
-        //         setShowUpdate(false)
-        //     }
-        //     catch(err) {
-        //         console.log(err);
-        //         setMessErr(err.response.data)
-        //     }
-        // }
+        if(!e.target.rePassword.value || !e.target.password.value) {
+            setError(true)
+            setMessErr(null)
+        } else if (e.target.rePassword.value !== e.target.password.value) {
+            setError(false)
+            setMessErr("Nhập lại mật khẩu mới không trùng khớp!")
+        }
+        else {
+            setError(false)
+            setMessErr(null)
+
+            // try {
+            //     console.log();
+            //     const res = await CompanyAPI.update(data);
+            //     console.log(res);
+            //     alertify.set('notifier', 'position', 'top-right');
+            //     alertify.success(res.data);
+            //     setShowUpdate(false)
+            // }
+            // catch(err) {
+            //     console.log(err);
+            //     setMessErr(err.response.data)
+            // }
+        }
     };
 
+    const handleClose = (e) => {
+        e.preventDefault();
+        setError(false)
+        setMessErr(null)
+        setUpdatePass(false)
+    }
+
+    const onHide = () => {
+        setError(false)
+        setMessErr(null)
+        setUpdatePass(false)
+    }
+
     return (
-        <Modal dialogClassName="update-employee" show={updatePass} onHide={() => setUpdatePass(false)}>
+        <Modal dialogClassName="update-employee" show={updatePass} onHide={onHide}>
             <form onSubmit={handleSubmit}>
                 <Modal.Header className='justify-content-center'>
                     <Modal.Title className='title'>CẬP NHẬT MẬT KHẨU</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className='w-100 m-auto text-center'>
-                    <form className='form-container'>
+                    <div className='form-container'>
                         <div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                 <div className='label'>
@@ -115,21 +133,29 @@ const UpdatePass = ({setUpdatePass, updatePass}) => {
                                     type={ visibleRePass ? "text" : "password"} 
                                     name="rePassword" 
                                     className="form-control" 
-                                    id="floatingPassword" 
+                                    id="floatingRePassword" 
                                     placeholder="Nhập lại mật khẩu mới"
                                 />
-                                <span toggle="#floatingPassword" 
+                                <span toggle="#floatingRePassword" 
                                 className={ visibleRePass ? 'toggle-password fa-regular fa-eye-slash' : 'toggle-password fa-regular fa-eye' } 
                                 onClick={() => setVisibleRePass(!visibleRePass)}></span>
                             </div>
                         </div>
-                    </form>
+                    </div>
+                    <div className='m-auto mb-3 text-center'>
+                    {error && 
+                        <div className="error-text">Vui lòng nhập đầy đủ thông tin.</div>
+                    }
+                    {messErr &&
+                        <div className="error-text">{messErr}</div>
+                    }
+                    </div>
                 </Modal.Body>
                 <Modal.Footer className='justify-content-center'>
-                    <button className='mx-3 btn btn-cancle' onClick={() => setUpdatePass(false)}>
+                    <button className='mx-3 btn btn-cancle' onClick={handleClose}>
                         Đóng
                     </button>
-                    <button className='mx-3 btn btn-continue'>
+                    <button className='mx-3 btn btn-continue' type="submit">
                         Cập nhật
                     </button>
                 </Modal.Footer>

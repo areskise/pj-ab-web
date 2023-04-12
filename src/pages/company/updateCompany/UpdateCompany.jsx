@@ -1,9 +1,8 @@
 import "./updateCompany.css";
 import Modal from 'react-bootstrap/Modal';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { format } from 'date-fns';
 import alertify from 'alertifyjs';
+import { useState, useEffect } from 'react';
+import { format } from 'date-fns';
 import CompanyAPI from "../../../API/CompanyAPI";
 import companyCode from "../../../helpers/companyCode";
 
@@ -15,8 +14,6 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
     const [formValues, setFormValues] = useState({});
     const data = new FormData();
     
-    const navigate = useNavigate();
-
     useEffect(() => {
         setCode(companyCode(formValues.name))
     },[formValues.name]);
@@ -28,37 +25,47 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        data.append('_id', showUpdate._id);
         data.append('name', e.target.name.value);
         data.append('title', e.target.code.value);
         data.append('phone', e.target.phone.value);
         data.append('money', e.target.money.value);
         data.append('date', e.target.date.value);
-        console.log(data);
-
-        // if(!e.target.name.value || !e.target.code.value || !e.target.phone.value || !e.target.money.value || !e.target.date.value) {
-        //     setError(true)
-        // } else {
-        //     try {
-        //         console.log();
-        //         const res = await CompanyAPI.update(data);
-        //         console.log(res);
-        //         alertify.set('notifier', 'position', 'top-right');
-        //         alertify.success(res.data);
-        //         setShowUpdate(false)
-        //     }
-        //     catch(err) {
-        //         console.log(err);
-        //         setMessErr(err.response.data)
-        //     }
-        // }
-    };
-
-    return (
-        <Modal dialogClassName="modal-update" show={showUpdate} onHide={() => {
+        data.append('status', e.target.status.value);
+        if(!e.target.name.value || !e.target.phone.value || !e.target.money.value || !e.target.date.value) {
+            setError(true)
+        } else {
+            try {
+                const res = await CompanyAPI.update(data);
+                console.log(res);
                 setShowUpdate(false)
                 setCode(null)
-            }}
-        >
+                setError(false)                
+                alertify.set('notifier', 'position', 'top-right');
+                alertify.success('Cập nhật thành công!');
+            }
+            catch(err) {
+                console.log(err);
+                setMessErr(err.response.data)
+            }
+        }
+    };
+
+    const handleClose = (e) => {
+        e.preventDefault();
+        setError(false)
+        setCode(null)
+        setShowUpdate(false)
+    }
+
+    const onHide = () => {
+        setError(false)
+        setCode(null)
+        setShowUpdate(false)
+    }
+
+    return (
+        <Modal dialogClassName="modal-update" show={showUpdate} onHide={onHide}>
             <form onSubmit={handleSubmit}>
                 <Modal.Header className='justify-content-center'>
                     <Modal.Title className='title'>CẬP NHẬT CÔNG TY</Modal.Title>
@@ -103,7 +110,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                         name="phone"
                                         className='form-control' 
                                         placeholder='Nhập số điện thoại' 
-                                        defaultValue={'0'+(showUpdate.phone)}
+                                        defaultValue={showUpdate.phone}
                                         onChange={handleChange}
                                     />
                                 </div>
@@ -136,13 +143,13 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                 </div>
                                 <div className='d-flex m-3 align-items-center justify-content-center'>
                                     <div className='d-flex mx-4 align-items-center justify-content-center'>
-                                        <input type="radio" id="Active" className='form-checkbox' name='company' checked/>
+                                        <input type="radio" id="Active" className='form-checkbox' name='status' value={true} defaultChecked/>
                                         <div>
                                             <label htmlFor="Active" className='company-active'>Hoạt động</label>
                                         </div>
                                     </div>
                                     <div className='d-flex mx-4 align-items-center justify-content-center'>
-                                        <input type="radio" id="Disable" className='form-checkbox' name='company'/>
+                                        <input type="radio" id="Disable" className='form-checkbox' name='status' value={false}/>
                                         <div>
                                             <label htmlFor="Disable" className='company-disable'>Không hoạt động</label>
                                         </div>
@@ -260,13 +267,17 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                             </div>
                         </div>
                     </div>
+                    <div className='m-auto mt-3 text-center'>
+                    {error && 
+                        <div className="error-text">Vui lòng nhập đầy đủ thông tin.</div>
+                    }
+                    {messErr &&
+                        <div className="error-text">{messErr}</div>
+                    }
+                    </div>
                 </Modal.Body>
                 <Modal.Footer className='justify-content-center'>
-                    <button className='mx-3 btn btn-cancle' onClick={() => {
-                            setShowUpdate(false)
-                            setCode(null)
-                        }}
-                    >
+                    <button className='mx-3 btn btn-cancle' onClick={handleClose}>
                         Đóng
                     </button>
                     <button className='mx-3 btn btn-continue' type="submit">

@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import { employeeActions, selectorEmployees } from '../../redux/slice/employeeSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectorCompanies } from '../../redux/slice/companySlice';
+import { companyActions, selectorCompanies } from '../../redux/slice/companySlice';
 
 const Employee = () => {
     const [showAdd, setShowAdd] = useState(false);
@@ -18,7 +18,7 @@ const Employee = () => {
     const [updatePass, setUpdatePass] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
     // const [employees, setEmployees] = useState([]);
-    const [selectComany, setSelectCompany] = useState([]);
+    const [company, setCompany] = useState(null);
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
     const [totalPage, setTotalPage] = useState(1);
@@ -26,22 +26,21 @@ const Employee = () => {
     const dispatch = useDispatch();
     const employees = useSelector(selectorEmployees)
     const companies = useSelector(selectorCompanies)
-console.log(employees   );
     const navigate = useNavigate();	
     const cookies = new Cookies();
     const access_token = cookies.get('access_token');
 
     useEffect(() => {
-        if(access_token) {
+        if(!company || company === 'all') {
             // const data = {
             //     limit: limit,
             //     page: page
             // }
             dispatch(employeeActions.setEmployees())
         } else {
-            navigate('/');
+            dispatch(companyActions.setUsers(company))
         }
-    }, []);
+    }, [showAdd, showUpdate, updatePass, showDetail]);
 
     const nextPage = () => {
         if(page < totalPage) {
@@ -82,7 +81,7 @@ console.log(employees   );
                         <div className='label'>
                             <label htmlFor="">Công ty:</label>
                         </div>
-                        <select className='select-company' onChange={(e) => setSelectCompany(e.target.value)}>
+                        <select className='select-company' onChange={(e) => setCompany(e.target.value)}>
                             <option value='all'>Tất cả</option>
                             {companies?.map((company, i) => (
                                 <option key={i} value={company.name}>{company.name}</option>

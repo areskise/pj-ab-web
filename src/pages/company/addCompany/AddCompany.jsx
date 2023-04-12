@@ -1,44 +1,51 @@
 import "./addCompany.css";
 import Modal from 'react-bootstrap/Modal';
+import alertify from 'alertifyjs';
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import companyCode from '../../../helpers/companyCode';
 import CompanyAPI from "../../../API/CompanyAPI";
+import { useSelector } from "react-redux";
+import { selectorPermissions } from "../../../redux/slice/permissionSlice";
 
 const AddCompany = ({setShowAdd, showAdd}) => {
     const [subMenu, setSubMenu] = useState(false);
     const [error, setError] = useState(false);
-    const [messErr, setMessErr] = useState(null);
+    const [messErr, setMessErr] = useState(false);
     const [code, setCode] = useState(null);
     const [formValues, setFormValues] = useState({});
     const data = new FormData();
+    const permissions = useSelector(selectorPermissions)
     
     useEffect(() => {
         setCode(companyCode(formValues.name))
     },[formValues.name]);
-
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValues({...formValues, [name]: value})
     }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         data.append('name', e.target.name.value);
         data.append('title', e.target.code.value);
         data.append('phone', e.target.phone.value);
         data.append('money', e.target.money.value);
-        data.append('createAt', e.target.date.value);
+        data.append('date', e.target.date.value);
+        console.log(e.target.date.value);
+
         if(!e.target.name.value || !e.target.phone.value || !e.target.money.value || !e.target.date.value) {
             setError(true)
         } else {
             try {
                 const res = await CompanyAPI.create(data);
                 console.log(res);
-                
-                // alertify.set('notifier', 'position', 'top-right');
-                // alertify.success(res.data);
                 setShowAdd(false)
+                setCode(null)
                 setError(false)
+                alertify.set('notifier', 'position', 'top-right');
+                alertify.success('Thêm mới thành công!');
             }
             catch(err) {
                 console.log(err);
@@ -47,8 +54,21 @@ const AddCompany = ({setShowAdd, showAdd}) => {
         }
     };
 
+    const handleClose = (e) => {
+        e.preventDefault();
+        setError(false)
+        setCode(null)
+        setShowAdd(false)
+    }
+
+    const onHide = () => {
+        setError(false)
+        setCode(null)
+        setShowAdd(false)
+    }
+
     return (
-        <Modal dialogClassName="modal-add" show={showAdd} onHide={() => setShowAdd(false)}>
+        <Modal dialogClassName="modal-add" show={showAdd} onHide={onHide}>
             <form onSubmit={handleSubmit}>
                 <Modal.Header className='justify-content-center'>
                     <Modal.Title className='title'>THÊM CÔNG TY</Modal.Title>
@@ -78,6 +98,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                                         name="code"
                                         className='form-control' 
                                         defaultValue={code}
+                                        onChange={handleChange}
                                         disabled 
                                     />
                                 </div>
@@ -232,23 +253,17 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                             </div>
                         </div>
                     </div>
-                    <div className='m-auto mb-3 text-center'>
+                    <div className='m-auto mt-3 text-center'>
                     {error && 
                         <div className="error-text">Vui lòng nhập đầy đủ thông tin.</div>
                     }
                     {messErr &&
-                        <div className="error-text">{messErr}</div>
+                        <div className="error-text">Lỗi do hệ thống vui lòng liên hệ với admin!</div>
                     }
                     </div>
                 </Modal.Body>
                 <Modal.Footer className='justify-content-center'>
-                    <button 
-                        className='mx-3 btn btn-cancle' 
-                        onClick={() => {
-                            setShowAdd(false)
-                            setError(false)
-                        }}
-                    >
+                    <button className='mx-3 btn btn-cancle' onClick={handleClose}>
                         Đóng
                     </button>
                     <button className='mx-3 btn btn-continue' type="submit">

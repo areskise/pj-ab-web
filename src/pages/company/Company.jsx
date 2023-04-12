@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import currencyFormatter from 'currency-formatter';
 import Cookies from 'universal-cookie';
 import { companyActions, selectorCompanies } from "../../redux/slice/companySlice";
+import { permissionActions } from "../../redux/slice/permissionSlice";
 
 const Company = () => {
     const [showAdd, setShowAdd] = useState(false);
@@ -32,10 +33,11 @@ const Company = () => {
             //     page: page
             // }
             dispatch(companyActions.setCompanies())
+            dispatch(permissionActions.setPermissions())
         } else {
             navigate('/');
         }
-    }, []);
+    }, [showAdd, showUpdate]);
 
     const nextPage = () => {
         if(page < totalPage) {
@@ -119,7 +121,7 @@ const Company = () => {
                                 <tr key={i}>
                                     <td scope="row" data-label="Mã CT:">{company.title}</td>
                                     <td data-label="Tên công ty:" className="company-word">{company.name}</td>
-                                    <td data-label="Số điện thoại:">0{company.phone}</td>
+                                    <td data-label="Số điện thoại:">{company.phone}</td>
                                     <td data-label="Số vốn:">
                                         {currencyFormatter.format(company.money, {
                                         symbol: 'VND',
@@ -155,7 +157,7 @@ const Company = () => {
                             <div className="d-flex align-items-center mx-md-4">
                                 <i className="p-1 fa-solid fa-chevron-left" onClick={() => prevPage()}></i>
                                 <div className="d-flex mx-md-4">
-                                    <input className="input-page" value={page}></input>
+                                    <input className="input-page" defaultValue={page}></input>
                                     <div>/ {totalPage?totalPage:1}</div>
                                 </div>
                                 <i className="p-1 fa-solid fa-chevron-right" onClick={() => nextPage()}></i>

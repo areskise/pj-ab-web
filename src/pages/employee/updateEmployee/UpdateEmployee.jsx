@@ -5,17 +5,21 @@ import { format } from 'date-fns';
 import { useNavigate } from "react-router-dom";
 import { selectorCompanies } from "../../../redux/slice/companySlice";
 import { useSelector } from "react-redux";
+import EmployeeAPI from "../../../API/EmployeeAPI";
 
 const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
-    const [subMenu, setSubMenu] = useState(false);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
     const [formValues, setFormValues] = useState({});
     const data = new FormData();
-    const navigate = useNavigate();
-
+    console.log(showUpdate);
     useEffect(() => {
-    },[formValues.name]);
+        const fetchCompany = async () => {
+            // const res = await CompanyAPI.getById(showUpdate.);
+            // const result = res.ResponseResult.Result
+            // setRoles(result)
+        }
+    },[]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -24,33 +28,43 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        data.append('name', e.target.name.value);
-        data.append('title', e.target.code.value);
-        data.append('phone', e.target.phone.value);
-        data.append('money', e.target.money.value);
-        data.append('date', e.target.date.value);
-        console.log(data);
-
-        // if(!e.target.name.value || !e.target.code.value || !e.target.phone.value || !e.target.money.value || !e.target.date.value) {
-        //     setError(true)
-        // } else {
-        //     try {
-        //         console.log();
-        //         const res = await CompanyAPI.update(data);
-        //         console.log(res);
-        //         alertify.set('notifier', 'position', 'top-right');
-        //         alertify.success(res.data);
-        //         setShowUpdate(false)
-        //     }
-        //     catch(err) {
-        //         console.log(err);
-        //         setMessErr(err.response.data)
-        //     }
-        // }
+        // data.append('company', e.target.company.value);
+        data.append('userName', e.target.userName.value);
+        data.append('password', e.target.password.value);
+        data.append('rePassword', e.target.rePassword.value);
+        data.append('fullName', e.target.fullName.value);
+        data.append('email', e.target.email.value);
+        data.append('phoneName', e.target.phoneName.value);
+        data.append('role', e.target.role.value);
+        if(!e.target.company.value || !e.target.userName.value || !e.target.password.value || !e.target.rePassword.value || !e.target.fullName.value || !e.target.role.value) {
+            setError(true)
+        } else {
+            try {
+                const res = await EmployeeAPI.update(data);
+                console.log(res);
+                setShowUpdate(false)
+                setError(false)
+            }
+            catch(err) {
+                console.log(err);
+                setMessErr(err.response.data)
+            }
+        }
     };
 
+    const handleClose = (e) => {
+        e.preventDefault();
+        setError(false)
+        setShowUpdate(false)
+    }
+
+    const onHide = () => {
+        setError(false)
+        setShowUpdate(false)
+    }
+
     return (
-        <Modal dialogClassName="update-employee" show={showUpdate} onHide={() => setShowUpdate(false)}>
+        <Modal dialogClassName="update-employee" show={showUpdate} onHide={onHide}>
             <form onSubmit={handleSubmit}>
                 <Modal.Header className='justify-content-center'>
                     <Modal.Title className='title'>CẬP NHẬT NHÂN VIÊN</Modal.Title>
@@ -68,7 +82,7 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
                                     <input 
                                         type="text" 
                                         className='form-control' 
-                                        value={'Công ty 1'} 
+                                        value={showUpdate.name} 
                                         disabled
                                     />
                                 </div>
@@ -159,12 +173,20 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
                             </div>
                         </div>
                     </div>
+                    <div className='m-auto mt-3 text-center'>
+                    {error && 
+                        <div className="error-text">Vui lòng nhập đầy đủ thông tin.</div>
+                    }
+                    {messErr &&
+                        <div className="error-text">{messErr}</div>
+                    }
+                    </div>
                 </Modal.Body>
                 <Modal.Footer className='justify-content-center'>
-                    <button className='mx-3 btn btn-cancle' onClick={() => setShowUpdate(false)}>
+                    <button className='mx-3 btn btn-cancle' onClick={handleClose}>
                         Đóng
                     </button>
-                    <button className='mx-3 btn btn-continue'>
+                    <button className='mx-3 btn btn-continue' type="submit">
                         Cập nhật
                     </button>
                 </Modal.Footer>

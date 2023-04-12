@@ -9,11 +9,7 @@ const initialState = {
         totalPage: 1,
     },
     getById: null,
-    getUsers: null,
-    getRoles: null,
-    create: null,
-    update: null,
-    modalData: {},
+    users: [],
 };
 
 const companySlice = createSlice({
@@ -28,24 +24,8 @@ const companySlice = createSlice({
             state.getById = action.payload
         },
 
-        fetchUsers(state, action) {
-            state.getUsers = action.payload
-        },
-
-        fetchRoles(state, action) {
-            state.getRoles = action.payload
-        },
-
-        create(state, action) {
-            state.create = action.payload
-        },
-
-        update(state, action) {
-            state.update = action.payload
-        },
-
-        modalData(state, action) {
-            state.modalData = action.payload
+        setUsers(state, action) {
+            state.users = action.payload
         },
     }
 });
@@ -53,6 +33,7 @@ const companySlice = createSlice({
 export const companyActions = companySlice.actions;
 
 export const selectorCompanies = state => state.company.companies
+export const selectorUsers = state => state.company.users
 
 const companyReducer = companySlice.reducer;
 export default companyReducer;

@@ -14,6 +14,7 @@ const CompanyAPI = {
     },
 
     getRoles: async (id) => {
+        console.log(id);
         return axiosClient.get(`/organization/getRoles?id=${id}`);
     },
 
