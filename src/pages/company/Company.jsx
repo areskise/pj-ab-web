@@ -11,6 +11,7 @@ import currencyFormatter from 'currency-formatter';
 import Cookies from 'universal-cookie';
 import { companyActions, selectorCompanies } from "../../redux/slice/companySlice";
 import { permissionActions } from "../../redux/slice/permissionSlice";
+import { applicationActions } from "../../redux/slice/applicationSlice";
 
 const Company = () => {
     const [showAdd, setShowAdd] = useState(false);
@@ -33,6 +34,7 @@ const Company = () => {
             //     page: page
             // }
             dispatch(companyActions.setCompanies())
+            dispatch(applicationActions.setApplications())
             dispatch(permissionActions.setPermissions())
         } else {
             navigate('/');

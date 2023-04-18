@@ -13,18 +13,6 @@ function* fetchCompanies(action) {
     }
 };
 
-function* fetchUsers(action) {
-    try {
-        const res = yield call(CompanyAPI.getUsers, action.payload);
-        const result = res.ResponseResult.Result
-        yield put(companyActions.setUsers(result));
-    } 
-    catch(err) {
-        console.log(err);
-    }
-};
-
 export default function* companySaga() {
     yield takeLeading(companyActions.setCompanies.type, fetchCompanies);
-    yield takeLeading(companyActions.setUsers.type, fetchUsers);
 };

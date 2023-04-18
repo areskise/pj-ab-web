@@ -29,7 +29,7 @@ const Employee = () => {
     const navigate = useNavigate();	
     const cookies = new Cookies();
     const access_token = cookies.get('access_token');
-
+console.log(company);
     useEffect(() => {
         if(!company || company === 'all') {
             // const data = {
@@ -38,7 +38,7 @@ const Employee = () => {
             // }
             dispatch(employeeActions.setEmployees())
         } else {
-            dispatch(companyActions.setUsers(company))
+            dispatch(employeeActions.setUsers(company))
         }
     }, [showAdd, showUpdate, updatePass, showDetail]);
 
@@ -84,7 +84,7 @@ const Employee = () => {
                         <select className='select-company' onChange={(e) => setCompany(e.target.value)}>
                             <option value='all'>Tất cả</option>
                             {companies?.map((company, i) => (
-                                <option key={i} value={company.name}>{company.name}</option>
+                                <option key={i} value={company._id}>{company.name}</option>
                             ))}
                         </select>
                     </div>

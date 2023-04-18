@@ -1,0 +1,91 @@
+.home {
+    display: flex;
+}
+
+.home .dashboard {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.home .count {
+    display: flex;
+    font-size: 40px;
+    text-align: center;
+    align-items: center;
+}
+
+.home .hui {
+    display: flex;
+    justify-content: center;
+    width: 60%;
+}
+
+.home-container {
+    width: 100%;
+    margin: 2rem;
+}
+
+.count-company {
+    padding: 1rem;
+    background-color: #D5DEFF;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+.count-hui {
+    padding: 1rem;
+    background-color: #FFE2FC;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+.list-hui {
+    padding: 1rem;
+    width: 100%;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+.hui-item {
+    display: flex;
+    padding: .5rem;
+    margin: 12px 0;
+    width: 100%;
+    background-color: #FFF8E4;
+    border-radius: 10px;
+    font-size: 20px;
+    text-align: center;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hui-item p {
+    font-size: 16px;
+    margin: 0;
+}
+
+@media screen and (max-width: 992px) {
+    .home-container .form-container {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .home-container .btn-control {
+        height: 62px;
+    }
+
+    .home-container .title {
+        margin-left: 0;
+        padding-top: 16px;
+    }
+
+    .home-container .form-check {
+        margin: 16px 0 0 0;
+    }
+
+    .home-container .label {
+        width: 132px;
+    }
+}

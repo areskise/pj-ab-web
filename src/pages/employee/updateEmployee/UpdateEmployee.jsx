@@ -6,21 +6,49 @@ import { useNavigate } from "react-router-dom";
 import { selectorCompanies } from "../../../redux/slice/companySlice";
 import { useSelector } from "react-redux";
 import EmployeeAPI from "../../../API/EmployeeAPI";
+import CompanyAPI from "../../../API/CompanyAPI";
+import RoleAPI from "../../../API/RoleAPI";
 
 const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
+    const [company, setCompany] = useState(null);
+    const [role, setRole] = useState(null);
+    const [roles, setRoles] = useState(null);
     const [formValues, setFormValues] = useState({});
     const data = new FormData();
-    console.log(showUpdate);
+    console.log(role);
     useEffect(() => {
         const fetchCompany = async () => {
-            // const res = await CompanyAPI.getById(showUpdate.);
-            // const result = res.ResponseResult.Result
-            // setRoles(result)
+            if(showUpdate) {
+                const resCompany = await EmployeeAPI.getOrganizations(showUpdate._id);
+                const companyResult = resCompany.ResponseResult.Result
+                setCompany(companyResult[0])
+                const resRole = await RoleAPI.getById(showUpdate.roleId);
+                const roleResult = resRole.ResponseResult.Result
+                setRole(roleResult)
+            } else {
+                setCompany(null)
+                setRole(null)
+            }
         }
-    },[]);
+        fetchCompany()
+    },[showUpdate]);
 
+    useEffect(() => {
+        const fetchCompany = async () => {
+           
+        if(company) {
+            const resRoles = await CompanyAPI.getRoles(company.organizationId._id);
+            const rolesResult = resRoles.ResponseResult.Result
+            setRoles(rolesResult)
+        } else {
+            setRoles(null)
+        }
+        }
+        fetchCompany()
+    },[company]);
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValues({...formValues, [name]: value})
@@ -28,15 +56,13 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // data.append('company', e.target.company.value);
         data.append('userName', e.target.userName.value);
-        data.append('password', e.target.password.value);
-        data.append('rePassword', e.target.rePassword.value);
         data.append('fullName', e.target.fullName.value);
         data.append('email', e.target.email.value);
-        data.append('phoneName', e.target.phoneName.value);
-        data.append('role', e.target.role.value);
-        if(!e.target.company.value || !e.target.userName.value || !e.target.password.value || !e.target.rePassword.value || !e.target.fullName.value || !e.target.role.value) {
+        data.append('phoneNumber', e.target.phoneNumber.value);
+        data.append('status', e.target.status.value);
+        data.append('roleId', e.target.role.value);
+        if(!e.target.userName.value || !e.target.fullName.value || !e.target.role.value) {
             setError(true)
         } else {
             try {
@@ -56,11 +82,13 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
         e.preventDefault();
         setError(false)
         setShowUpdate(false)
+        setMessErr(null)
     }
 
     const onHide = () => {
         setError(false)
         setShowUpdate(false)
+        setMessErr(null)
     }
 
     return (
@@ -82,7 +110,7 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
                                     <input 
                                         type="text" 
                                         className='form-control' 
-                                        value={showUpdate.name} 
+                                        value={company?company.organizationId.name:null} 
                                         disabled
                                     />
                                 </div>
@@ -151,21 +179,30 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
                                         <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
-                                <select className='select-company'>
-                                    <option>Nhóm quyền 1</option>
-                                    <option>Nhóm quyền 2</option>
-                                    <option>Nhóm quyền 3</option>
+                                <select 
+                                    name="role" 
+                                    className='select-company'
+                                    onChange={handleChange}
+                                >
+                                    {role ? 
+                                    <option value={role.roleId} hidden>{role.name}</option> 
+                                    : 
+                                    <option value={null} hidden>Chọn nhóm quyền</option>
+                                    }
+                                    {roles && roles.map((role, i) => (
+                                        <option key={i} value={role._id}>{role.name}</option>
+                                    ))}
                                 </select>
                             </div>
                             <div className='d-flex m-3 align-items-center justify-content-center'>
                                 <div className='d-flex mx-4 align-items-center justify-content-center'>
-                                    <input type="radio" id="Active" className='form-checkbox' name='employee' checked/>
+                                    <input type="radio" id="Active" className='form-checkbox' name='status' value={true} checked/>
                                     <div>
                                         <label htmlFor="Active" className='employee-active'>Hoạt động</label>
                                     </div>
                                 </div>
                                 <div className='d-flex mx-4 align-items-center justify-content-center'>
-                                    <input type="radio" id='Disable' className='form-checkbox' name='employee'/>
+                                    <input type="radio" id='Disable' className='form-checkbox' name='status'value={false}/>
                                     <div>
                                         <label htmlFor="Disable" className='employee-disable'>Không hoạt động</label>
                                     </div>

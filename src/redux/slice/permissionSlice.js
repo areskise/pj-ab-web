@@ -1,9 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    permissions: [],
-    permissionById: null,
-    permissionByRole: null,
+    permissions: []
 };
 
 const permissionSlice = createSlice({
@@ -12,15 +10,7 @@ const permissionSlice = createSlice({
     reducers: {
         setPermissions(state, action) {
             state.permissions = action.payload
-        },
-
-        setById(state, action) {
-            state.permissionById = action.payload
-        },
-
-        setByRole(state, action) {
-            state.permissionByRole = action.payload
-        },
+        }
     }
 });
 

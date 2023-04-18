@@ -6,17 +6,18 @@ import { format } from 'date-fns';
 import companyCode from '../../../helpers/companyCode';
 import CompanyAPI from "../../../API/CompanyAPI";
 import { useSelector } from "react-redux";
+import { selectorApplications } from "../../../redux/slice/applicationSlice";
+import RoleAPI from "../../../API/RoleAPI";
 import { selectorPermissions } from "../../../redux/slice/permissionSlice";
 
 const AddCompany = ({setShowAdd, showAdd}) => {
-    const [subMenu, setSubMenu] = useState(false);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(false);
     const [code, setCode] = useState(null);
     const [formValues, setFormValues] = useState({});
-    const data = new FormData();
+    const applications = useSelector(selectorApplications)
     const permissions = useSelector(selectorPermissions)
-    
+console.log(permissions);
     useEffect(() => {
         setCode(companyCode(formValues.name))
     },[formValues.name]);
@@ -28,24 +29,37 @@ const AddCompany = ({setShowAdd, showAdd}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        data.append('name', e.target.name.value);
-        data.append('title', e.target.code.value);
-        data.append('phone', e.target.phone.value);
-        data.append('money', e.target.money.value);
-        data.append('date', e.target.date.value);
-        console.log(e.target.date.value);
-
+        const defaultApp = applications.find(app => app.title === 'default')
+        const huiApp = applications.find(app => app.title === 'hui')
+        const app = [defaultApp._id]
+        if(e.target.hui.checked) {
+            app.push(huiApp._id)
+        }
+        const data = {
+            name: e.target.name.value,
+            title: e.target.code.value,
+            phone: +e.target.phone.value,
+            money: +e.target.money.value,
+            date: e.target.date.value,
+            applicationId: app
+        }
+        console.log(data);
         if(!e.target.name.value || !e.target.phone.value || !e.target.money.value || !e.target.date.value) {
-            setError(true)
+            setError(data.values())
         } else {
             try {
                 const res = await CompanyAPI.create(data);
                 console.log(res);
-                setShowAdd(false)
-                setCode(null)
-                setError(false)
-                alertify.set('notifier', 'position', 'top-right');
-                alertify.success('Thêm mới thành công!');
+                if(res.ResponseResult.Message === 'Success'){
+                    console.log(res.ResponseResult.Result);
+                    const per = []
+                    // await RoleAPI.create(data);
+                    setShowAdd(false)
+                    setCode(null)
+                    setError(false)
+                    alertify.set('notifier', 'position', 'top-right');
+                    alertify.success('Thêm mới thành công!');
+                }
             }
             catch(err) {
                 console.log(err);
@@ -98,7 +112,6 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                                         name="code"
                                         className='form-control' 
                                         defaultValue={code}
-                                        onChange={handleChange}
                                         disabled 
                                     />
                                 </div>
@@ -111,7 +124,6 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                                         name="phone"
                                         className='form-control' 
                                         placeholder='Nhập SĐT' 
-                                        onChange={handleChange}
                                     />
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -123,8 +135,6 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                                         name="money"
                                         className='form-control form-money' 
                                         placeholder='Nhập số vốn'
-                                        onChange={handleChange}
-                                        
                                     />
                                     <span className='money'>VND</span>
                                 </div>
@@ -138,7 +148,6 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                                         className='form-control' 
                                         defaultValue={format(new Date(), 'yyyy-MM-dd')} 
                                         min={format(new Date(), 'yyyy-MM-dd')}
-                                        onChange={handleChange}
                                     />
                                 </div>
                         </div>
@@ -149,107 +158,16 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                                     <input type="text" className='form-control' placeholder='Nhập từ khóa tìm kiếm' />
                                 </div>
                                 <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                    <input type="checkbox" className='form-checkbox' />
+                                    <input 
+                                        type="checkbox" 
+                                        className='form-checkbox' 
+                                        id='hui' 
+                                        name="hui"
+                                    />
                                     <div>
-                                        <label htmlFor="">Tất cả</label>
+                                        <label htmlFor="hui">Quản lý hụi</label>
                                     </div>
                                 </div>
-                                <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                    <input type="checkbox" className='form-checkbox' />
-                                    <div>
-                                        <label htmlFor="">Trang chủ</label>
-                                    </div>
-                                </div>
-                                <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                    <input type="checkbox" className='form-checkbox' />
-                                    <div>
-                                        <label htmlFor="">Quản lý công ty</label>
-                                    </div>
-                                </div>
-                                <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                    <input type="checkbox" className='form-checkbox' />
-                                    <div onClick={()=>setSubMenu(!subMenu)}>
-                                        <label htmlFor="">
-                                            Quản lý người dùng
-                                            <i className="mx-3 fa-solid fa-chevron-down"></i>
-                                        </label>
-                                    </div>
-                                </div>
-                                {subMenu &&
-                                    <ul>
-                                        <li className='nav-sub-item p-2'>
-                                            <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                <input type="checkbox" className='form-checkbox' />
-                                                <div>
-                                                    <label htmlFor="">Nhân viên</label>
-                                                </div>
-                                            </div>
-                                            <ul className='mt-2'>
-                                                <li className='nav-sub-item p-2'>
-                                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                        <input type="checkbox" className='form-checkbox' />
-                                                        <div>
-                                                            <label htmlFor="">Thêm</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li className='nav-sub-item p-2'>
-                                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                        <input type="checkbox" className='form-checkbox' />
-                                                        <div>
-                                                            <label htmlFor="">Cập nhập</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li className='nav-sub-item px-2'>
-                                            <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                <input type="checkbox" className='form-checkbox' />
-                                                <div>
-                                                    <label htmlFor="">Khách hàng</label>
-                                                </div>
-                                            </div>
-                                            <ul className='mt-2'>
-                                                <li className='nav-sub-item p-2'>
-                                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                        <input type="checkbox" className='form-checkbox' />
-                                                        <div>
-                                                            <label htmlFor="">Thêm</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li className='nav-sub-item p-2'>
-                                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                        <input type="checkbox" className='form-checkbox' />
-                                                        <div>
-                                                            <label htmlFor="">Cập nhật</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                }
-                                <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                    <input type="checkbox" className='form-checkbox' />
-                                    <div>
-                                        <label htmlFor="">Quản lý hụi</label>
-                                    </div>
-                                </div>
-                                <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                    <input type="checkbox" className='form-checkbox' />
-                                    <div>
-                                        <label htmlFor="">Báo cáo</label>
-                                    </div>
-                                </div>
-                                <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                    <input type="checkbox" className='form-checkbox' />
-                                    <div>
-                                        <label htmlFor="">Ngày hoạt động</label>
-                                    </div>
-                                </div>
-                                
                             </div>
                         </div>
                     </div>

@@ -9,6 +9,10 @@ const EmployeeAPI = {
         return axiosClient.get(`/user/list?id=${id}`);
     },
 
+    getOrganizations: async (id) => {
+        return axiosClient.get(`/user/getOrganizations?id=${id}`);
+    },
+
     create: async (body) => {
         return axiosClient.post(`/user`, body);
     },
