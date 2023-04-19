@@ -26,13 +26,13 @@ const Company = () => {
     const access_token = cookies.get('access_token');
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    
     useEffect(() => {
         if(access_token) {
             // const data = {
-            //     limit: limit,
-            //     page: page
-            // }
+                //     limit: limit,
+                //     page: page
+                // }
             dispatch(companyActions.setCompanies())
             dispatch(applicationActions.setApplications())
             dispatch(permissionActions.setPermissions())

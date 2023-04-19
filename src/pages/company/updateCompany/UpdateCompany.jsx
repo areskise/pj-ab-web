@@ -5,33 +5,54 @@ import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import CompanyAPI from "../../../API/CompanyAPI";
 import companyCode from "../../../helpers/companyCode";
+import { selectorApplications } from "../../../redux/slice/applicationSlice";
+import { useSelector } from "react-redux";
 
 const UpdateCompany = ({setShowUpdate, showUpdate}) => {
-    const [subMenu, setSubMenu] = useState(false);
     const [error, setError] = useState(false);
+    const [selectHui, setSelectHui] = useState(false);
     const [code, setCode] = useState(null);
     const [messErr, setMessErr] = useState(null);
     const [formValues, setFormValues] = useState({});
-    const data = new FormData();
-    
+    const applications = useSelector(selectorApplications)
+
+    useEffect(() => {
+        if(showUpdate && applications) {
+            const huiApp = applications.find(app => app.title === 'hui')
+            const hui = showUpdate.applicationId.includes(huiApp._id)
+            setSelectHui(hui)
+        }
+    },[showUpdate]);
+
     useEffect(() => {
         setCode(companyCode(formValues.name))
     },[formValues.name]);
-
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValues({...formValues, [name]: value})
     }
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
-        data.append('_id', showUpdate._id);
-        data.append('name', e.target.name.value);
-        data.append('title', e.target.code.value);
-        data.append('phone', e.target.phone.value);
-        data.append('money', e.target.money.value);
-        data.append('date', e.target.date.value);
-        data.append('status', e.target.status.value);
+        const defaultApp = applications.find(app => app.title === 'default')
+        const huiApp = applications.find(app => app.title === 'hui')
+        const app = [defaultApp._id]
+
+        if(e.target.hui.checked) {
+            app.push(huiApp._id)
+        }
+
+        const data = {
+            _id: showUpdate._id,
+            name: e.target.name.value,
+            title: e.target.code.value,
+            phone: +e.target.phone.value,
+            money: +e.target.money.value,
+            date: e.target.date.value,
+            status: e.target.status.value,
+            applicationId: app
+        }
         if(!e.target.name.value || !e.target.phone.value || !e.target.money.value || !e.target.date.value) {
             setError(true)
         } else {
@@ -40,6 +61,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                 console.log(res);
                 setShowUpdate(false)
                 setCode(null)
+                setSelectHui(false)
                 setError(false)                
                 alertify.set('notifier', 'position', 'top-right');
                 alertify.success('Cập nhật thành công!');
@@ -56,12 +78,14 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
         setError(false)
         setCode(null)
         setShowUpdate(false)
+        setSelectHui(false)
     }
 
     const onHide = () => {
         setError(false)
         setCode(null)
         setShowUpdate(false)
+        setSelectHui(false)
     }
 
     return (
@@ -162,108 +186,31 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-start'>
                                     <input type="text" className='form-control' placeholder='Nhập từ khóa tìm kiếm'/>
                                 </div>
-                                <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                    <input type="checkbox" id='all' className='form-checkbox' />
-                                    <div>
-                                        <label htmlFor="all">Tất cả</label>
-                                    </div>
-                                </div>
-                                <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                    <input type="checkbox" className='form-checkbox' />
-                                    <div>
-                                        <label htmlFor="">Trang chủ</label>
-                                    </div>
-                                </div>
-                                <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                    <input type="checkbox" className='form-checkbox' />
-                                    <div>
-                                        <label htmlFor="">Quản lý công ty</label>
-                                    </div>
-                                </div>
-                                <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                    <input type="checkbox" className='form-checkbox' />
-                                    <div onClick={()=>setSubMenu(!subMenu)}>
-                                        <label htmlFor="">
-                                            Quản lý người dùng
-                                            <i className="mx-3 fa-solid fa-chevron-down"></i>
-                                        </label>
-                                    </div>
-                                </div>
-                                {subMenu &&
-                                    <ul>
-                                        <li className='nav-sub-item p-2'>
-                                            <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                <input type="checkbox" className='form-checkbox' />
-                                                <div>
-                                                    <label htmlFor="">Nhân viên</label>
-                                                </div>
-                                            </div>
-                                            <ul className='mt-2'>
-                                                <li className='nav-sub-item p-2'>
-                                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                        <input type="checkbox" className='form-checkbox' />
-                                                        <div>
-                                                            <label htmlFor="">Thêm</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li className='nav-sub-item p-2'>
-                                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                        <input type="checkbox" className='form-checkbox' />
-                                                        <div>
-                                                            <label htmlFor="">Cập nhập</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li className='nav-sub-item px-2'>
-                                            <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                <input type="checkbox" className='form-checkbox' />
-                                                <div>
-                                                    <label htmlFor="">Khách hàng</label>
-                                                </div>
-                                            </div>
-                                            <ul className='mt-2'>
-                                                <li className='nav-sub-item p-2'>
-                                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                        <input type="checkbox" className='form-checkbox' />
-                                                        <div>
-                                                            <label htmlFor="">Thêm</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li className='nav-sub-item p-2'>
-                                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                        <input type="checkbox" className='form-checkbox' />
-                                                        <div>
-                                                            <label htmlFor="">Cập nhật</label>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
+                                {selectHui ? 
+                                    <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
+                                        <input 
+                                            type="checkbox" 
+                                            id='hui' 
+                                            name="hui"
+                                            className='form-checkbox' 
+                                            defaultChecked
+                                        />
+                                        <div>
+                                            <label htmlFor="hui">Quản lý hụi</label>
+                                        </div>
+                                    </div> 
+                                :   <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
+                                        <input 
+                                            type="checkbox" 
+                                            className='form-checkbox'
+                                            id='hui' 
+                                            name="hui"
+                                        />
+                                        <div>
+                                            <label htmlFor="hui">Quản lý hụi</label>
+                                        </div>
+                                    </div>                        
                                 }
-                                <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                    <input type="checkbox" className='form-checkbox' />
-                                    <div>
-                                        <label htmlFor="">Quản lý hụi</label>
-                                    </div>
-                                </div>
-                                <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                    <input type="checkbox" className='form-checkbox' />
-                                    <div>
-                                        <label htmlFor="">Báo cáo</label>
-                                    </div>
-                                </div>
-                                <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                    <input type="checkbox" className='form-checkbox' />
-                                    <div>
-                                        <label htmlFor="">Ngày hoạt động</label>
-                                    </div>
-                                </div>
-                                
                             </div>
                         </div>
                     </div>

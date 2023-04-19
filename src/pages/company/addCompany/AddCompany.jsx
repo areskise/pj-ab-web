@@ -7,8 +7,6 @@ import companyCode from '../../../helpers/companyCode';
 import CompanyAPI from "../../../API/CompanyAPI";
 import { useSelector } from "react-redux";
 import { selectorApplications } from "../../../redux/slice/applicationSlice";
-import RoleAPI from "../../../API/RoleAPI";
-import { selectorPermissions } from "../../../redux/slice/permissionSlice";
 
 const AddCompany = ({setShowAdd, showAdd}) => {
     const [error, setError] = useState(false);
@@ -16,8 +14,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
     const [code, setCode] = useState(null);
     const [formValues, setFormValues] = useState({});
     const applications = useSelector(selectorApplications)
-    const permissions = useSelector(selectorPermissions)
-console.log(permissions);
+
     useEffect(() => {
         setCode(companyCode(formValues.name))
     },[formValues.name]);
@@ -32,9 +29,11 @@ console.log(permissions);
         const defaultApp = applications.find(app => app.title === 'default')
         const huiApp = applications.find(app => app.title === 'hui')
         const app = [defaultApp._id]
+
         if(e.target.hui.checked) {
             app.push(huiApp._id)
         }
+
         const data = {
             name: e.target.name.value,
             title: e.target.code.value,
@@ -43,22 +42,20 @@ console.log(permissions);
             date: e.target.date.value,
             applicationId: app
         }
-        console.log(data);
+        
         if(!e.target.name.value || !e.target.phone.value || !e.target.money.value || !e.target.date.value) {
-            setError(data.values())
+            setError(true)
         } else {
             try {
                 const res = await CompanyAPI.create(data);
-                console.log(res);
                 if(res.ResponseResult.Message === 'Success'){
-                    console.log(res.ResponseResult.Result);
-                    const per = []
-                    // await RoleAPI.create(data);
                     setShowAdd(false)
                     setCode(null)
                     setError(false)
                     alertify.set('notifier', 'position', 'top-right');
-                    alertify.success('Thêm mới thành công!');
+                    alertify.success('Thêm công ty mới thành công!');
+                } else {
+                    setMessErr(res.ResponseResult.Message)
                 }
             }
             catch(err) {
