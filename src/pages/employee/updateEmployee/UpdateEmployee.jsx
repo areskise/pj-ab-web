@@ -16,8 +16,7 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
     const [role, setRole] = useState(null);
     const [roles, setRoles] = useState(null);
     const [formValues, setFormValues] = useState({});
-    const data = new FormData();
-    console.log(role);
+    
     useEffect(() => {
         const fetchCompany = async () => {
             if(showUpdate) {
@@ -56,12 +55,14 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        data.append('userName', e.target.userName.value);
-        data.append('fullName', e.target.fullName.value);
-        data.append('email', e.target.email.value);
-        data.append('phoneNumber', e.target.phoneNumber.value);
-        data.append('status', e.target.status.value);
-        data.append('roleId', e.target.role.value);
+        const data = {
+            userName: e.target.userName.value,
+            fullName: e.target.fullName.value,
+            email: e.target.email.value,
+            phoneNumber: e.target.phoneNumber.value,
+            status: e.target.status.value,
+            roleId: e.target.role.value
+        }
         if(!e.target.userName.value || !e.target.fullName.value || !e.target.role.value) {
             setError(true)
         } else {

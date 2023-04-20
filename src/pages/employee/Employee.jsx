@@ -6,44 +6,53 @@ import AddEmployee from "./addEmployee/AddEmployee";
 import UpdateEmployee from "./updateEmployee/UpdateEmployee";
 import UpdatePass from './updatePass/UpdatePass';
 import DetailEmployee from './detailEmployee/DetailEmployee';
-import { useNavigate } from 'react-router-dom';
-import Cookies from 'universal-cookie';
 import { employeeActions, selectorEmployees } from '../../redux/slice/employeeSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { companyActions, selectorCompanies } from '../../redux/slice/companySlice';
+import { selectorUserCompanies } from '../../redux/slice/companySlice';
+import EmployeeAPI from '../../API/EmployeeAPI';
+import CompanyAPI from '../../API/CompanyAPI';
 
 const Employee = () => {
     const [showAdd, setShowAdd] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
     const [updatePass, setUpdatePass] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
-    // const [employees, setEmployees] = useState([]);
     const [company, setCompany] = useState(null);
     const [page, setPage] = useState(1);
-    const [count, setCount] = useState(0);
-    const [totalPage, setTotalPage] = useState(1);
     const limit = 5;
     const dispatch = useDispatch();
     const employees = useSelector(selectorEmployees)
-    const companies = useSelector(selectorCompanies)
-    const navigate = useNavigate();	
-    const cookies = new Cookies();
-    const access_token = cookies.get('access_token');
-console.log(company);
+    const userCompanies = useSelector(selectorUserCompanies)
+console.log(employees);
     useEffect(() => {
         if(!company || company === 'all') {
-            // const data = {
-            //     limit: limit,
-            //     page: page
-            // }
-            dispatch(employeeActions.setEmployees())
+            const data = {
+                limit: limit,
+                page: page
+            }
+            const fetchEmployee = async () => {
+                const res = await EmployeeAPI.getAll(data)
+                const result = res.ResponseResult.Result
+                dispatch(employeeActions.setEmployees(result))
+            }
+            fetchEmployee();
         } else {
-            dispatch(employeeActions.setUsers(company))
+            const data = {
+                limit: limit,
+                page: page,
+                id: company,
+            }
+            const fetchEmployee = async () => {
+                const res = await CompanyAPI.getUsers(data)
+                const result = res.ResponseResult.Result
+                dispatch(employeeActions.setEmployees(result))
+            }
+            fetchEmployee();
         }
-    }, [showAdd, showUpdate, updatePass, showDetail]);
+    }, [page, limit, company, showAdd, showUpdate, updatePass, showDetail]);
 
     const nextPage = () => {
-        if(page < totalPage) {
+        if(page < employees.totalPages) {
             setPage(page + 1)
         } else {
             setPage(1)
@@ -54,7 +63,7 @@ console.log(company);
         if(page > 1) {
             setPage(page - 1)
         } else {
-            setPage(totalPage)
+            setPage(employees.totalPages)
         }
     }
 
@@ -83,7 +92,7 @@ console.log(company);
                         </div>
                         <select className='select-company' onChange={(e) => setCompany(e.target.value)}>
                             <option value='all'>Tất cả</option>
-                            {companies?.map((company, i) => (
+                            {userCompanies?.map((company, i) => (
                                 <option key={i} value={company._id}>{company.name}</option>
                             ))}
                         </select>
@@ -126,7 +135,7 @@ console.log(company);
                         </tr>
                         </thead>
                         <tbody>
-                            {employees && employees.map((employee, i) => (
+                            {employees.docs?.map((employee, i) => (
                                 <tr key={i}>
                                     <td scope="row" data-label="Họ tên:" onClick={() => setShowDetail(true)}>
                                         {employee.fullName}
@@ -134,7 +143,7 @@ console.log(company);
                                     </td>
                                     <td data-label="Số điện thoại:">{employee.phoneNumber}</td>
                                     <td data-label="Email:" className="employee-word">{employee.email}</td>
-                                    <td data-label="Nhóm quyền:">{employee.roleId}</td>
+                                    <td data-label="Nhóm quyền:">{employee.roleId.name}</td>
                                     <td data-label="Trạng thái:">
                                         {employee.status?
                                             <div className="employee-active">Hoạt động</div>
@@ -160,12 +169,12 @@ console.log(company);
                         </tbody>
                         </table>
                         <div className="p-2 mb-4 d-flex justify-content-between">
-                            <h6 className="mx-md-2 my-0">Tìm thấy: {count?count:0} nhân viên</h6>
+                            <h6 className="mx-md-2 my-0">Tìm thấy: {employees.totalDocs?employees.totalDocs:0} nhân viên</h6>
                             <div className="d-flex align-items-center mx-md-4">
                                 <i className="fa-solid fa-chevron-left" onClick={() => prevPage()}></i>
                                 <div className="d-flex mx-md-4">
-                                    <input className="input-page" value={page}></input>
-                                    <div>/ {totalPage?totalPage:1}</div>
+                                    <input className="input-page" value={page} onChange={(e)=>setPage(e.target.value)}></input>
+                                    <div>/ {employees.totalPages?employees.totalPages:1}</div>
                                 </div>
                                 <i className="fa-solid fa-chevron-right" onClick={() => nextPage()}></i>
                             </div>

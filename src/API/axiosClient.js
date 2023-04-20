@@ -26,9 +26,9 @@ axiosClient.interceptors.request.use(
     // Do something before request is sent
 	// Handle token here ...
 	const cookies = new Cookies();
-	const token = cookies.get('token');
-	if (token) {
-		config.headers['Authorization'] = 'Bearer ' + token;
+	const access_token = cookies.get('access_token');
+	if (access_token) {
+		config.headers['Authorization'] = 'Bearer ' + access_token.token;
 	}
     	return config;
   	}, 

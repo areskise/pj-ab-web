@@ -1,9 +1,10 @@
 import "./addEmployee.css";
 import Modal from 'react-bootstrap/Modal';
+import alertify from 'alertifyjs';
 import { useEffect, useState } from 'react';
 import EmployeeAPI from "../../../API/EmployeeAPI";
 import { useDispatch, useSelector } from "react-redux";
-import { companyActions, selectorCompanies, selectorRoles } from "../../../redux/slice/companySlice";
+import { selectorUserCompanies } from "../../../redux/slice/companySlice";
 import CompanyAPI from "../../../API/CompanyAPI";
 
 const AddEmployee = ({setShowAdd, showAdd}) => {
@@ -16,18 +17,19 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
     const [formValues, setFormValues] = useState({});
     const data = new FormData();
     
-    const companies = useSelector(selectorCompanies)
+    const userCompanies = useSelector(selectorUserCompanies)
     const dispatch = useDispatch();
     useEffect(() => {
         const fetchRoles = async () => {
             const res = await CompanyAPI.getRoles(formValues.company);
             const result = res.ResponseResult.Result
+            console.log(res);
             setRoles(result)
         }
         if(formValues.company) {
             fetchRoles();
         }
-    },[formValues.company]);
+    },[formValues]);
     
 
     const handleChange = (e) => {
@@ -40,23 +42,46 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
         data.append('organizationId', e.target.company.value);
         data.append('userName', e.target.userName.value);
         data.append('password', e.target.password.value);
-        data.append('rePassword', e.target.rePassword.value);
         data.append('fullName', e.target.fullName.value);
         data.append('email', e.target.email.value);
         data.append('phoneNumber', e.target.phoneNumber.value);
         data.append('roleId', e.target.role.value);
-        if(!e.target.company.value || !e.target.userName.value || !e.target.password.value || !e.target.rePassword.value || !e.target.fullName.value || !e.target.role.value) {
+        if(
+            !e.target.company.value || 
+            !e.target.userName.value || 
+            !e.target.password.value || 
+            !e.target.rePassword.value || 
+            !e.target.fullName.value || 
+            !e.target.role.value
+        ) {
             setError(true)
+        } else if(e.target.password.value !== e.target.rePassword.value) {
+            setMessErr('Nhập lại mật khẩu không chính xác!')
+            setError(false)
         } else {
             try {
                 const res = await EmployeeAPI.create(data);
-                console.log(res);
-                setShowAdd(false)
-                setError(false)
+                // console.log(res.ResponseResult.Result.keyValue[0]);
+                if(res.ResponseResult.ErrorCode === 0){
+                    setShowAdd(false)
+                    setError(false)
+                    setMessErr(null)
+                    alertify.set('notifier', 'position', 'top-right');
+                    alertify.success('Thêm nhân viên mới thành công!');
+                } else {
+                    if(res.ResponseResult.Result.code === 11000) {
+                        setError(false)
+                        setMessErr('Tên đăng nhập hoặc Email đã tồn tại!')
+                    } else {
+                        console.log(res.ResponseResult.Message);
+                        setError(false)
+                        setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+                    }
+                }
             }
             catch(err) {
                 console.log(err);
-                setMessErr(err.response.data)
+                setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
             }
         }
     };
@@ -65,11 +90,13 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
         e.preventDefault();
         setError(false)
         setShowAdd(false)
+        setMessErr(null)
     }
 
     const onHide = () => {
         setError(false)
         setShowAdd(false)
+        setMessErr(null)
     }
 
     return (
@@ -94,7 +121,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     onChange={handleChange}
                                 >   
                                     <option value={null} hidden>Chọn công ty</option>
-                                    {companies?.map((company, i) => (
+                                    {userCompanies?.map((company, i) => (
                                         <option key={i} value={company._id}>{company.name}</option>
                                     ))}
                                 </select>
@@ -111,7 +138,6 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     name="userName"
                                     className='form-control'
                                     placeholder="Nhập tên đăng nhập"
-                                    onChange={handleChange}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -127,7 +153,6 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     className="form-control" 
                                     id="floatingPassword" 
                                     placeholder="Nhập mật khẩu"
-                                    onChange={handleChange}
                                 />
                                 <span toggle="#floatingPassword" 
                                 className={ visiblePass ? 'toggle-password fa-regular fa-eye-slash' : 'toggle-password fa-regular fa-eye' } 
@@ -146,7 +171,6 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     className="form-control" 
                                     id="floatingRePassword" 
                                     placeholder="Nhập lại mật khẩu"
-                                    onChange={handleChange}
                                 />
                                 <span toggle="#loatingRePassword" 
                                 className={ visibleRePass ? 'toggle-password fa-regular fa-eye-slash' : 'toggle-password fa-regular fa-eye' } 
@@ -164,7 +188,6 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     name="fullName"
                                     className='form-control'
                                     placeholder="Nhập họ tên"
-                                    onChange={handleChange}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -176,7 +199,6 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     name="email"
                                     className='form-control' 
                                     placeholder='Nhập Email' 
-                                    onChange={handleChange}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -188,7 +210,6 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     name="phoneNumber"
                                     className='form-control' 
                                     placeholder='Nhập SĐT' 
-                                    onChange={handleChange}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -201,9 +222,8 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                 <select 
                                     name="role" 
                                     className='select-company'
-                                    onChange={handleChange}
                                 >
-                                    <option value={null} hidden>Chọn nhóm quyền</option>
+                                    <option value='' hidden>Chọn nhóm quyền</option>
                                     {roles && roles.map((role, i) => (
                                         <option key={i} value={role._id}>{role.name}</option>
                                     ))}

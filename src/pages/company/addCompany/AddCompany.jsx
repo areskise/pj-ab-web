@@ -10,14 +10,14 @@ import { selectorApplications } from "../../../redux/slice/applicationSlice";
 
 const AddCompany = ({setShowAdd, showAdd}) => {
     const [error, setError] = useState(false);
-    const [messErr, setMessErr] = useState(false);
+    const [messErr, setMessErr] = useState(null);
     const [code, setCode] = useState(null);
     const [formValues, setFormValues] = useState({});
     const applications = useSelector(selectorApplications)
 
     useEffect(() => {
         setCode(companyCode(formValues.name))
-    },[formValues.name]);
+    },[formValues]);
     
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -39,28 +39,36 @@ const AddCompany = ({setShowAdd, showAdd}) => {
             title: e.target.code.value,
             phone: +e.target.phone.value,
             money: +e.target.money.value,
-            date: e.target.date.value,
+            startDate: e.target.startDate.value,
             applicationId: app
         }
-        
-        if(!e.target.name.value || !e.target.phone.value || !e.target.money.value || !e.target.date.value) {
+        console.log(data);
+        if(!e.target.name.value || !e.target.phone.value || !e.target.money.value || !e.target.startDate.value) {
             setError(true)
         } else {
             try {
                 const res = await CompanyAPI.create(data);
-                if(res.ResponseResult.Message === 'Success'){
+                if(res.ResponseResult.ErrorCode === 0){
                     setShowAdd(false)
                     setCode(null)
                     setError(false)
+                    setMessErr(null)
                     alertify.set('notifier', 'position', 'top-right');
                     alertify.success('Thêm công ty mới thành công!');
                 } else {
-                    setMessErr(res.ResponseResult.Message)
+                    if(res.ResponseResult.Result.code === 11000) {
+                        setError(false)
+                        setMessErr('Mã công ty đã tồn tại. Vui lòng nhập tên khác!')
+                    } else {
+                        console.log(res.ResponseResult.Message);
+                        setError(false)
+                        setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+                    }
                 }
             }
             catch(err) {
                 console.log(err);
-                setMessErr(err.response.data)
+                setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
             }
         }
     };
@@ -70,12 +78,14 @@ const AddCompany = ({setShowAdd, showAdd}) => {
         setError(false)
         setCode(null)
         setShowAdd(false)
+        setMessErr(null)
     }
 
     const onHide = () => {
         setError(false)
         setCode(null)
         setShowAdd(false)
+        setMessErr(null)
     }
 
     return (
@@ -141,7 +151,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                                     </div>
                                     <input 
                                         type="date" 
-                                        name="date"
+                                        name="startDate"
                                         className='form-control' 
                                         defaultValue={format(new Date(), 'yyyy-MM-dd')} 
                                         min={format(new Date(), 'yyyy-MM-dd')}
@@ -173,7 +183,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                         <div className="error-text">Vui lòng nhập đầy đủ thông tin.</div>
                     }
                     {messErr &&
-                        <div className="error-text">Lỗi do hệ thống vui lòng liên hệ với admin!</div>
+                        <div className="error-text">{messErr}</div>
                     }
                     </div>
                 </Modal.Body>

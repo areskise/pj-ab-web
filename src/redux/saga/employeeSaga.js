@@ -1,17 +1,9 @@
 import { call, put, takeLeading } from 'redux-saga/effects';
 import { employeeActions } from '../slice/employeeSlice';
-import EmployeeAPI from '../../API/EmployeeAPI';
 import CompanyAPI from '../../API/CompanyAPI';
 
 function* fetchEmployees(action) {
-    try {
-        const res = yield call(EmployeeAPI.getAll, action.payload);
-        const result = res.ResponseResult.Result
-        yield put(employeeActions.setEmployees(result));
-    } 
-    catch(err) {
-        console.log(err);
-    }
+        yield put(employeeActions.setEmployees(action.payload));
 };
 
 function* fetchUsers(action) {

@@ -26,7 +26,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
 
     useEffect(() => {
         setCode(companyCode(formValues.name))
-    },[formValues.name]);
+    },[formValues]);
     
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -49,26 +49,34 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
             title: e.target.code.value,
             phone: +e.target.phone.value,
             money: +e.target.money.value,
-            date: e.target.date.value,
+            startDate: e.target.startDate.value,
             status: e.target.status.value,
             applicationId: app
         }
-        if(!e.target.name.value || !e.target.phone.value || !e.target.money.value || !e.target.date.value) {
+        if(!e.target.name.value || !e.target.phone.value || !e.target.money.value || !e.target.startDate.value) {
             setError(true)
         } else {
             try {
                 const res = await CompanyAPI.update(data);
-                console.log(res);
-                setShowUpdate(false)
-                setCode(null)
-                setSelectHui(false)
-                setError(false)                
-                alertify.set('notifier', 'position', 'top-right');
-                alertify.success('Cập nhật thành công!');
+                if(res.ResponseResult.ErrorCode === 0){
+                    setShowUpdate(false)
+                    setCode(null)
+                    setError(false)
+                    setMessErr(null)
+                    alertify.set('notifier', 'position', 'top-right');
+                    alertify.success('Cập nhật công ty thành công!');
+                } else {
+                    if(res.ResponseResult.Result.code === 11000) {
+                        setMessErr('Mã công ty đã tồn tại. Vui lòng nhập tên khác!')
+                    } else {
+                        console.log(res.ResponseResult.Message);
+                        setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+                    }
+                }
             }
             catch(err) {
                 console.log(err);
-                setMessErr(err.response.data)
+                setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
             }
         }
     };
@@ -79,6 +87,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
         setCode(null)
         setShowUpdate(false)
         setSelectHui(false)
+        setMessErr(null)
     }
 
     const onHide = () => {
@@ -86,6 +95,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
         setCode(null)
         setShowUpdate(false)
         setSelectHui(false)
+        setMessErr(null)
     }
 
     return (
@@ -157,14 +167,15 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                     </div>
                                     <input 
                                         type="date" 
-                                        name="date"
+                                        name="startDate"
                                         className='form-control' 
                                         placeholder='Nhập từ khóa tìm kiếm' 
-                                        defaultValue={showUpdate.createdAt?format(new Date(showUpdate.createdAt), 'yyyy-MM-dd'):format(new Date(), 'yyyy-MM-dd')}
-                                        min={showUpdate.createdAt?format(new Date(showUpdate.createdAt), 'yyyy-MM-dd'):format(new Date(), 'yyyy-MM-dd')}
+                                        defaultValue={showUpdate.startDate?format(new Date(showUpdate.startDate), 'yyyy-MM-dd'):format(new Date(), 'yyyy-MM-dd')}
+                                        min={showUpdate.startDate?format((new Date(showUpdate.startDate)<new Date())?new Date(showUpdate.startDate):new Date(), 'yyyy-MM-dd'):format(new Date(), 'yyyy-MM-dd')}
                                         onChange={handleChange}
                                     />
                                 </div>
+                                {showUpdate.status?
                                 <div className='d-flex m-3 align-items-center justify-content-center'>
                                     <div className='d-flex mx-4 align-items-center justify-content-center'>
                                         <input type="radio" id="Active" className='form-checkbox' name='status' value={true} defaultChecked/>
@@ -179,6 +190,22 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                         </div>
                                     </div>
                                 </div>
+                                :
+                                <div className='d-flex m-3 align-items-center justify-content-center'>
+                                    <div className='d-flex mx-4 align-items-center justify-content-center'>
+                                        <input type="radio" id="Active" className='form-checkbox' name='status' value={true}/>
+                                        <div>
+                                            <label htmlFor="Active" className='company-active'>Hoạt động</label>
+                                        </div>
+                                    </div>
+                                    <div className='d-flex mx-4 align-items-center justify-content-center'>
+                                        <input type="radio" id="Disable" className='form-checkbox' name='status' value={false} defaultChecked/>
+                                        <div>
+                                            <label htmlFor="Disable" className='company-disable'>Không hoạt động</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                }
                         </div>
                         <div>
                             <h5 className='title'>THÊM CHỨC NĂNG</h5>

@@ -12,13 +12,12 @@ import Cookies from 'universal-cookie';
 import { companyActions, selectorCompanies } from "../../redux/slice/companySlice";
 import { permissionActions } from "../../redux/slice/permissionSlice";
 import { applicationActions } from "../../redux/slice/applicationSlice";
+import CompanyAPI from "../../API/CompanyAPI";
 
 const Company = () => {
     const [showAdd, setShowAdd] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
     const [page, setPage] = useState(1);
-    const [count, setCount] = useState(0);
-    const [totalPage, setTotalPage] = useState(1);
     const limit = 5;
     const companies = useSelector(selectorCompanies)
 
@@ -26,23 +25,29 @@ const Company = () => {
     const access_token = cookies.get('access_token');
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    
+
+    console.log(companies);
     useEffect(() => {
         if(access_token) {
-            // const data = {
-                //     limit: limit,
-                //     page: page
-                // }
-            dispatch(companyActions.setCompanies())
-            dispatch(applicationActions.setApplications())
-            dispatch(permissionActions.setPermissions())
+            const data = {
+                    limit: limit,
+                    page: page
+                }
+            const fetchCompany = async () => {
+                const res = await CompanyAPI.getAll(data)
+                const result = res.ResponseResult.Result
+                dispatch(companyActions.setCompanies(result))
+                dispatch(applicationActions.setApplications())
+                dispatch(permissionActions.setPermissions())
+            }
+            fetchCompany();
         } else {
             navigate('/');
         }
-    }, [showAdd, showUpdate]);
+    }, [page, limit, showAdd, showUpdate]);
 
     const nextPage = () => {
-        if(page < totalPage) {
+        if(page < companies.totalPages) {
             setPage(page + 1)
         } else {
             setPage(1)
@@ -53,10 +58,9 @@ const Company = () => {
         if(page > 1) {
             setPage(page - 1)
         } else {
-            setPage(totalPage)
+            setPage(companies.totalPages)
         }
     }
-
 
     return(
         <div className="company body-container bg-light">
@@ -81,7 +85,7 @@ const Company = () => {
                                 <i className="p-1 fa-solid fa-arrow-down-up-across-line"></i>
                             </button>
                             <button className='btn btn-sort'>
-                                Ngày tạo
+                                Ngày hoạt động
                                 <i className="p-1 fa-solid fa-arrow-down-up-across-line"></i>
                             </button>
                             <button className='btn btn-sort'>
@@ -105,7 +109,7 @@ const Company = () => {
                             </th>
                             <th scope="col">
                                 <div className='d-flex align-items-end'>
-                                    Ngày tạo 
+                                    Ngày hoạt động 
                                     <i className="p-1 fa-solid fa-arrow-down-up-across-line"></i>
                                 </div>
                             </th>
@@ -119,7 +123,7 @@ const Company = () => {
                         </tr>
                         </thead>
                         <tbody>
-                            {companies && companies.map((company, i) => (
+                            {companies.docs?.map((company, i) => (
                                 <tr key={i}>
                                     <td scope="row" data-label="Mã CT:">{company.title}</td>
                                     <td data-label="Tên công ty:" className="company-word">{company.name}</td>
@@ -133,7 +137,7 @@ const Company = () => {
                                         format: '%v %s' // %s is the symbol and %v is the value
                                         })}
                                     </td>
-                                    <td data-label="Ngày tạo:">{format(new Date(company.createdAt), 'dd/MM/yyyy')}</td>
+                                    <td data-label="Ngày hoạt động:">{format(company.startDate?new Date(company.startDate):new Date(company.createdAt), 'dd/MM/yyyy')}</td>
                                     <td data-label="Trạng thái:">
                                         {company.status?
                                             <div className="company-active">Hoạt động</div>
@@ -155,12 +159,12 @@ const Company = () => {
                         </tbody>
                         </table>
                         <div className="p-2 mb-4 d-flex justify-content-between">
-                            <h6 className="mx-md-2 my-0">Tìm thấy: {count?count:0} công ty</h6>
+                            <h6 className="mx-md-2 my-0">Tìm thấy: {companies.totalDocs?companies.totalDocs:0} công ty</h6>
                             <div className="d-flex align-items-center mx-md-4">
                                 <i className="p-1 fa-solid fa-chevron-left" onClick={() => prevPage()}></i>
                                 <div className="d-flex mx-md-4">
-                                    <input className="input-page" defaultValue={page}></input>
-                                    <div>/ {totalPage?totalPage:1}</div>
+                                    <input className="input-page" value={page} onChange={(e)=>setPage(e.target.value)}></input>
+                                    <div>/ {companies.totalPages?companies.totalPages:1}</div>
                                 </div>
                                 <i className="p-1 fa-solid fa-chevron-right" onClick={() => nextPage()}></i>
                             </div>

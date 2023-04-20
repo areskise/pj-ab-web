@@ -2,12 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     companies: [],
-    pagination: {
-        page: 1,
-        limit: 5,
-        count: 0,
-        totalPage: 1,
-    }
+    userCompanies: [],
 };
 
 const companySlice = createSlice({
@@ -17,12 +12,16 @@ const companySlice = createSlice({
         setCompanies(state, action) {
             state.companies = action.payload
         },
+        setUserCompanies(state, action) {
+            state.userCompanies = action.payload
+        },
     }
 });
 
 export const companyActions = companySlice.actions;
 
 export const selectorCompanies = state => state.company.companies
+export const selectorUserCompanies = state => state.company.userCompanies
 
 const companyReducer = companySlice.reducer;
 export default companyReducer;
