@@ -6,7 +6,6 @@ function* fetchPermissions(action) {
     try {
         const res = yield call(PermissionAPI.getAll, action.payload);
         const result = res.ResponseResult.Result
-        console.log(res);
         yield put(permissionActions.setPermissions(result));
     } 
     catch(err) {

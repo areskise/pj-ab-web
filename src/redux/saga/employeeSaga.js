@@ -3,11 +3,10 @@ import { employeeActions } from '../slice/employeeSlice';
 import CompanyAPI from '../../API/CompanyAPI';
 
 function* fetchEmployees(action) {
-        yield put(employeeActions.setEmployees(action.payload));
+    yield put(employeeActions.setEmployees(action.payload));
 };
 
 function* fetchUsers(action) {
-    console.log(action.payload);
     try {
         const res = yield call(CompanyAPI.getUsers, action.payload);
         const result = res.ResponseResult.Result

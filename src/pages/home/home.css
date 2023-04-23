@@ -31,6 +31,7 @@
     background-color: #D5DEFF;
     border-radius: 10px;
     font-size: 20px;
+    height: 160px;
 }
 
 .count-hui {
@@ -38,6 +39,7 @@
     background-color: #FFE2FC;
     border-radius: 10px;
     font-size: 20px;
+    height: 160px;
 }
 
 .list-hui {
@@ -65,27 +67,37 @@
     margin: 0;
 }
 
-@media screen and (max-width: 992px) {
-    .home-container .form-container {
+@media screen and (max-width: 1200px) {
+    .home {
         display: block;
+    }
+
+    .home .hui,
+    .home .dashboard {
+        width: auto;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .home {
+        display: block;
+    }
+
+    .home .hui,
+    .home .dashboard {
+        width: auto;
     }
 }
 
 @media screen and (max-width: 576px) {
-    .home-container .btn-control {
-        height: 62px;
+    .home .dashboard {
+        display: flex;
+        flex-direction: column;
+        padding: .5rem 0;
     }
 
-    .home-container .title {
-        margin-left: 0;
-        padding-top: 16px;
-    }
-
-    .home-container .form-check {
-        margin: 16px 0 0 0;
-    }
-
-    .home-container .label {
-        width: 132px;
+    .home-container {
+        width: auto;
+        margin: 1rem;
     }
 }

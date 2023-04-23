@@ -37,12 +37,12 @@ const AddCompany = ({setShowAdd, showAdd}) => {
         const data = {
             name: e.target.name.value,
             title: e.target.code.value,
-            phone: +e.target.phone.value,
-            money: +e.target.money.value,
+            phone: e.target.phone.value,
+            money: e.target.money.value,
             startDate: e.target.startDate.value,
             applicationId: app
         }
-        console.log(data);
+        
         if(!e.target.name.value || !e.target.phone.value || !e.target.money.value || !e.target.startDate.value) {
             setError(true)
         } else {
@@ -54,16 +54,14 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                     setError(false)
                     setMessErr(null)
                     alertify.set('notifier', 'position', 'top-right');
-                    alertify.success('Thêm công ty mới thành công!');
+                    alertify.success('Thêm mới thành công!');
+                } else if(res.ResponseResult.Result.code === 11000) {
+                    setError(false)
+                    setMessErr('Mã công ty đã tồn tại. Vui lòng nhập tên khác!')
                 } else {
-                    if(res.ResponseResult.Result.code === 11000) {
-                        setError(false)
-                        setMessErr('Mã công ty đã tồn tại. Vui lòng nhập tên khác!')
-                    } else {
-                        console.log(res.ResponseResult.Message);
-                        setError(false)
-                        setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
-                    }
+                    console.log(res.ResponseResult.Message);
+                    setError(false)
+                    setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
                 }
             }
             catch(err) {

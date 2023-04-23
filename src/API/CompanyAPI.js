@@ -1,12 +1,12 @@
 import axiosClient from "./axiosClient";
 
 const CompanyAPI = {
-    getAll: async (data) =>  {
-        return axiosClient.get(`/organization/getAll?page=${data.page}&limit=${data.limit}`);
+    getAll: async () =>  {
+        return axiosClient.get(`/organization/getAll`);
     },
 
-    getList: async () =>  {
-        return axiosClient.get(`/organization/list`);
+    getList: async (data) =>  {
+        return axiosClient.get(`/organization/list?page=${data.page}&limit=${data.limit}&money=${data.money}&startDate=${data.startDate}&status=${data.status}`);
     },
 
     getById: async (id) => {
@@ -14,7 +14,8 @@ const CompanyAPI = {
     },
 
     getUsers: async (data) => {
-        return axiosClient.get(`/organization/getUsers?limit=${data.limit}&page=${data.page}&query={"organizationId":${data.id}}`);
+        console.log(data);
+        return axiosClient.get(`/organization/getUsers?limit=${data.limit}&page=${data.page}&organizationId=${data.id}&status=${data.status}`);
     },
 
     getRoles: async (id) => {

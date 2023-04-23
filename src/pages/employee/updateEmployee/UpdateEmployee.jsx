@@ -1,28 +1,37 @@
 import "./updateEmployee.css";
 import Modal from 'react-bootstrap/Modal';
+import alertify from 'alertifyjs';
 import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
-import { useNavigate } from "react-router-dom";
-import { selectorCompanies } from "../../../redux/slice/companySlice";
-import { useSelector } from "react-redux";
 import EmployeeAPI from "../../../API/EmployeeAPI";
 import CompanyAPI from "../../../API/CompanyAPI";
 import RoleAPI from "../../../API/RoleAPI";
 
-const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
+const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
-    const [company, setCompany] = useState(null);
+    const [company, setCompany] = useState([]);
+    const [defaultCompany, setDefaultCompany] = useState(null);
     const [role, setRole] = useState(null);
     const [roles, setRoles] = useState(null);
     const [formValues, setFormValues] = useState({});
-    
+    const data = new FormData();
+console.log(company);
+
     useEffect(() => {
         const fetchCompany = async () => {
             if(showUpdate) {
-                const resCompany = await EmployeeAPI.getOrganizations(showUpdate._id);
-                const companyResult = resCompany.ResponseResult.Result
-                setCompany(companyResult[0])
+                if(selectCompany==='all') {
+                    const resCompany = await EmployeeAPI.getOrganizations(showUpdate._id);
+                    const companyResult = resCompany.ResponseResult.Result
+                    setCompany(companyResult)
+                    setDefaultCompany(companyResult[0])
+                } else {
+                    const resCompany = await CompanyAPI.getById(selectCompany);
+                    const companyResult = resCompany.ResponseResult.Result
+                    console.log(resCompany);
+                    setCompany(companyResult)
+                    setDefaultCompany(companyResult[0])
+                }
                 const resRole = await RoleAPI.getById(showUpdate.roleId);
                 const roleResult = resRole.ResponseResult.Result
                 setRole(roleResult)
@@ -32,21 +41,21 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
             }
         }
         fetchCompany()
-    },[showUpdate]);
+    },[showUpdate, formValues]);
 
     useEffect(() => {
-        const fetchCompany = async () => {
-           
+        const fetchRole = async () => {
         if(company) {
-            const resRoles = await CompanyAPI.getRoles(company.organizationId._id);
+            const resRoles = await CompanyAPI.getRoles(defaultCompany.organizationId._id);
             const rolesResult = resRoles.ResponseResult.Result
+            console.log(resRoles);
             setRoles(rolesResult)
         } else {
             setRoles(null)
         }
         }
-        fetchCompany()
-    },[company]);
+        fetchRole()
+    },[company, formValues]);
     
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -55,26 +64,38 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = {
-            userName: e.target.userName.value,
-            fullName: e.target.fullName.value,
-            email: e.target.email.value,
-            phoneNumber: e.target.phoneNumber.value,
-            status: e.target.status.value,
-            roleId: e.target.role.value
-        }
-        if(!e.target.userName.value || !e.target.fullName.value || !e.target.role.value) {
+        data.append('_id', showUpdate._id);
+        data.append('organizationId', e.target.company.value);
+        data.append('fullName', e.target.fullName.value);
+        data.append('email', e.target.email.value);
+        data.append('phoneNumber', e.target.phoneNumber.value);
+        data.append('status', e.target.status.value);
+        data.append('roleId', e.target.role.value);
+        if( !e.target.fullName.value ) {
             setError(true)
         } else {
             try {
                 const res = await EmployeeAPI.update(data);
-                console.log(res);
-                setShowUpdate(false)
-                setError(false)
+                if(res.ResponseResult.ErrorCode === 0){
+                    setShowUpdate(false)
+                    setError(false)
+                    setMessErr(null)
+                    alertify.set('notifier', 'position', 'top-right');
+                    alertify.success('Cập nhật thành công!');
+                } else {
+                    if(res.ResponseResult.Result.code === 11000) {
+                        setError(false)
+                        setMessErr('Mã công ty đã tồn tại. Vui lòng nhập tên khác!')
+                    } else {
+                        console.log(res.ResponseResult.Message);
+                        setError(false)
+                        setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+                    }
+                }
             }
             catch(err) {
-                console.log(err);
-                setMessErr(err.response.data)
+                console.log(err.message);
+                setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
             }
         }
     };
@@ -108,12 +129,26 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
                                         <label style={{color: 'red'}}>*</label>
                                         </label>
                                     </div>
-                                    <input 
-                                        type="text" 
-                                        className='form-control' 
-                                        value={company?company.organizationId.name:null} 
-                                        disabled
-                                    />
+                                {/* {selectCompany==='all'? */}
+                                    <select 
+                                        name="company" 
+                                        className='select-company'
+                                        onChange={handleChange}
+                                    >
+                                        <option value={defaultCompany?defaultCompany.organizationId._id:null} hidden>{defaultCompany?defaultCompany.organizationId.name:null}</option>
+                                        {company?.map((company, i) => (
+                                            <option key={i} value={company?company.organizationId._id:null}>{company?company.organizationId.name:null}</option>
+                                        ))}
+                                    </select>
+                                    {/* :
+                                    <select 
+                                        name="company" 
+                                        className='select-company'
+                                        onChange={handleChange}
+                                    >
+                                        <option value={selectCompany?selectCompany._id:null} hidden>{selectCompany?selectCompany.name:null}</option>
+                                    </select>
+                                    } */}
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                 <div className='label'>
@@ -128,7 +163,7 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
                                     className='form-control'
                                     placeholder='Nhập tên đăng nhập'
                                     defaultValue={showUpdate.userName}
-                                    onChange={handleChange}
+                                    disabled
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -144,7 +179,6 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
                                     className='form-control'
                                     placeholder='Nhập họ tên'
                                     defaultValue={showUpdate.fullName}
-                                    onChange={handleChange}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -157,7 +191,6 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
                                     className='form-control' 
                                     placeholder='Nhập Email' 
                                     defaultValue={showUpdate.email}
-                                    onChange={handleChange}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -170,7 +203,6 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
                                     className='form-control' 
                                     placeholder='Nhập SĐT' 
                                     defaultValue={showUpdate.phoneNumber}
-                                    onChange={handleChange}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -183,7 +215,6 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
                                 <select 
                                     name="role" 
                                     className='select-company'
-                                    onChange={handleChange}
                                 >
                                     {role ? 
                                     <option value={role.roleId} hidden>{role.name}</option> 
@@ -197,7 +228,7 @@ const UpdateEmployee = ({setShowUpdate, showUpdate}) => {
                             </div>
                             <div className='d-flex m-3 align-items-center justify-content-center'>
                                 <div className='d-flex mx-4 align-items-center justify-content-center'>
-                                    <input type="radio" id="Active" className='form-checkbox' name='status' value={true} checked/>
+                                    <input type="radio" id="Active" className='form-checkbox' name='status' value={true} defaultChecked/>
                                     <div>
                                         <label htmlFor="Active" className='employee-active'>Hoạt động</label>
                                     </div>

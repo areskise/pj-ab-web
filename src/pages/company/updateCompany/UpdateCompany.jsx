@@ -64,18 +64,20 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                     setError(false)
                     setMessErr(null)
                     alertify.set('notifier', 'position', 'top-right');
-                    alertify.success('Cập nhật công ty thành công!');
+                    alertify.success('Cập nhật thành công!');
                 } else {
                     if(res.ResponseResult.Result.code === 11000) {
+                        setError(false)
                         setMessErr('Mã công ty đã tồn tại. Vui lòng nhập tên khác!')
                     } else {
                         console.log(res.ResponseResult.Message);
+                        setError(false)
                         setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
                     }
                 }
             }
             catch(err) {
-                console.log(err);
+                console.log(err.message);
                 setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
             }
         }

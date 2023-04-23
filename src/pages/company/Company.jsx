@@ -10,7 +10,6 @@ import { format } from 'date-fns';
 import currencyFormatter from 'currency-formatter';
 import Cookies from 'universal-cookie';
 import { companyActions, selectorCompanies } from "../../redux/slice/companySlice";
-import { permissionActions } from "../../redux/slice/permissionSlice";
 import { applicationActions } from "../../redux/slice/applicationSlice";
 import CompanyAPI from "../../API/CompanyAPI";
 
@@ -18,6 +17,12 @@ const Company = () => {
     const [showAdd, setShowAdd] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
     const [page, setPage] = useState(1);
+    const [sortMoney, setSortMoney] = useState('');
+    const [sortDate, setSortDate] = useState('');
+    const [sortStatus, setSortStatus] = useState('');
+    const [iconMoney, setIcontMoney] = useState("p-1 fa-solid fa-arrow-right-arrow-left");
+    const [iconDate, setIcontDate] = useState("p-1 fa-solid fa-arrow-right-arrow-left");
+    const [iconStatus, setIcontStatus] = useState("p-1 fa-solid fa-arrow-right-arrow-left");
     const limit = 5;
     const companies = useSelector(selectorCompanies)
 
@@ -26,37 +31,77 @@ const Company = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    console.log(companies);
     useEffect(() => {
         if(access_token) {
             const data = {
-                    limit: limit,
-                    page: page
-                }
+                limit: limit,
+                page: page,
+                money: sortMoney,
+                startDate: sortDate,
+                status: sortStatus,
+            }
             const fetchCompany = async () => {
-                const res = await CompanyAPI.getAll(data)
+                const res = await CompanyAPI.getList(data)
                 const result = res.ResponseResult.Result
                 dispatch(companyActions.setCompanies(result))
                 dispatch(applicationActions.setApplications())
-                dispatch(permissionActions.setPermissions())
             }
             fetchCompany();
         } else {
             navigate('/');
         }
-    }, [page, limit, showAdd, showUpdate]);
+    }, [page, showAdd, showUpdate, sortMoney, sortDate, sortStatus]);
+
+    const sortByMoney = () => {
+        if(sortMoney === '') {
+            setSortMoney(1)
+            setIcontMoney('p-1 fa-solid fa-arrow-up-short-wide')
+        } else if(sortMoney === 1) {
+            setSortMoney(-1)
+            setIcontMoney('p-1 fa-solid fa-arrow-down-wide-short')
+        } else {
+            setSortMoney('')
+            setIcontMoney('p-1 fa-solid fa-arrow-right-arrow-left')
+        }
+    }
+
+    const sortByDate = () => {
+        if(sortDate === '') {
+            setSortDate(1)
+            setIcontDate('p-1 fa-solid fa-arrow-up-short-wide')
+        } else if(sortDate === 1) {
+            setSortDate(-1)
+            setIcontDate('p-1 fa-solid fa-arrow-down-wide-short')
+        } else {
+            setSortDate('')
+            setIcontDate('p-1 fa-solid fa-arrow-right-arrow-left')
+        }
+    }
+
+    const sortByStatus = () => {
+        if(sortStatus === '') {
+            setSortStatus(1)
+            setIcontStatus('p-1 status-icon company-disable fa-solid fa-circle')
+        } else if(sortStatus === 1) {
+            setSortStatus(-1)
+            setIcontStatus('p-1 status-icon company-active fa-solid fa-circle')
+        } else {
+            setSortStatus('')
+            setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
+        }
+    }
 
     const nextPage = () => {
-        if(page < companies.totalPages) {
-            setPage(page + 1)
+        if(companies.hasNextPage) {
+            setPage(companies.nextPage)
         } else {
             setPage(1)
         }
     }
     
     const prevPage = () => {
-        if(page > 1) {
-            setPage(page - 1)
+        if(companies.hasPrevPage) {
+            setPage(companies.prevPage)
         } else {
             setPage(companies.totalPages)
         }
@@ -64,7 +109,7 @@ const Company = () => {
 
     return(
         <div className="company body-container bg-light">
-            <Header/>
+            <Header showAdd={showAdd} showUpdate={showUpdate}/>
             <SideBar/>
             <AddCompany showAdd={showAdd} setShowAdd={setShowAdd} />
             <UpdateCompany showUpdate={showUpdate} setShowUpdate={setShowUpdate}/>
@@ -82,15 +127,24 @@ const Company = () => {
                         <div className='btn-sort-container'>
                             <button className='btn btn-sort'>
                                 Vốn
-                                <i className="p-1 fa-solid fa-arrow-down-up-across-line"></i>
+                                <i 
+                                    className={iconMoney} 
+                                    onClick={sortByMoney}
+                                ></i>
                             </button>
                             <button className='btn btn-sort'>
                                 Ngày hoạt động
-                                <i className="p-1 fa-solid fa-arrow-down-up-across-line"></i>
+                                <i 
+                                    className={iconDate}
+                                    onClick={sortByDate}
+                                ></i>
                             </button>
                             <button className='btn btn-sort'>
                                 Trạng thái
-                                <i className="p-1 fa-solid fa-arrow-down-up-across-line"></i>
+                                <i 
+                                    className={iconStatus}
+                                    onClick={sortByStatus}
+                                ></i>
                             </button>
                         </div>
                     </div>
@@ -104,19 +158,28 @@ const Company = () => {
                             <th scope="col">
                                 <div className='d-flex align-items-end'> 
                                     Số vốn 
-                                    <i className="p-1 fa-solid fa-arrow-down-up-across-line"></i>
+                                    <i 
+                                        className={iconMoney}
+                                        onClick={sortByMoney}
+                                    ></i>
                                 </div>
                             </th>
                             <th scope="col">
                                 <div className='d-flex align-items-end'>
                                     Ngày hoạt động 
-                                    <i className="p-1 fa-solid fa-arrow-down-up-across-line"></i>
+                                    <i 
+                                        className={iconDate}
+                                        onClick={sortByDate}
+                                    ></i>
                                 </div>
                             </th>
                             <th scope="col">
                                 <div className='d-flex align-items-end'>
                                     Trạng thái 
-                                    <i className="p-1 fa-solid fa-arrow-down-up-across-line"></i>
+                                    <i 
+                                        className={iconStatus}
+                                        onClick={sortByStatus}
+                                    ></i>
                                 </div>
                             </th>
                             <th scope="col" className="company-center">Chức năng</th>
@@ -137,7 +200,7 @@ const Company = () => {
                                         format: '%v %s' // %s is the symbol and %v is the value
                                         })}
                                     </td>
-                                    <td data-label="Ngày hoạt động:">{format(company.startDate?new Date(company.startDate):new Date(company.createdAt), 'dd/MM/yyyy')}</td>
+                                    <td data-label="Ngày hoạt động:">{format(new Date(company.startDate), 'dd/MM/yyyy')}</td>
                                     <td data-label="Trạng thái:">
                                         {company.status?
                                             <div className="company-active">Hoạt động</div>
@@ -163,7 +226,7 @@ const Company = () => {
                             <div className="d-flex align-items-center mx-md-4">
                                 <i className="p-1 fa-solid fa-chevron-left" onClick={() => prevPage()}></i>
                                 <div className="d-flex mx-md-4">
-                                    <input className="input-page" value={page} onChange={(e)=>setPage(e.target.value)}></input>
+                                    <input className="input-page" value={companies.page} onChange={(e)=>setPage(e.target.value)}></input>
                                     <div>/ {companies.totalPages?companies.totalPages:1}</div>
                                 </div>
                                 <i className="p-1 fa-solid fa-chevron-right" onClick={() => nextPage()}></i>

@@ -3,12 +3,11 @@ import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
 import { useEffect, useState } from 'react';
 import EmployeeAPI from "../../../API/EmployeeAPI";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectorUserCompanies } from "../../../redux/slice/companySlice";
 import CompanyAPI from "../../../API/CompanyAPI";
 
 const AddEmployee = ({setShowAdd, showAdd}) => {
-    // const [selectComany, setSelectCompany] = useState('');
     const [visiblePass, setVisiblePass] = useState(false);
     const [visibleRePass, setVisibleRePass] = useState(false);
     const [error, setError] = useState(false);
@@ -16,14 +15,12 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
     const [roles, setRoles] = useState([]);
     const [formValues, setFormValues] = useState({});
     const data = new FormData();
-    
     const userCompanies = useSelector(selectorUserCompanies)
-    const dispatch = useDispatch();
+    
     useEffect(() => {
         const fetchRoles = async () => {
             const res = await CompanyAPI.getRoles(formValues.company);
             const result = res.ResponseResult.Result
-            console.log(res);
             setRoles(result)
         }
         if(formValues.company) {
@@ -61,13 +58,12 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
         } else {
             try {
                 const res = await EmployeeAPI.create(data);
-                // console.log(res.ResponseResult.Result.keyValue[0]);
                 if(res.ResponseResult.ErrorCode === 0){
                     setShowAdd(false)
                     setError(false)
                     setMessErr(null)
                     alertify.set('notifier', 'position', 'top-right');
-                    alertify.success('Thêm nhân viên mới thành công!');
+                    alertify.success('Thêm mới thành công!');
                 } else {
                     if(res.ResponseResult.Result.code === 11000) {
                         setError(false)

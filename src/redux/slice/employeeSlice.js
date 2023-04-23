@@ -2,12 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     employees: [],
-    pagination: {
-        page: 1,
-        limit: 5,
-        count: 0,
-        totalPage: 1,
-    }
 };
 
 const employeeSlice = createSlice({

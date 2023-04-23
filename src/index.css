@@ -6,6 +6,7 @@ html, body, #root {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  user-select: none;
 }
 
 code {
@@ -122,6 +123,10 @@ input[type=number] {
 i:hover {
   opacity: 0.8;
   cursor: pointer;
+}
+
+.table tbody {
+  user-select: text;
 }
 
 @media screen and (max-width: 1200px) {

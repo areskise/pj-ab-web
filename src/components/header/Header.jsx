@@ -7,40 +7,32 @@ import { companyActions, selectorUserCompanies } from "../../redux/slice/company
 import Cookies from 'universal-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import CompanyAPI from '../../API/CompanyAPI';
-import EmployeeAPI from '../../API/EmployeeAPI';
 
-const Header = () => {
+const Header = ({showAdd, showUpdate}) => {
     const [showModal, setShowModal] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const [navUser, setNavUser] = useState(false);
     const [selectComany, setSelectCompany] = useState([]);
-    const userCompanies = useSelector(selectorUserCompanies)
-
+    
 	const cookies = new Cookies();
     const access_token = cookies.get('access_token');
     const userName = access_token.userName
-    const userId = access_token.id
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    const userCompanies = useSelector(selectorUserCompanies)
+    
     useEffect(() => {
         const fetchUserCompanies = async () => {
-            // const res = await CompanyAPI.getList()
-            const res = await EmployeeAPI.getOrganizations(userId);
+            const res = await CompanyAPI.getAll()
             const result = res.ResponseResult.Result
-            console.log(res);
             dispatch(companyActions.setUserCompanies(result))
         }
         fetchUserCompanies();
-    }, []);
-
-    useEffect(() => {
-        
-    }, [selectComany]);
+    }, [showAdd, showUpdate]);
 
     const handleLogout = () => {
-        navigate('/');
         cookies.remove('access_token');
+        navigate('/');
     }
 
     return (
@@ -53,7 +45,7 @@ const Header = () => {
                         </a>
                     <div className='d-flex'>
                         <select className='select-company' onChange={(e) => setSelectCompany(e.target.value)}>
-                            {userCompanies && userCompanies?.map((company, i) => (
+                            {userCompanies?.map((company, i) => (
                                 <option key={i} value={company.name}>{company.name}</option>
                             ))}
                         </select>

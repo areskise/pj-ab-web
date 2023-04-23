@@ -17,22 +17,26 @@ const Employee = () => {
     const [showUpdate, setShowUpdate] = useState(false);
     const [updatePass, setUpdatePass] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
-    const [company, setCompany] = useState(null);
+    const [selectCompany, setSelectCompany] = useState('all');
     const [page, setPage] = useState(1);
+    const [sortStatus, setSortStatus] = useState('');
+    const [iconStatus, setIcontStatus] = useState("p-1 fa-solid fa-arrow-right-arrow-left");
     const limit = 5;
     const dispatch = useDispatch();
     const employees = useSelector(selectorEmployees)
     const userCompanies = useSelector(selectorUserCompanies)
-console.log(employees);
+
     useEffect(() => {
-        if(!company || company === 'all') {
+        if(selectCompany === 'all') {
             const data = {
                 limit: limit,
-                page: page
+                page: page,
+                status: sortStatus,
             }
             const fetchEmployee = async () => {
                 const res = await EmployeeAPI.getAll(data)
                 const result = res.ResponseResult.Result
+                console.log(res);
                 dispatch(employeeActions.setEmployees(result))
             }
             fetchEmployee();
@@ -40,28 +44,43 @@ console.log(employees);
             const data = {
                 limit: limit,
                 page: page,
-                id: company,
+                id: selectCompany,
+                status: sortStatus,
             }
             const fetchEmployee = async () => {
                 const res = await CompanyAPI.getUsers(data)
                 const result = res.ResponseResult.Result
+                console.log(res);
                 dispatch(employeeActions.setEmployees(result))
             }
             fetchEmployee();
         }
-    }, [page, limit, company, showAdd, showUpdate, updatePass, showDetail]);
+    }, [page, limit, selectCompany, showAdd, showUpdate, updatePass, showDetail, sortStatus]);
+
+    const sortByStatus = () => {
+        if(sortStatus === '') {
+            setSortStatus(1)
+            setIcontStatus('p-1 status-icon employee-disable fa-solid fa-circle')
+        } else if(sortStatus === 1) {
+            setSortStatus(-1)
+            setIcontStatus('p-1 status-icon employee-active fa-solid fa-circle')
+        } else {
+            setSortStatus('')
+            setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
+        }
+    }
 
     const nextPage = () => {
-        if(page < employees.totalPages) {
-            setPage(page + 1)
+        if(employees.hasNextPage) {
+            setPage(employees.nextPage)
         } else {
             setPage(1)
         }
     }
     
     const prevPage = () => {
-        if(page > 1) {
-            setPage(page - 1)
+        if(employees.hasPrevPage) {
+            setPage(employees.prevPage)
         } else {
             setPage(employees.totalPages)
         }
@@ -71,8 +90,8 @@ console.log(employees);
         <div className="employee body-container bg-light">
             <Header/>
             <SideBar/>
-            <AddEmployee showAdd={showAdd} setShowAdd={setShowAdd} />
-            <UpdateEmployee showUpdate={showUpdate} setShowUpdate={setShowUpdate}/>
+            <AddEmployee selectCompany={selectCompany} showAdd={showAdd} setShowAdd={setShowAdd} />
+            <UpdateEmployee selectCompany={selectCompany} showUpdate={showUpdate} setShowUpdate={setShowUpdate}/>
             <UpdatePass updatePass={updatePass} setUpdatePass={setUpdatePass}/>
             <DetailEmployee showDetail={showDetail} setShowDetail={setShowDetail}/>
             <div className="main-container bg-light">
@@ -90,7 +109,7 @@ console.log(employees);
                         <div className='label'>
                             <label htmlFor="">Công ty:</label>
                         </div>
-                        <select className='select-company' onChange={(e) => setCompany(e.target.value)}>
+                        <select className='select-company' onChange={(e) => setSelectCompany(e.target.value)}>
                             <option value='all'>Tất cả</option>
                             {userCompanies?.map((company, i) => (
                                 <option key={i} value={company._id}>{company.name}</option>
@@ -98,19 +117,16 @@ console.log(employees);
                         </select>
                     </div>
                     <div className="sort-container"> 
-                        <div className='px-2'>
+                        <div className='label'>
                             <label htmlFor="">Sắp xếp:</label>
                         </div>
-                        <div className='d-flex'>
-                            <button className='btn btn-sort'>
-                                Nhóm quyền
-                                <i className="p-1 fa-solid fa-arrow-down-up-across-line"></i>
-                            </button>
-                            <button className='btn btn-sort'>
-                                Trạng thái
-                                <i className="status-icon fa-solid fa-circle"></i>
-                            </button>
-                        </div>
+                        <button className='btn btn-sort'>
+                            Trạng thái
+                            <i 
+                                className={iconStatus}
+                                onClick={sortByStatus}
+                            ></i>
+                        </button>
                     </div>
                     <div className="employee-container">
                         <table className="table">
@@ -119,21 +135,20 @@ console.log(employees);
                             <th scope="col">Họ tên</th>
                             <th scope="col">Số điện thoại</th>
                             <th scope="col">Email</th>
+                            <th scope="col">Nhóm quyền</th>
                             <th scope="col">
-                                <div className='d-flex align-items-end'>
-                                    Nhóm quyền 
-                                    <i className="p-1 fa-solid fa-arrow-down-up-across-line"></i>
-                                </div>
-                            </th>
-                            <th scope="col">
-                                <div className='d-flex align-items-end'>
+                            <div className='d-flex align-items-end'>
                                     Trạng thái 
-                                    <i className="p-1 status-icon fa-solid fa-circle"></i>
+                                    <i 
+                                        className={iconStatus}
+                                        onClick={sortByStatus}
+                                    ></i>
                                 </div>
                             </th>
                             <th scope="col" className="employee-center">Chức năng</th>
                         </tr>
                         </thead>
+                        {selectCompany==='all'?
                         <tbody>
                             {employees.docs?.map((employee, i) => (
                                 <tr key={i}>
@@ -143,7 +158,7 @@ console.log(employees);
                                     </td>
                                     <td data-label="Số điện thoại:">{employee.phoneNumber}</td>
                                     <td data-label="Email:" className="employee-word">{employee.email}</td>
-                                    <td data-label="Nhóm quyền:">{employee.roleId.name}</td>
+                                    <td data-label="Nhóm quyền:" className="employee-word">{employee.roleId}</td>
                                     <td data-label="Trạng thái:">
                                         {employee.status?
                                             <div className="employee-active">Hoạt động</div>
@@ -167,13 +182,48 @@ console.log(employees);
                                 </tr>
                             ))}
                         </tbody>
+                        :
+                        <tbody>
+                            {employees.docs?.map((employee, i) => (
+                                <tr key={i}>
+                                    <td scope="row" data-label="Họ tên:" onClick={() => setShowDetail(true)}>
+                                        {employee.userId?.fullName}
+                                        <div  className="employee-word">({employee.userId?.userName})</div>
+                                    </td>
+                                    <td data-label="Số điện thoại:">{employee.userId?.phoneNumber}</td>
+                                    <td data-label="Email:" className="employee-word">{employee.userId?.email}</td>
+                                    <td data-label="Nhóm quyền:" className="employee-word">{employee.roleId}</td>
+                                    <td data-label="Trạng thái:">
+                                        {employee.userId?.status?
+                                            <div className="employee-active">Hoạt động</div>
+                                        :
+                                            <div className="employee-disable">Không hoạt động</div>
+                                        }
+                                    </td>
+                                    <td data-label="Chức năng:" className="employee-center">
+                                        <div className='func-icon'>
+                                            <i 
+                                                className="fa-solid fa-pen-to-square p-1 m-1"  
+                                                style={{color: '#6280EB'}}
+                                                onClick={() => setShowUpdate(employee)}
+                                            ></i>
+                                            <i 
+                                                className="fa-solid fa-key p-1 m-1"  
+                                                onClick={() => setUpdatePass(employee)}
+                                            ></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                        }
                         </table>
                         <div className="p-2 mb-4 d-flex justify-content-between">
                             <h6 className="mx-md-2 my-0">Tìm thấy: {employees.totalDocs?employees.totalDocs:0} nhân viên</h6>
                             <div className="d-flex align-items-center mx-md-4">
                                 <i className="fa-solid fa-chevron-left" onClick={() => prevPage()}></i>
                                 <div className="d-flex mx-md-4">
-                                    <input className="input-page" value={page} onChange={(e)=>setPage(e.target.value)}></input>
+                                    <input className="input-page" value={employees.page} onChange={(e)=>setPage(e.target.value)}></input>
                                     <div>/ {employees.totalPages?employees.totalPages:1}</div>
                                 </div>
                                 <i className="fa-solid fa-chevron-right" onClick={() => nextPage()}></i>
