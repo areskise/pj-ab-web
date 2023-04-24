@@ -1,31 +1,24 @@
 import "./updatePass.css";
 import Modal from 'react-bootstrap/Modal';
+import alertify from 'alertifyjs';
 import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import EmployeeAPI from "../../../API/EmployeeAPI";
 
 const UpdatePass = ({setUpdatePass, updatePass}) => {
-    const [subMenu, setSubMenu] = useState(false);
     const [visiblePass, setVisiblePass] = useState(false);
     const [visibleRePass, setVisibleRePass] = useState(false);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
-    const [formValues, setFormValues] = useState({});
     const data = new FormData();
 console.log(updatePass);
     useEffect(() => {
-    },[formValues.name]);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormValues({...formValues, [name]: value})
-    }
+    },[]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         data.append('userName', e.target.userName.value);
         data.append('newPassword', e.target.rePassword.value);
-        console.log(data);
-
+        console.log(e.target.userName.value);
         if(!e.target.rePassword.value || !e.target.password.value) {
             setError(true)
             setMessErr(null)
@@ -34,21 +27,26 @@ console.log(updatePass);
             setMessErr("Nhập lại mật khẩu mới không trùng khớp!")
         }
         else {
-            setError(false)
-            setMessErr(null)
-
-            // try {
-            //     console.log();
-            //     const res = await CompanyAPI.update(data);
-            //     console.log(res);
-            //     alertify.set('notifier', 'position', 'top-right');
-            //     alertify.success(res.data);
-            //     setShowUpdate(false)
-            // }
-            // catch(err) {
-            //     console.log(err);
-            //     setMessErr(err.response.data)
-            // }
+            try {
+                const res = await EmployeeAPI.setPass(data);
+                console.log(res);
+                if(res.ResponseResult.ErrorCode === 0){
+                    setUpdatePass(false)
+                    setError(false)
+                    setMessErr(null)
+                    alertify.set('notifier', 'position', 'top-right');
+                    alertify.success('Cập nhật thành công!');
+                } else {
+                    console.log(res.ResponseResult.Message);
+                    setError(false)
+                    setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+                }
+            }
+            catch(err) {
+                console.log(err.message);
+                setError(false)
+                setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+            }
         }
     };
 

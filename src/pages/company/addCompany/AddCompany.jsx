@@ -45,6 +45,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
         
         if(!e.target.name.value || !e.target.phone.value || !e.target.money.value || !e.target.startDate.value) {
             setError(true)
+            setMessErr(null)
         } else {
             try {
                 const res = await CompanyAPI.create(data);
@@ -66,6 +67,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
             }
             catch(err) {
                 console.log(err);
+                setError(false)
                 setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
             }
         }

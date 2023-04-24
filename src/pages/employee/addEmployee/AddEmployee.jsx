@@ -52,6 +52,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
             !e.target.role.value
         ) {
             setError(true)
+            setMessErr(null)
         } else if(e.target.password.value !== e.target.rePassword.value) {
             setMessErr('Nhập lại mật khẩu không chính xác!')
             setError(false)
@@ -77,6 +78,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
             }
             catch(err) {
                 console.log(err);
+                setError(false)
                 setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
             }
         }

@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectorUserCompanies } from '../../redux/slice/companySlice';
 import EmployeeAPI from '../../API/EmployeeAPI';
 import CompanyAPI from '../../API/CompanyAPI';
+import { set } from 'date-fns';
 
 const Employee = () => {
     const [showAdd, setShowAdd] = useState(false);
@@ -25,7 +26,7 @@ const Employee = () => {
     const dispatch = useDispatch();
     const employees = useSelector(selectorEmployees)
     const userCompanies = useSelector(selectorUserCompanies)
-
+console.log(sortStatus);
     useEffect(() => {
         if(selectCompany === 'all') {
             const data = {
@@ -70,6 +71,11 @@ const Employee = () => {
         }
     }
 
+    const changeCompany = (e) => {
+        setSelectCompany(e.target.value)
+        setPage(1)
+    }
+
     const nextPage = () => {
         if(employees.hasNextPage) {
             setPage(employees.nextPage)
@@ -109,7 +115,7 @@ const Employee = () => {
                         <div className='label'>
                             <label htmlFor="">Công ty:</label>
                         </div>
-                        <select className='select-company' onChange={(e) => setSelectCompany(e.target.value)}>
+                        <select className='select-company' onChange={changeCompany}>
                             <option value='all'>Tất cả</option>
                             {userCompanies?.map((company, i) => (
                                 <option key={i} value={company._id}>{company.name}</option>

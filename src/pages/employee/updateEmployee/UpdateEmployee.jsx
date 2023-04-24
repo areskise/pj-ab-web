@@ -73,6 +73,7 @@ console.log(company);
         data.append('roleId', e.target.role.value);
         if( !e.target.fullName.value ) {
             setError(true)
+            setMessErr(null)
         } else {
             try {
                 const res = await EmployeeAPI.update(data);
@@ -95,6 +96,7 @@ console.log(company);
             }
             catch(err) {
                 console.log(err.message);
+                setError(false)
                 setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
             }
         }

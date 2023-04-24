@@ -2,7 +2,7 @@ import axiosClient from "./axiosClient";
 
 const EmployeeAPI = {
     getAll: async (data) =>  {
-        return axiosClient.get(`/user/list?limit=${data.limit}&page=${data.page}&money=${data.money}&startDate=${data.startDate}&status=${data.status}`);
+        return axiosClient.get(`/user/list?limit=${data.limit}&page=${data.page}&status=${data.status}`);
     },
 
     getById: async (id) => {

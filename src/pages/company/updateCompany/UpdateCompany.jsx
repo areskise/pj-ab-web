@@ -55,6 +55,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
         }
         if(!e.target.name.value || !e.target.phone.value || !e.target.money.value || !e.target.startDate.value) {
             setError(true)
+            setMessErr(null)
         } else {
             try {
                 const res = await CompanyAPI.update(data);
@@ -78,6 +79,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
             }
             catch(err) {
                 console.log(err.message);
+                setError(false)
                 setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
             }
         }
