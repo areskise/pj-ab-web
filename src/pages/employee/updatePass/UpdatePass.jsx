@@ -83,7 +83,7 @@ console.log(updatePass);
                                     type="text" 
                                     name="userName"
                                     className='form-control'
-                                    defaultValue={updatePass.userName} 
+                                    defaultValue={updatePass.userId?.userName} 
                                     disabled
                                 />
                             </div>
@@ -98,7 +98,7 @@ console.log(updatePass);
                                     type="text" 
                                     name="fullName"
                                     className='form-control' 
-                                    defaultValue={updatePass.fullName}
+                                    defaultValue={updatePass.userId?.fullName}
                                     disabled
                                 />
                             </div>

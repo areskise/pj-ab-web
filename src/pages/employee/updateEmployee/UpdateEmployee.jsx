@@ -15,26 +15,25 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
     const [roles, setRoles] = useState(null);
     const [formValues, setFormValues] = useState({});
     const data = new FormData();
-console.log(company);
 
     useEffect(() => {
         const fetchCompany = async () => {
             if(showUpdate) {
                 if(selectCompany==='all') {
-                    const resCompany = await EmployeeAPI.getOrganizations(showUpdate._id);
+                    const resCompany = await EmployeeAPI.getOrganizations(showUpdate.userId._id);
                     const companyResult = resCompany.ResponseResult.Result
                     setCompany(companyResult)
                     setDefaultCompany(companyResult[0])
+                    const resRole = await RoleAPI.getById(showUpdate.roleId._id);
+                    const roleResult = resRole.ResponseResult.Result
+                    setRole(roleResult)
                 } else {
                     const resCompany = await CompanyAPI.getById(selectCompany);
                     const companyResult = resCompany.ResponseResult.Result
-                    console.log(resCompany);
+                    setRole(null)
                     setCompany(companyResult)
-                    setDefaultCompany(companyResult[0])
+                    setDefaultCompany(companyResult)
                 }
-                const resRole = await RoleAPI.getById(showUpdate.roleId);
-                const roleResult = resRole.ResponseResult.Result
-                setRole(roleResult)
             } else {
                 setCompany(null)
                 setRole(null)
@@ -45,10 +44,9 @@ console.log(company);
 
     useEffect(() => {
         const fetchRole = async () => {
-        if(company) {
-            const resRoles = await CompanyAPI.getRoles(defaultCompany.organizationId._id);
+        if(company._id) {
+            const resRoles = await CompanyAPI.getRoles(company._id);
             const rolesResult = resRoles.ResponseResult.Result
-            console.log(resRoles);
             setRoles(rolesResult)
         } else {
             setRoles(null)
@@ -64,7 +62,7 @@ console.log(company);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        data.append('_id', showUpdate._id);
+        data.append('_id', showUpdate.userId._id);
         data.append('organizationId', e.target.company.value);
         data.append('fullName', e.target.fullName.value);
         data.append('email', e.target.email.value);
@@ -77,6 +75,7 @@ console.log(company);
         } else {
             try {
                 const res = await EmployeeAPI.update(data);
+                console.log(res);
                 if(res.ResponseResult.ErrorCode === 0){
                     setShowUpdate(false)
                     setError(false)
@@ -131,26 +130,26 @@ console.log(company);
                                         <label style={{color: 'red'}}>*</label>
                                         </label>
                                     </div>
-                                {/* {selectCompany==='all'? */}
+                                {selectCompany==='all'?
                                     <select 
                                         name="company" 
                                         className='select-company'
                                         onChange={handleChange}
                                     >
-                                        <option value={defaultCompany?defaultCompany.organizationId._id:null} hidden>{defaultCompany?defaultCompany.organizationId.name:null}</option>
+                                        <option value={defaultCompany?defaultCompany.organizationId?._id:null} hidden>{defaultCompany?defaultCompany.organizationId?.name:null}</option>
                                         {company?.map((company, i) => (
                                             <option key={i} value={company?company.organizationId._id:null}>{company?company.organizationId.name:null}</option>
                                         ))}
                                     </select>
-                                    {/* :
+                                    :
                                     <select 
                                         name="company" 
                                         className='select-company'
                                         onChange={handleChange}
                                     >
-                                        <option value={selectCompany?selectCompany._id:null} hidden>{selectCompany?selectCompany.name:null}</option>
+                                        <option value={company?company._id:null} >{company?company.name:null}</option>
                                     </select>
-                                    } */}
+                                }
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                 <div className='label'>
@@ -164,7 +163,7 @@ console.log(company);
                                     name="userName"
                                     className='form-control'
                                     placeholder='Nhập tên đăng nhập'
-                                    defaultValue={showUpdate.userName}
+                                    defaultValue={showUpdate.userId?.userName}
                                     disabled
                                 />
                             </div>
@@ -180,7 +179,7 @@ console.log(company);
                                     name="fullName"
                                     className='form-control'
                                     placeholder='Nhập họ tên'
-                                    defaultValue={showUpdate.fullName}
+                                    defaultValue={showUpdate.userId?.fullName}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -192,7 +191,7 @@ console.log(company);
                                     name="email"
                                     className='form-control' 
                                     placeholder='Nhập Email' 
-                                    defaultValue={showUpdate.email}
+                                    defaultValue={showUpdate.userId?.email}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -204,7 +203,7 @@ console.log(company);
                                     name="phoneNumber"
                                     className='form-control' 
                                     placeholder='Nhập SĐT' 
-                                    defaultValue={showUpdate.phoneNumber}
+                                    defaultValue={showUpdate.userId?.phoneNumber}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -221,9 +220,9 @@ console.log(company);
                                     {role ? 
                                     <option value={role.roleId} hidden>{role.name}</option> 
                                     : 
-                                    <option value={null} hidden>Chọn nhóm quyền</option>
+                                    <option value={showUpdate.roleId?._id} hidden>{showUpdate.roleId?.name}</option>
                                     }
-                                    {roles && roles.map((role, i) => (
+                                    {roles && roles?.map((role, i) => (
                                         <option key={i} value={role._id}>{role.name}</option>
                                     ))}
                                 </select>

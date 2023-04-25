@@ -6,12 +6,10 @@ import AddEmployee from "./addEmployee/AddEmployee";
 import UpdateEmployee from "./updateEmployee/UpdateEmployee";
 import UpdatePass from './updatePass/UpdatePass';
 import DetailEmployee from './detailEmployee/DetailEmployee';
-import { employeeActions, selectorEmployees } from '../../redux/slice/employeeSlice';
+import { employeeActions, selectorAllEmployees, selectorEmployees } from '../../redux/slice/employeeSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectorUserCompanies } from '../../redux/slice/companySlice';
-import EmployeeAPI from '../../API/EmployeeAPI';
 import CompanyAPI from '../../API/CompanyAPI';
-import { set } from 'date-fns';
 
 const Employee = () => {
     const [showAdd, setShowAdd] = useState(false);
@@ -25,8 +23,9 @@ const Employee = () => {
     const limit = 5;
     const dispatch = useDispatch();
     const employees = useSelector(selectorEmployees)
+    const allEmployees = useSelector(selectorAllEmployees)
     const userCompanies = useSelector(selectorUserCompanies)
-console.log(sortStatus);
+console.log(allEmployees);
     useEffect(() => {
         if(selectCompany === 'all') {
             const data = {
@@ -35,7 +34,7 @@ console.log(sortStatus);
                 status: sortStatus,
             }
             const fetchEmployee = async () => {
-                const res = await EmployeeAPI.getAll(data)
+                const res = await CompanyAPI.getAllUsers(data)
                 const result = res.ResponseResult.Result
                 console.log(res);
                 dispatch(employeeActions.setEmployees(result))
@@ -154,41 +153,6 @@ console.log(sortStatus);
                             <th scope="col" className="employee-center">Chức năng</th>
                         </tr>
                         </thead>
-                        {selectCompany==='all'?
-                        <tbody>
-                            {employees.docs?.map((employee, i) => (
-                                <tr key={i}>
-                                    <td scope="row" data-label="Họ tên:" onClick={() => setShowDetail(true)}>
-                                        {employee.fullName}
-                                        <div  className="employee-word">({employee.userName})</div>
-                                    </td>
-                                    <td data-label="Số điện thoại:">{employee.phoneNumber}</td>
-                                    <td data-label="Email:" className="employee-word">{employee.email}</td>
-                                    <td data-label="Nhóm quyền:" className="employee-word">{employee.roleId}</td>
-                                    <td data-label="Trạng thái:">
-                                        {employee.status?
-                                            <div className="employee-active">Hoạt động</div>
-                                        :
-                                            <div className="employee-disable">Không hoạt động</div>
-                                        }
-                                    </td>
-                                    <td data-label="Chức năng:" className="employee-center">
-                                        <div className='func-icon'>
-                                            <i 
-                                                className="fa-solid fa-pen-to-square p-1 m-1"  
-                                                style={{color: '#6280EB'}}
-                                                onClick={() => setShowUpdate(employee)}
-                                            ></i>
-                                            <i 
-                                                className="fa-solid fa-key p-1 m-1"  
-                                                onClick={() => setUpdatePass(employee)}
-                                            ></i>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                        :
                         <tbody>
                             {employees.docs?.map((employee, i) => (
                                 <tr key={i}>
@@ -198,7 +162,7 @@ console.log(sortStatus);
                                     </td>
                                     <td data-label="Số điện thoại:">{employee.userId?.phoneNumber}</td>
                                     <td data-label="Email:" className="employee-word">{employee.userId?.email}</td>
-                                    <td data-label="Nhóm quyền:" className="employee-word">{employee.roleId}</td>
+                                    <td data-label="Nhóm quyền:" className="employee-word">{employee.roleId?.name}</td>
                                     <td data-label="Trạng thái:">
                                         {employee.userId?.status?
                                             <div className="employee-active">Hoạt động</div>
@@ -222,7 +186,6 @@ console.log(sortStatus);
                                 </tr>
                             ))}
                         </tbody>
-                        }
                         </table>
                         <div className="p-2 mb-4 d-flex justify-content-between">
                             <h6 className="mx-md-2 my-0">Tìm thấy: {employees.totalDocs?employees.totalDocs:0} nhân viên</h6>

@@ -13,6 +13,10 @@ const EmployeeAPI = {
         return axiosClient.get(`/user/getOrganizations?id=${id}`);
     },
 
+    getRoles: async (id) => {
+        return axiosClient.get(`/user/getRoles?id=${id}`);
+    },
+
     create: async (body) => {
         return axiosClient.post(`/user`, body);
     },
