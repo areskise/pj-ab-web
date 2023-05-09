@@ -13,11 +13,14 @@ const SignIn = () => {
   const [error, setError] = useState(false);
   
 	const cookies = new Cookies();
+  const access_token = cookies.get('access_token');
   const navigate = useNavigate();
 
   useEffect(() => {
-    
-  }, []);
+    if(access_token){
+      navigate('/trang-chu');
+    }
+  }, [access_token, navigate]);
 
   const handleSignin = async (e) => {
     e.preventDefault();
@@ -32,6 +35,7 @@ const SignIn = () => {
       try {
         const res = await AuthAPI.login(data);
         const result = res.ResponseResult.Result
+        console.log(res);
         if(res.ResponseResult.ErrorCode === 0) {
           if(remember) {
             cookies.set('access_token', result, {maxAge: 604800})
@@ -97,9 +101,9 @@ const SignIn = () => {
                   onClick={() => setRemember(!remember)}
                 /> Ghi nhớ đăng nhập
               </label>
-              <label>
+              {/* <label>
                 <a className='forgot' href='#'>Quên mật khẩu?</a>
-              </label>
+              </label> */}
             </div>
             {error && 
             <div className='m-auto mb-3 text-center'>

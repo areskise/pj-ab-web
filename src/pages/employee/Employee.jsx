@@ -12,6 +12,7 @@ import { selectorUserCompanies } from '../../redux/slice/companySlice';
 import CompanyAPI from '../../API/CompanyAPI';
 
 const Employee = () => {
+    const [loading, setLoading] = useState(false);
     const [showAdd, setShowAdd] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
     const [updatePass, setUpdatePass] = useState(false);
@@ -23,9 +24,8 @@ const Employee = () => {
     const limit = 5;
     const dispatch = useDispatch();
     const employees = useSelector(selectorEmployees)
-    const allEmployees = useSelector(selectorAllEmployees)
     const userCompanies = useSelector(selectorUserCompanies)
-console.log(allEmployees);
+
     useEffect(() => {
         if(selectCompany === 'all') {
             const data = {
@@ -34,10 +34,17 @@ console.log(allEmployees);
                 status: sortStatus,
             }
             const fetchEmployee = async () => {
-                const res = await CompanyAPI.getAllUsers(data)
-                const result = res.ResponseResult.Result
-                console.log(res);
-                dispatch(employeeActions.setEmployees(result))
+                try {
+                    setLoading(true);
+                    const res = await CompanyAPI.getAllUsers(data);
+                    const result = res.ResponseResult.Result;
+                    console.log(res);
+                    dispatch(employeeActions.setEmployees(result));
+                    setLoading(false);
+                } catch (error) {
+                    setLoading(false);
+                    console.error(error);
+                }
             }
             fetchEmployee();
         } else {
@@ -48,10 +55,17 @@ console.log(allEmployees);
                 status: sortStatus,
             }
             const fetchEmployee = async () => {
-                const res = await CompanyAPI.getUsers(data)
-                const result = res.ResponseResult.Result
-                console.log(res);
-                dispatch(employeeActions.setEmployees(result))
+                try {
+                    setLoading(true);
+                    const res = await CompanyAPI.getUsers(data);
+                    const result = res.ResponseResult.Result;
+                    console.log(res);
+                    dispatch(employeeActions.setEmployees(result));
+                    setLoading(false);
+                } catch (error) {
+                    setLoading(false);
+                    console.error(error);
+                }
             }
             fetchEmployee();
         }

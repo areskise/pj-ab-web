@@ -18,7 +18,8 @@
 }
 
 .form-signin {
-  max-width: 360px;
+  /* max-width: 360px; */
+  width: 313px;
   padding: 30px;
   background: linear-gradient(126.43deg, rgba(255, 255, 255, 0.75) 10.57%, rgba(255, 255, 255, 0.5) 67.6%);
   box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.2);

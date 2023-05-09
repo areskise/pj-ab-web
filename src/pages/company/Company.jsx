@@ -1,4 +1,5 @@
 import "./company.css"; 
+import Spinner from 'react-bootstrap/Spinner';
 import Header from "../../components/header/Header";
 import SideBar from "../../components/sidebar/SideBar";
 import { useEffect, useState } from 'react';
@@ -14,6 +15,7 @@ import { applicationActions } from "../../redux/slice/applicationSlice";
 import CompanyAPI from "../../API/CompanyAPI";
 
 const Company = () => {
+    const [loading, setLoading] = useState(false);
     const [showAdd, setShowAdd] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
     const [page, setPage] = useState(1);
@@ -41,10 +43,17 @@ const Company = () => {
                 status: sortStatus,
             }
             const fetchCompany = async () => {
-                const res = await CompanyAPI.getList(data)
-                const result = res.ResponseResult.Result
-                dispatch(companyActions.setCompanies(result))
-                dispatch(applicationActions.setApplications())
+                try {
+                    setLoading(true);
+                    const res = await CompanyAPI.getList(data);
+                    const result = res.ResponseResult.Result;
+                    dispatch(companyActions.setCompanies(result));
+                    dispatch(applicationActions.setApplications());
+                    setLoading(false);
+                } catch (error) {
+                    setLoading(false);
+                    console.error(error);
+                }
             }
             fetchCompany();
         } else {
@@ -185,41 +194,60 @@ const Company = () => {
                             <th scope="col" className="company-center">Chức năng</th>
                         </tr>
                         </thead>
-                        <tbody>
-                            {companies.docs?.map((company, i) => (
-                                <tr key={i}>
-                                    <td scope="row" data-label="Mã CT:">{company.title}</td>
-                                    <td data-label="Tên công ty:" className="company-word">{company.name}</td>
-                                    <td data-label="Số điện thoại:">{company.phone}</td>
-                                    <td data-label="Số vốn:">
-                                        {currencyFormatter.format(company.money, {
-                                        symbol: 'VND',
-                                        decimal: '*',
-                                        thousand: '.',
-                                        precision: 0,
-                                        format: '%v %s' // %s is the symbol and %v is the value
-                                        })}
-                                    </td>
-                                    <td data-label="Ngày hoạt động:">{format(new Date(company.startDate), 'dd/MM/yyyy')}</td>
-                                    <td data-label="Trạng thái:">
-                                        {company.status?
-                                            <div className="company-active">Hoạt động</div>
-                                        :
-                                            <div className="company-disable">Không hoạt động</div>
-                                        }
-                                    </td>
-                                    <td data-label="Chức năng:" className="company-center">
-                                        <i 
-                                            className="fa-solid fa-pen-to-square p-1"  
-                                            style={{color: '#6280EB'}}
-                                            onClick={() => {
-                                                setShowUpdate(company)
-                                            }}
-                                        ></i>
-                                    </td>
+                        {loading?
+                            <tbody>
+                                <tr className="d-flex align-items-center">
+                                    <Spinner
+                                        as="span"
+                                        animation="border"
+                                        variant="secondary"
+                                        size="sm"
+                                        role="status"
+                                        aria-hidden="true"
+                                        className="spinner-loading"
+                                    />
+                                    <span className="text-loading">
+                                        Loading...
+                                    </span>
                                 </tr>
-                            ))}
-                        </tbody>
+                          </tbody>
+                        :
+                            <tbody>
+                                {companies.docs?.map((company, i) => (
+                                    <tr key={i}>
+                                        <td scope="row" data-label="Mã CT:">{company.title}</td>
+                                        <td data-label="Tên công ty:" className="company-word">{company.name}</td>
+                                        <td data-label="Số điện thoại:">{company.phone}</td>
+                                        <td data-label="Số vốn:">
+                                            {currencyFormatter.format(company.money, {
+                                            symbol: 'VND',
+                                            decimal: '*',
+                                            thousand: '.',
+                                            precision: 0,
+                                            format: '%v %s' // %s is the symbol and %v is the value
+                                            })}
+                                        </td>
+                                        <td data-label="Ngày hoạt động:">{format(new Date(company.startDate), 'dd/MM/yyyy')}</td>
+                                        <td data-label="Trạng thái:">
+                                            {company.status?
+                                                <div className="company-active">Hoạt động</div>
+                                            :
+                                                <div className="company-disable">Không hoạt động</div>
+                                            }
+                                        </td>
+                                        <td data-label="Chức năng:" className="company-center">
+                                            <i 
+                                                className="fa-solid fa-pen-to-square p-1"  
+                                                style={{color: '#6280EB'}}
+                                                onClick={() => {
+                                                    setShowUpdate(company)
+                                                }}
+                                            ></i>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        }
                         </table>
                         <div className="p-2 mb-4 d-flex justify-content-between">
                             <h6 className="mx-md-2 my-0">Tìm thấy: {companies.totalDocs?companies.totalDocs:0} công ty</h6>
