@@ -4,38 +4,46 @@ import alertify from 'alertifyjs';
 import { selectorUserCompanies } from '../../redux/slice/companySlice';
 import { selectorPermissions } from '../../redux/slice/permissionSlice';
 import PermissionAPI from '../../API/PermissionAPI';
+import CompanyAPI from '../../API/CompanyAPI';
+import RoleAPI from '../../API/RoleAPI';
 
 const UpdateAuthority = () => {
-    const [selectComany, setSelectCompany] = useState('');
+    const [selectCompany, setSelectCompany] = useState(null);
+    const [selectRole, setSelectRole] = useState(null);
+    const [roles, setRoles] = useState([]);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
     const [menuUser, setMenuUser] = useState(false);
     const [menuHui, setMenuHui] = useState(false);
     const userCompanies = useSelector(selectorUserCompanies)
     const permissions = useSelector(selectorPermissions)
-    console.log(permissions);
+    console.log(roles);
+
+    useEffect(()=> {
+        const fetchRoles = async () => {
+            const res = await CompanyAPI.getRoles(selectCompany)
+            const result = res.ResponseResult.Result;
+            setRoles(result)
+        }
+        if(selectCompany) {
+            fetchRoles()
+        }
+    },[selectCompany])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { name, checked, value } = e.target;
-        const per = []
-        const formCheck = {...per, [name]: checked}
-        console.log(formCheck);
-
-        if(e.target.hui.checked) {
-            per.push(e.target.hui.value)
-        }
-
+    
         const data = {
-            title: e.target.name.value,
-            permissionId: per
+            id: e.target.name.role,
+            name: e.target.name.value
         }
         
         if(!e.target.name.value) {
             setError(true)
         } else {
             try {
-                const res = await PermissionAPI.create(data);
+                const res = await RoleAPI.update(data);
+                console.log(res);
                 if(res.ResponseResult.ErrorCode === 0){
                     setError(false)
                     setMessErr(null)
@@ -64,20 +72,22 @@ const UpdateAuthority = () => {
                             <div className='label'>
                                 <label htmlFor="">Công ty:</label>
                             </div>
-                            <select className='select-company' onChange={(e) => setSelectCompany(e.target.value)}>
-                            {userCompanies?.map((company, i) => (
-                                <option key={i} value={company._id}>{company.name}</option>
-                            ))}
+                            <select className='select-company' name="company" onChange={(e) => setSelectCompany(e.target.value)}>
+                                <option value={null} hidden>Chọn công ty</option>
+                                {userCompanies?.map((company, i) => (
+                                    <option key={i} value={company._id}>{company.name}</option>
+                                ))}
                             </select>
                         </div>
                         <div className='d-flex m-md-3 my-3 align-items-center justify-content-start'>
                             <div className='label'>
                                 <label htmlFor="">Tên nhóm quyền:</label>
                             </div>
-                            <select className='select-company' onChange={(e) => setSelectCompany(e.target.value)}>
-                                <option>Nhóm quyền 1</option>
-                                <option>Nhóm quyền 2</option>
-                                <option>Nhóm quyền 3</option>
+                            <select className='select-company' name="role" onChange={(e) => setSelectRole(e.target.value)}>
+                                    <option value='' hidden>Chọn nhóm quyền</option>
+                                    {roles && roles.map((role, i) => (
+                                        <option key={i} value={role._id}>{role.name}</option>
+                                    ))}
                             </select>
                         </div>
                         <div className='d-flex m-md-3 my-3 align-items-center justify-content-start'>
@@ -86,7 +96,7 @@ const UpdateAuthority = () => {
                             </div>
                             <input 
                                 type="text" 
-                                name="newName"
+                                name="name"
                                 className='form-control' 
                                 placeholder='Nhập tên mới'
                             />
