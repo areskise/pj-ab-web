@@ -216,7 +216,7 @@ const Company = () => {
                                 {companies.docs?.map((company, i) => (
                                     <tr key={i}>
                                         <td scope="row" data-label="Mã CT:">{company.title}</td>
-                                        <td data-label="Tên công ty:" className="company-word">{company.name}</td>
+                                        <td data-label="Tên công ty:">{company.name}</td>
                                         <td data-label="Số điện thoại:">{company.phone}</td>
                                         <td data-label="Số vốn:">
                                             {currencyFormatter.format(company.money, {

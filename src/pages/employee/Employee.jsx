@@ -1,4 +1,5 @@
 import './employee.css';
+import Spinner from 'react-bootstrap/Spinner';
 import Header from "../../components/header/Header";
 import SideBar from "../../components/sidebar/SideBar";
 import { useEffect, useState } from 'react';
@@ -6,7 +7,7 @@ import AddEmployee from "./addEmployee/AddEmployee";
 import UpdateEmployee from "./updateEmployee/UpdateEmployee";
 import UpdatePass from './updatePass/UpdatePass';
 import DetailEmployee from './detailEmployee/DetailEmployee';
-import { employeeActions, selectorAllEmployees, selectorEmployees } from '../../redux/slice/employeeSlice';
+import { employeeActions, selectorEmployees } from '../../redux/slice/employeeSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectorUserCompanies } from '../../redux/slice/companySlice';
 import CompanyAPI from '../../API/CompanyAPI';
@@ -25,7 +26,7 @@ const Employee = () => {
     const dispatch = useDispatch();
     const employees = useSelector(selectorEmployees)
     const userCompanies = useSelector(selectorUserCompanies)
-
+console.log(employees);
     useEffect(() => {
         if(selectCompany === 'all') {
             const data = {
@@ -167,39 +168,58 @@ const Employee = () => {
                             <th scope="col" className="employee-center">Chức năng</th>
                         </tr>
                         </thead>
-                        <tbody>
-                            {employees.docs?.map((employee, i) => (
-                                <tr key={i}>
-                                    <td scope="row" data-label="Họ tên:" onClick={() => setShowDetail(true)}>
-                                        {employee.userId?.fullName}
-                                        <div  className="employee-word">({employee.userId?.userName})</div>
-                                    </td>
-                                    <td data-label="Số điện thoại:">{employee.userId?.phoneNumber}</td>
-                                    <td data-label="Email:" className="employee-word">{employee.userId?.email}</td>
-                                    <td data-label="Nhóm quyền:" className="employee-word">{employee.roleId?.name}</td>
-                                    <td data-label="Trạng thái:">
-                                        {employee.userId?.status?
-                                            <div className="employee-active">Hoạt động</div>
-                                        :
-                                            <div className="employee-disable">Không hoạt động</div>
-                                        }
-                                    </td>
-                                    <td data-label="Chức năng:" className="employee-center">
-                                        <div className='func-icon'>
-                                            <i 
-                                                className="fa-solid fa-pen-to-square p-1 m-1"  
-                                                style={{color: '#6280EB'}}
-                                                onClick={() => setShowUpdate(employee)}
-                                            ></i>
-                                            <i 
-                                                className="fa-solid fa-key p-1 m-1"  
-                                                onClick={() => setUpdatePass(employee)}
-                                            ></i>
-                                        </div>
-                                    </td>
+                        {loading?
+                            <tbody>
+                                <tr className="d-flex align-items-center">
+                                    <Spinner
+                                        as="span"
+                                        animation="border"
+                                        variant="secondary"
+                                        size="sm"
+                                        role="status"
+                                        aria-hidden="true"
+                                        className="spinner-loading"
+                                    />
+                                    <span className="text-loading">
+                                        Loading...
+                                    </span>
                                 </tr>
-                            ))}
-                        </tbody>
+                          </tbody>
+                        :
+                            <tbody>
+                                {employees && employees.docs?.map((employee, i) => (
+                                    <tr key={i}>
+                                        <td scope="row" data-label="Họ tên:" onClick={() => setShowDetail(true)}>
+                                            {employee.userId?.fullName}
+                                            <div>({employee.userId?.userName})</div>
+                                        </td>
+                                        <td data-label="Số điện thoại:">{employee.userId?.phoneNumber}</td>
+                                        <td data-label="Email:">{employee.userId?.email}</td>
+                                        <td data-label="Nhóm quyền:">{employee.roleId?.name}</td>
+                                        <td data-label="Trạng thái:">
+                                            {employee.userId?.status?
+                                                <div className="employee-active">Hoạt động</div>
+                                            :
+                                                <div className="employee-disable">Không hoạt động</div>
+                                            }
+                                        </td>
+                                        <td data-label="Chức năng:" className="employee-center">
+                                            <div className='func-icon'>
+                                                <i 
+                                                    className="fa-solid fa-pen-to-square p-1 m-1"  
+                                                    style={{color: '#6280EB'}}
+                                                    onClick={() => setShowUpdate(employee)}
+                                                ></i>
+                                                <i 
+                                                    className="fa-solid fa-key p-1 m-1"  
+                                                    onClick={() => setUpdatePass(employee)}
+                                                ></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        }
                         </table>
                         <div className="p-2 mb-4 d-flex justify-content-between">
                             <h6 className="mx-md-2 my-0">Tìm thấy: {employees.totalDocs?employees.totalDocs:0} nhân viên</h6>

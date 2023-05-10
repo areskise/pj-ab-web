@@ -78,6 +78,10 @@
 }
 
 @media screen and (max-width: 1200px) {
+  .company-container {
+    padding: 1rem;
+  }
+
   .company-container .table-container {
     padding: 0;
   }

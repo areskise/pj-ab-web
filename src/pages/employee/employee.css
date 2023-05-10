@@ -103,12 +103,24 @@
 }
   
 @media screen and (max-width: 1200px) {
+    .employee-container {
+      padding: 1rem;
+    }
+
     .employee-container .table-container {
       padding: 0;
+    }
+
+    .employee .func-icon {
+      display: block;
     }
 }
   
 @media screen and (max-width: 768px) {
+  .employee .func-icon {
+    display: flex;
+  }
+
   .employee .select-company-container {
     display: flex;
     align-items: center;

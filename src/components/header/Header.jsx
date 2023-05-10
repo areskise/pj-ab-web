@@ -53,7 +53,7 @@ const Header = ({showAdd, showUpdate}) => {
                     </div>
 
                     <div className='d-flex'>
-                        <i className="fa-regular fa-bell notify-icon"></i>
+                        {/* <i className="fa-regular fa-bell notify-icon"></i> */}
                         <div className="d-flex dropdown text-end">
                             <a href="#" className="avatar link-dark text-decoration-none p-1 border rounded" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src={img.avatar} alt="mdo" width="32" height="32" className="rounded-circle" />
