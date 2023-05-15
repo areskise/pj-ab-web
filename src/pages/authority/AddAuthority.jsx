@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import alertify from 'alertifyjs';
 import { selectorUserCompanies } from '../../redux/slice/companySlice';
 import { selectorPermissions } from '../../redux/slice/permissionSlice';
-import PermissionAPI from '../../API/PermissionAPI';
+import RoleAPI from '../../API/RoleAPI';
 
 const AddAuthority = () => {
     const [selectComany, setSelectCompany] = useState('');
@@ -13,29 +13,29 @@ const AddAuthority = () => {
     const [menuHui, setMenuHui] = useState(false);
     const userCompanies = useSelector(selectorUserCompanies)
     const permissions = useSelector(selectorPermissions)
-    console.log(permissions);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { name, checked, value } = e.target;
-        const per = []
-        const formCheck = {...per, [name]: value}
-        console.log(formCheck.checkAll);
+        // const { name, checked, value } = e.target;
+        // const per = []
+        // const formCheck = {...per, [name]: value}
+        // console.log(formCheck.checkAll);
 
-        if(e.target.hui.checked) {
-            per.push(e.target.hui.value)
-        }
+        // if(e.target.hui.checked) {
+        //     per.push(e.target.hui.value)
+        // }
 
         const data = {
+            organizationId: selectComany,
             title: e.target.name.value,
-            permissionId: per
+            name: e.target.name.value,
         }
         
         if(!e.target.name.value) {
             setError(true)
         } else {
             try {
-                const res = await PermissionAPI.create(data);
+                const res = await RoleAPI.create(data);
                 if(res.ResponseResult.ErrorCode === 0){
                     setError(false)
                     setMessErr(null)

@@ -16,10 +16,10 @@ const Header = ({showAdd, showUpdate}) => {
     
 	const cookies = new Cookies();
     const access_token = cookies.get('access_token');
-    const userName = access_token.userName
+    const userName = access_token?.userName;
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const userCompanies = useSelector(selectorUserCompanies)
+    const userCompanies = useSelector(selectorUserCompanies);
     
     useEffect(() => {
         const fetchUserCompanies = async () => {
@@ -27,7 +27,7 @@ const Header = ({showAdd, showUpdate}) => {
             const result = res.ResponseResult.Result
             dispatch(companyActions.setUserCompanies(result))
         }
-        fetchUserCompanies();
+        access_token?fetchUserCompanies():navigate('/')
     }, [showAdd, showUpdate]);
 
     const handleLogout = () => {

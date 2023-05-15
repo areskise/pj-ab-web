@@ -39,7 +39,7 @@ const SideBar = () => {
               className="nav-link link-color"
               activeclassname="active"
             >
-              Quảng lý phân quyền
+              Quản lý phân quyền
             </NavLink>
           </li>
           <li

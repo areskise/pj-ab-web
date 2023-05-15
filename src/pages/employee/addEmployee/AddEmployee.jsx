@@ -68,6 +68,8 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                 } else {
                     if(res.ResponseResult.Result.code === 11000) {
                         setError(false)
+                        console.log(res.ResponseResult.Message);
+
                         setMessErr('Tên đăng nhập hoặc Email đã tồn tại!')
                     } else {
                         console.log(res.ResponseResult.Message);

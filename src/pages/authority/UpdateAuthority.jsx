@@ -8,6 +8,7 @@ import CompanyAPI from '../../API/CompanyAPI';
 import RoleAPI from '../../API/RoleAPI';
 
 const UpdateAuthority = () => {
+    const [loading, setLoading] = useState(false);
     const [selectCompany, setSelectCompany] = useState(null);
     const [selectRole, setSelectRole] = useState(null);
     const [roles, setRoles] = useState([]);
@@ -28,13 +29,13 @@ const UpdateAuthority = () => {
         if(selectCompany) {
             fetchRoles()
         }
-    },[selectCompany])
+    },[selectCompany,loading])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
     
         const data = {
-            id: e.target.name.role,
+            _id: e.target.role.value,
             name: e.target.name.value
         }
         
@@ -48,7 +49,8 @@ const UpdateAuthority = () => {
                     setError(false)
                     setMessErr(null)
                     alertify.set('notifier', 'position', 'top-right');
-                    alertify.success('Thêm mới thành công!');
+                    alertify.success('Cập nhật thành công!');
+                    setLoading(!loading)
                 } else if(res.ResponseResult.Result.code === 11000) {
                     setError(false)
                     setMessErr('Tên nhóm quyền đã tồn tại!')
