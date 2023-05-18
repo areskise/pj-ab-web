@@ -4,15 +4,30 @@ import alertify from 'alertifyjs';
 import { selectorUserCompanies } from '../../redux/slice/companySlice';
 import { selectorPermissions } from '../../redux/slice/permissionSlice';
 import RoleAPI from '../../API/RoleAPI';
+import CompanyAPI from '../../API/CompanyAPI';
 
 const AddAuthority = () => {
-    const [selectComany, setSelectCompany] = useState('');
+    const [selectCompany, setSelectCompany] = useState('');
+    const [checkedPer, setCheckedPer] = useState([]);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
     const [menuUser, setMenuUser] = useState(false);
     const [menuHui, setMenuHui] = useState(false);
     const userCompanies = useSelector(selectorUserCompanies)
     const permissions = useSelector(selectorPermissions)
+    useEffect(()=> {
+        
+    },[selectCompany])
+
+    const handleChange = (e) => {
+        const { checked, value } = e.target;
+        if(checked) {
+            setCheckedPer([...checkedPer, value])
+        }
+        else {
+            setCheckedPer(checkedPer.filter(e => e !== value))
+        }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,9 +39,9 @@ const AddAuthority = () => {
         // if(e.target.hui.checked) {
         //     per.push(e.target.hui.value)
         // }
-
+        console.log(checkedPer);
         const data = {
-            organizationId: selectComany,
+            organizationId: selectCompany,
             title: e.target.name.value,
             name: e.target.name.value,
         }
@@ -66,9 +81,10 @@ const AddAuthority = () => {
                                 <label htmlFor="">Công ty:</label>
                             </div>
                             <select className='select-company' onChange={(e) => setSelectCompany(e.target.value)}>
-                            {userCompanies?.map((company, i) => (
-                                <option key={i} value={company._id}>{company.name}</option>
-                            ))}
+                                <option value={null} hidden>Chọn công ty</option>
+                                {userCompanies?.map((company, i) => (
+                                    <option key={i} value={company._id}>{company.name}</option>
+                                ))}
                             </select>
                         </div>
                         <div className='d-flex m-md-3 my-3 align-items-center justify-content-start'>
@@ -96,7 +112,10 @@ const AddAuthority = () => {
                                 type="checkbox" 
                                 name='checkAll'
                                 id='checkAll'
-                                className='form-checkbox' 
+                                className='form-checkbox'
+                                onChange={handleChange}
+                                value={permissions?.find(per => per.name === "name")}
+                                // checked={checked} 
                             />
                             <div>
                                 <label htmlFor="checkAll">Tất cả</label>
@@ -107,7 +126,10 @@ const AddAuthority = () => {
                                 type="checkbox" 
                                 name='checkHome'
                                 id='checkHome'
-                                className='form-checkbox' 
+                                className='form-checkbox'
+                                onChange={handleChange}
+                                value={permissions?.find(per => per.name === "name")}
+                                // checked={checked} 
                             />
                             <div>
                                 <label htmlFor="checkHome">Trang chủ</label>
@@ -118,7 +140,10 @@ const AddAuthority = () => {
                                 type="checkbox" 
                                 name='checkCompany'
                                 id='checkCompany'
-                                className='form-checkbox' 
+                                className='form-checkbox'
+                                onChange={handleChange}
+                                value={permissions?.find(per => per.name === "name")}
+                                // checked={checked} 
                             />
                             <div>
                                 <label htmlFor="checkCompany">Quản lý công ty</label>
@@ -130,6 +155,9 @@ const AddAuthority = () => {
                                 name='checkUser'
                                 id='checkUser'
                                 className='form-checkbox'
+                                onChange={handleChange}
+                                value={permissions?.find(per => per.name === "name")}
+                                // checked={checked}
                             />
                             <div className='w-75' >
                                 <label htmlFor="" className='d-flex align-items-center justify-content-between' onClick={()=>setMenuUser(!menuUser)}>
@@ -146,7 +174,10 @@ const AddAuthority = () => {
                                             type="checkbox" 
                                             name='checkEmployee'
                                             id='checkEmployee'
-                                            className='form-checkbox' 
+                                            className='form-checkbox'
+                                            onChange={handleChange}
+                                            value={permissions?.find(per => per.name === "name")}
+                                            // checked={checked} 
                                         />
                                         <div>
                                             <label htmlFor="checkEmployee">Nhân viên</label>
@@ -159,7 +190,10 @@ const AddAuthority = () => {
                                                     type="checkbox" 
                                                     name='addEmployee'
                                                     id='addEmployee'
-                                                    className='form-checkbox' 
+                                                    className='form-checkbox'
+                                                    onChange={handleChange}
+                                                    value={permissions?.find(per => per.name === "name")}
+                                                    // checked={checked} 
                                                 />
                                                 <div>
                                                     <label htmlFor="addEmployee">Thêm</label>
@@ -172,7 +206,10 @@ const AddAuthority = () => {
                                                     type="checkbox" 
                                                     name='updateEmployee'
                                                     id='updateEmployee'
-                                                    className='form-checkbox' 
+                                                    className='form-checkbox'
+                                                    onChange={handleChange}
+                                                    value={permissions?.find(per => per.name === "name")}
+                                                    // checked={checked} 
                                                 />
                                                 <div>
                                                     <label htmlFor="updateEmployee">Cập nhập</label>
@@ -187,7 +224,10 @@ const AddAuthority = () => {
                                             type="checkbox" 
                                             name='checkCustomer'
                                             id='checkCustomer'
-                                            className='form-checkbox' 
+                                            className='form-checkbox'
+                                            onChange={handleChange}
+                                            value={permissions?.find(per => per.name === "name")}
+                                            // checked={checked} 
                                         />
                                         <div>
                                             <label htmlFor="checkCustomer">Khách hàng</label>
@@ -200,7 +240,10 @@ const AddAuthority = () => {
                                                     type="checkbox" 
                                                     name='addCustomer'
                                                     id='addCustomer'
-                                                    className='form-checkbox' 
+                                                    className='form-checkbox'
+                                                    onChange={handleChange}
+                                                    value={permissions?.find(per => per.name === "name")}
+                                                    // checked={checked} 
                                                 />
                                                 <div>
                                                     <label htmlFor="addCustomer">Thêm</label>
@@ -213,7 +256,10 @@ const AddAuthority = () => {
                                                     type="checkbox" 
                                                     name='updateCustomer'
                                                     id='updateCustomer'
-                                                    className='form-checkbox' 
+                                                    className='form-checkbox'
+                                                    onChange={handleChange}
+                                                    value={permissions?.find(per => per.name === "name")}
+                                                    // checked={checked} 
                                                 />
                                                 <div>
                                                     <label htmlFor="updateCustomer">Cập nhật</label>
@@ -229,7 +275,10 @@ const AddAuthority = () => {
                                 type="checkbox" 
                                 id='checkAllHui' 
                                 name="checkAllHui"
-                                className='form-checkbox' 
+                                className='form-checkbox'
+                                onChange={handleChange}
+                                value={permissions?.find(per => per.name === "name")}
+                                // checked={checked} 
                             />
                             <div className='w-75'>
                                 <label htmlFor="" className='d-flex align-items-center justify-content-between' onClick={()=>setMenuHui(!menuHui)}>
@@ -246,7 +295,10 @@ const AddAuthority = () => {
                                             type="checkbox" 
                                             name='checkHui'
                                             id='checkHui'
-                                            className='form-checkbox' 
+                                            className='form-checkbox'
+                                            onChange={handleChange}
+                                            value={permissions?.find(per => per.name === "name")}
+                                            // checked={checked} 
                                         />
                                         <div>
                                             <label htmlFor="checkHui">Quản lý hụi</label>
@@ -259,7 +311,10 @@ const AddAuthority = () => {
                                             type="checkbox" 
                                             name='checkReport'
                                             id='checkReport'
-                                            className='form-checkbox' 
+                                            className='form-checkbox'
+                                            onChange={handleChange}
+                                            value={permissions?.find(per => per.name === "name")}
+                                            // checked={checked} 
                                         />
                                         <div>
                                             <label htmlFor="checkReport">Báo cáo</label>

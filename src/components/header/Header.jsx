@@ -27,7 +27,7 @@ const Header = ({showAdd, showUpdate}) => {
             const result = res.ResponseResult.Result
             dispatch(companyActions.setUserCompanies(result))
         }
-        access_token?fetchUserCompanies():navigate('/')
+        // access_token?fetchUserCompanies():navigate('/')
     }, [showAdd, showUpdate]);
 
     const handleLogout = () => {
