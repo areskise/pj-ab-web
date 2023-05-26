@@ -15,6 +15,8 @@ const AddAuthority = () => {
     const [menuHui, setMenuHui] = useState(false);
     const userCompanies = useSelector(selectorUserCompanies)
     const permissions = useSelector(selectorPermissions)
+
+    console.log(checkedPer);
     useEffect(()=> {
         
     },[selectCompany])
@@ -22,11 +24,19 @@ const AddAuthority = () => {
     const handleChange = (e) => {
         const { checked, value } = e.target;
         if(checked) {
-            setCheckedPer([...checkedPer, value])
+            if(value) {
+                setCheckedPer([...checkedPer, value])
+            }
         }
         else {
-            setCheckedPer(checkedPer.filter(e => e !== value))
+            if(value) {
+                setCheckedPer(checkedPer.filter(e => e !== value))
+            }
         }
+    }
+
+    const handleCheckAll = () => {
+
     }
 
     const handleSubmit = async (e) => {
@@ -40,36 +50,36 @@ const AddAuthority = () => {
         //     per.push(e.target.hui.value)
         // }
         console.log(checkedPer);
-        const data = {
-            organizationId: selectCompany,
-            title: e.target.name.value,
-            name: e.target.name.value,
-        }
+        // const data = {
+        //     organizationId: selectCompany,
+        //     title: e.target.name.value,
+        //     name: e.target.name.value,
+        // }
         
-        if(!e.target.name.value) {
-            setError(true)
-        } else {
-            try {
-                const res = await RoleAPI.create(data);
-                if(res.ResponseResult.ErrorCode === 0){
-                    setError(false)
-                    setMessErr(null)
-                    alertify.set('notifier', 'position', 'top-right');
-                    alertify.success('Thêm mới thành công!');
-                } else if(res.ResponseResult.Result.code === 11000) {
-                    setError(false)
-                    setMessErr('Tên nhóm quyền đã tồn tại!')
-                } else {
-                    console.log(res.ResponseResult.Message);
-                    setError(false)
-                    setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
-                }
-            }
-            catch(err) {
-                console.log(err);
-                setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
-            }
-        }
+        // if(!e.target.name.value) {
+        //     setError(true)
+        // } else {
+        //     try {
+        //         const res = await RoleAPI.create(data);
+        //         if(res.ResponseResult.ErrorCode === 0){
+        //             setError(false)
+        //             setMessErr(null)
+        //             alertify.set('notifier', 'position', 'top-right');
+        //             alertify.success('Thêm mới thành công!');
+        //         } else if(res.ResponseResult.Result.code === 11000) {
+        //             setError(false)
+        //             setMessErr('Tên nhóm quyền đã tồn tại!')
+        //         } else {
+        //             console.log(res.ResponseResult.Message);
+        //             setError(false)
+        //             setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+        //         }
+        //     }
+        //     catch(err) {
+        //         console.log(err);
+        //         setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+        //     }
+        // }
     };
 
     return (
@@ -81,7 +91,7 @@ const AddAuthority = () => {
                                 <label htmlFor="">Công ty:</label>
                             </div>
                             <select className='select-company' onChange={(e) => setSelectCompany(e.target.value)}>
-                                <option value={null} hidden>Chọn công ty</option>
+                                <option value='' hidden>Chọn công ty</option>
                                 {userCompanies?.map((company, i) => (
                                     <option key={i} value={company._id}>{company.name}</option>
                                 ))}
@@ -113,8 +123,8 @@ const AddAuthority = () => {
                                 name='checkAll'
                                 id='checkAll'
                                 className='form-checkbox'
-                                onChange={handleChange}
-                                value={permissions?.find(per => per.name === "name")}
+                                onChange={handleCheckAll}
+                                value=''
                                 // checked={checked} 
                             />
                             <div>
@@ -128,7 +138,7 @@ const AddAuthority = () => {
                                 id='checkHome'
                                 className='form-checkbox'
                                 onChange={handleChange}
-                                value={permissions?.find(per => per.name === "name")}
+                                value={permissions?.find(per => per.title === "main-page")?._id}
                                 // checked={checked} 
                             />
                             <div>
@@ -142,7 +152,7 @@ const AddAuthority = () => {
                                 id='checkCompany'
                                 className='form-checkbox'
                                 onChange={handleChange}
-                                value={permissions?.find(per => per.name === "name")}
+                                value={permissions?.find(per => per.title === "manage-company")?._id}
                                 // checked={checked} 
                             />
                             <div>
@@ -156,13 +166,13 @@ const AddAuthority = () => {
                                 id='checkUser'
                                 className='form-checkbox'
                                 onChange={handleChange}
-                                value={permissions?.find(per => per.name === "name")}
+                                value=''
                                 // checked={checked}
                             />
                             <div className='w-75' >
                                 <label htmlFor="" className='d-flex align-items-center justify-content-between' onClick={()=>setMenuUser(!menuUser)}>
                                     Quản lý người dùng
-                                    <i className="mx-3 fa-solid fa-chevron-down"></i>
+                                    <i className={menuUser?"mx-3 fa-solid fa-chevron-up":"mx-3 fa-solid fa-chevron-down"}></i>
                                 </label>
                             </div>
                         </div>
@@ -176,7 +186,7 @@ const AddAuthority = () => {
                                             id='checkEmployee'
                                             className='form-checkbox'
                                             onChange={handleChange}
-                                            value={permissions?.find(per => per.name === "name")}
+                                            value=''
                                             // checked={checked} 
                                         />
                                         <div>
@@ -192,7 +202,7 @@ const AddAuthority = () => {
                                                     id='addEmployee'
                                                     className='form-checkbox'
                                                     onChange={handleChange}
-                                                    value={permissions?.find(per => per.name === "name")}
+                                                    value={permissions?.find(per => per.title === "manage-user/staff/add")?._id}
                                                     // checked={checked} 
                                                 />
                                                 <div>
@@ -208,7 +218,7 @@ const AddAuthority = () => {
                                                     id='updateEmployee'
                                                     className='form-checkbox'
                                                     onChange={handleChange}
-                                                    value={permissions?.find(per => per.name === "name")}
+                                                    value={permissions?.find(per => per.title === "manage-user/staff/update")?._id}
                                                     // checked={checked} 
                                                 />
                                                 <div>
@@ -226,7 +236,7 @@ const AddAuthority = () => {
                                             id='checkCustomer'
                                             className='form-checkbox'
                                             onChange={handleChange}
-                                            value={permissions?.find(per => per.name === "name")}
+                                            value=''
                                             // checked={checked} 
                                         />
                                         <div>
@@ -242,7 +252,7 @@ const AddAuthority = () => {
                                                     id='addCustomer'
                                                     className='form-checkbox'
                                                     onChange={handleChange}
-                                                    value={permissions?.find(per => per.name === "name")}
+                                                    value={permissions?.find(per => per.title === "manage-user/customer/add")?._id}                                                   
                                                     // checked={checked} 
                                                 />
                                                 <div>
@@ -258,7 +268,7 @@ const AddAuthority = () => {
                                                     id='updateCustomer'
                                                     className='form-checkbox'
                                                     onChange={handleChange}
-                                                    value={permissions?.find(per => per.name === "name")}
+                                                    value={permissions?.find(per => per.title === "manage-user/customer/update")?._id}
                                                     // checked={checked} 
                                                 />
                                                 <div>
@@ -277,13 +287,13 @@ const AddAuthority = () => {
                                 name="checkAllHui"
                                 className='form-checkbox'
                                 onChange={handleChange}
-                                value={permissions?.find(per => per.name === "name")}
+                                value=''
                                 // checked={checked} 
                             />
                             <div className='w-75'>
                                 <label htmlFor="" className='d-flex align-items-center justify-content-between' onClick={()=>setMenuHui(!menuHui)}>
                                     Quản lý hụi
-                                    <i className="mx-3 fa-solid fa-chevron-down"></i>
+                                    <i className={menuHui?"mx-3 fa-solid fa-chevron-up":"mx-3 fa-solid fa-chevron-down"}></i>
                                 </label>
                             </div>
                         </div>
@@ -297,7 +307,7 @@ const AddAuthority = () => {
                                             id='checkHui'
                                             className='form-checkbox'
                                             onChange={handleChange}
-                                            value={permissions?.find(per => per.name === "name")}
+                                            value={permissions?.find(per => per.title === "manage-hui/manage")?._id}
                                             // checked={checked} 
                                         />
                                         <div>
@@ -313,7 +323,7 @@ const AddAuthority = () => {
                                             id='checkReport'
                                             className='form-checkbox'
                                             onChange={handleChange}
-                                            value={permissions?.find(per => per.name === "name")}
+                                            value={permissions?.find(per => per.title === "manage-hui/report")?._id}
                                             // checked={checked} 
                                         />
                                         <div>

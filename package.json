@@ -13,6 +13,7 @@
     "date-fns": "^2.29.3",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
+    "react-checkbox-tree": "^1.8.0",
     "react-dom": "^18.2.0",
     "react-number-format": "^5.1.4",
     "react-pro-sidebar": "^1.0.0",

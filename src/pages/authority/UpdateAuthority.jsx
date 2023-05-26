@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import CheckboxTree from 'react-checkbox-tree';
 import alertify from 'alertifyjs';
 import { selectorUserCompanies } from '../../redux/slice/companySlice';
 import { selectorPermissions } from '../../redux/slice/permissionSlice';
@@ -18,7 +19,7 @@ const UpdateAuthority = () => {
     const [menuHui, setMenuHui] = useState(false);
     const userCompanies = useSelector(selectorUserCompanies)
     const permissions = useSelector(selectorPermissions)
-    console.log(roles);
+    console.log(permissions);
 
     useEffect(()=> {
         const fetchRoles = async () => {
@@ -123,172 +124,34 @@ const UpdateAuthority = () => {
                                 <label htmlFor="checkAll">Tất cả</label>
                             </div>
                         </div>
-                        <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                            <input 
-                                type="checkbox" 
-                                name='checkHome'
-                                id='checkHome'
-                                className='form-checkbox' 
-                            />
-                            <div>
-                                <label htmlFor="checkHome">Trang chủ</label>
+                        {permissions?.filter(per => per.title === 'main-page').map(per => (
+                            <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
+                                <input 
+                                    type="checkbox" 
+                                    name={per.title}
+                                    id={per.title}
+                                    className='form-checkbox' 
+                                    value={per.id}
+                                />
+                                <div>
+                                    <label htmlFor={per.title}>{per.name}</label>
+                                </div>
                             </div>
-                        </div>
-                        <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                            <input 
-                                type="checkbox" 
-                                name='checkCompany'
-                                id='checkCompany'
-                                className='form-checkbox' 
-                            />
-                            <div>
-                                <label htmlFor="checkCompany">Quản lý công ty</label>
+                        ))}
+                        {permissions?.filter(per => per.title.split('/')[0] === 'manage-user').map(per => (
+                            <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
+                                <input 
+                                    type="checkbox" 
+                                    name={per.title}
+                                    id={per.title}
+                                    className='form-checkbox' 
+                                    value={per.id}
+                                />
+                                <div>
+                                    <label htmlFor={per.title}>{per.name}</label>
+                                </div>
                             </div>
-                        </div>
-                        <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                            <input 
-                                type="checkbox" 
-                                name='checkUser'
-                                id='checkUser'
-                                className='form-checkbox'
-                            />
-                            <div className='w-75' >
-                                <label htmlFor="" className='d-flex align-items-center justify-content-between' onClick={()=>setMenuUser(!menuUser)}>
-                                    Quản lý người dùng
-                                    <i className="mx-3 fa-solid fa-chevron-down"></i>
-                                </label>
-                            </div>
-                        </div>
-                        {menuUser &&
-                            <ul>
-                                <li className='nav-sub-item p-2'>
-                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                        <input 
-                                            type="checkbox" 
-                                            name='checkEmployee'
-                                            id='checkEmployee'
-                                            className='form-checkbox' 
-                                        />
-                                        <div>
-                                            <label htmlFor="checkEmployee">Nhân viên</label>
-                                        </div>
-                                    </div>
-                                    <ul className='mt-2'>
-                                        <li className='nav-sub-item p-2'>
-                                            <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                <input 
-                                                    type="checkbox" 
-                                                    name='addEmployee'
-                                                    id='addEmployee'
-                                                    className='form-checkbox' 
-                                                />
-                                                <div>
-                                                    <label htmlFor="addEmployee">Thêm</label>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li className='nav-sub-item p-2'>
-                                            <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                <input 
-                                                    type="checkbox" 
-                                                    name='updateEmployee'
-                                                    id='updateEmployee'
-                                                    className='form-checkbox' 
-                                                />
-                                                <div>
-                                                    <label htmlFor="updateEmployee">Cập nhập</label>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li className='nav-sub-item px-2'>
-                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                        <input 
-                                            type="checkbox" 
-                                            name='checkCustomer'
-                                            id='checkCustomer'
-                                            className='form-checkbox' 
-                                        />
-                                        <div>
-                                            <label htmlFor="checkCustomer">Khách hàng</label>
-                                        </div>
-                                    </div>
-                                    <ul className='mt-2'>
-                                        <li className='nav-sub-item p-2'>
-                                            <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                <input 
-                                                    type="checkbox" 
-                                                    name='addCustomer'
-                                                    id='addCustomer'
-                                                    className='form-checkbox' 
-                                                />
-                                                <div>
-                                                    <label htmlFor="addCustomer">Thêm</label>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li className='nav-sub-item p-2'>
-                                            <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                <input 
-                                                    type="checkbox" 
-                                                    name='updateCustomer'
-                                                    id='updateCustomer'
-                                                    className='form-checkbox' 
-                                                />
-                                                <div>
-                                                    <label htmlFor="updateCustomer">Cập nhật</label>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        }
-                        <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                            <input 
-                                type="checkbox" 
-                                id='checkAllHui' 
-                                name="checkAllHui"
-                                className='form-checkbox' 
-                            />
-                            <div className='w-75'>
-                                <label htmlFor="" className='d-flex align-items-center justify-content-between' onClick={()=>setMenuHui(!menuHui)}>
-                                    Quản lý hụi
-                                    <i className="mx-3 fa-solid fa-chevron-down"></i>
-                                </label>
-                            </div>
-                        </div>
-                        {menuHui &&
-                            <ul>
-                                <li className='nav-sub-item p-2'>
-                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                        <input 
-                                            type="checkbox" 
-                                            name='checkHui'
-                                            id='checkHui'
-                                            className='form-checkbox' 
-                                        />
-                                        <div>
-                                            <label htmlFor="checkHui">Quản lý hụi</label>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li className='nav-sub-item px-2'>
-                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                        <input 
-                                            type="checkbox" 
-                                            name='checkReport'
-                                            id='checkReport'
-                                            className='form-checkbox' 
-                                        />
-                                        <div>
-                                            <label htmlFor="checkReport">Báo cáo</label>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        }
+                        ))}
                     </div>
                 </div>
             </div>
