@@ -50,36 +50,36 @@ const AddAuthority = () => {
         //     per.push(e.target.hui.value)
         // }
         console.log(checkedPer);
-        // const data = {
-        //     organizationId: selectCompany,
-        //     title: e.target.name.value,
-        //     name: e.target.name.value,
-        // }
+        const data = {
+            organizationId: selectCompany,
+            title: e.target.name.value,
+            name: e.target.name.value,
+        }
         
-        // if(!e.target.name.value) {
-        //     setError(true)
-        // } else {
-        //     try {
-        //         const res = await RoleAPI.create(data);
-        //         if(res.ResponseResult.ErrorCode === 0){
-        //             setError(false)
-        //             setMessErr(null)
-        //             alertify.set('notifier', 'position', 'top-right');
-        //             alertify.success('Thêm mới thành công!');
-        //         } else if(res.ResponseResult.Result.code === 11000) {
-        //             setError(false)
-        //             setMessErr('Tên nhóm quyền đã tồn tại!')
-        //         } else {
-        //             console.log(res.ResponseResult.Message);
-        //             setError(false)
-        //             setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
-        //         }
-        //     }
-        //     catch(err) {
-        //         console.log(err);
-        //         setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
-        //     }
-        // }
+        if(!e.target.name.value) {
+            setError(true)
+        } else {
+            try {
+                const res = await RoleAPI.create(data);
+                if(res.ResponseResult.ErrorCode === 0){
+                    setError(false)
+                    setMessErr(null)
+                    alertify.set('notifier', 'position', 'top-right');
+                    alertify.success('Thêm mới thành công!');
+                } else if(res.ResponseResult.Result.code === 11000) {
+                    setError(false)
+                    setMessErr('Tên nhóm quyền đã tồn tại!')
+                } else {
+                    console.log(res.ResponseResult.Message);
+                    setError(false)
+                    setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+                }
+            }
+            catch(err) {
+                console.log(err);
+                setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+            }
+        }
     };
 
     return (
