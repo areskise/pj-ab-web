@@ -1,9 +1,23 @@
 import './sidebar.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from "react-router-dom";
+import MenuAPI from '../../API/MenuAPI';
+import { useDispatch } from 'react-redux';
+import { menuActions } from '../../redux/slice/menuSlice';
 
 const SideBar = () => {
   const [navUser, setNavUser] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchMenu = async () => {
+        const res = await MenuAPI.getDefault()
+        const result = res.ResponseResult.Result[0]?.menu
+        console.log(result);
+        dispatch(menuActions.setDefault(result))
+    }
+    fetchMenu();
+}, []);
 
   return(  
     <div className="sidebar flex-nowrap">

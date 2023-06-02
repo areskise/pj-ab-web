@@ -5,6 +5,7 @@ import permissionReducer from './slice/permissionSlice';
 import createSagaMiddleware from 'redux-saga';
 import applicationReducer from './slice/applicationSlice';
 import rootSaga from "./saga/rootSaga";
+import menuReducer from './slice/menuSlice';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -14,6 +15,7 @@ const store = configureStore({
         company: companyReducer,
         permission: permissionReducer,
         application: applicationReducer,
+        menu: menuReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
 });

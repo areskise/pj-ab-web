@@ -35,7 +35,6 @@ const SignIn = () => {
       try {
         const res = await AuthAPI.login(data);
         const result = res.ResponseResult.Result
-        console.log(res);
         if(res.ResponseResult.ErrorCode === 0) {
           if(remember) {
             cookies.set('access_token', result, {maxAge: 604800})

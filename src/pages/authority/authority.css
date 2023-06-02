@@ -46,7 +46,7 @@
     border: 1px solid #D8E2E9;
     border-radius: 20px;
     margin: 16px 16px 0 16px;
-    padding: .8em;
+    padding: 2em;
 }
 
 .authority-container .form-checkbox {
@@ -66,6 +66,41 @@
     color: #454545;
     display: flex;
     text-align: start;
+}
+
+.check-all>.rct-text>.rct-collapse-btn>.rct-icon {
+    display: none !important;
+}
+
+.check-all>.rct-text>.rct-collapse {
+    position: relative;
+    padding: 0 10px;
+}
+
+.rct-text {
+    position: relative;
+}
+
+.rct-collapse {
+    position: absolute;
+    right: 0;
+    margin: 4px 8px;
+    font-size: 16px !important;
+}
+
+.rct-icons-fa4 .rct-icon-uncheck::before,
+.rct-icons-fa4 .rct-icon-check::before,
+.rct-icons-fa4 .rct-icon-half-check::before {
+    font-size: 20px;
+}
+
+.react-checkbox-tree ol ol {
+    border-left: 2px solid #777;
+    margin-left: 12px;
+}
+
+.check-all>ol {
+    border: none !important;
 }
 
 @media screen and (max-width: 992px) {

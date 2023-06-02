@@ -1,59 +1,80 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import CheckboxTree from 'react-checkbox-tree';
+import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import alertify from 'alertifyjs';
 import { selectorUserCompanies } from '../../redux/slice/companySlice';
 import { selectorPermissions } from '../../redux/slice/permissionSlice';
 import RoleAPI from '../../API/RoleAPI';
-import CompanyAPI from '../../API/CompanyAPI';
+import { selectorMenuDefault } from '../../redux/slice/menuSlice';
 
 const AddAuthority = () => {
     const [selectCompany, setSelectCompany] = useState('');
-    const [checkedPer, setCheckedPer] = useState([]);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
-    const [menuUser, setMenuUser] = useState(false);
-    const [menuHui, setMenuHui] = useState(false);
+    const [checked, setChecked] = useState([]);
+    const [expanded, setExpanded] = useState(['all', '646f8a5a4e4fb00d95ee26aa', '646f8a924e4fb00d95ee26ac', '646f8ad04e4fb00d95ee26ae', '6478a3238cf76c1e8a41e7fe']);
+    const [filterText, setFilterText] = useState('');
     const userCompanies = useSelector(selectorUserCompanies)
-    const permissions = useSelector(selectorPermissions)
+    const menuDefault = useSelector(selectorMenuDefault)
+    const nodes = [{
+        value: 'all',
+        label: 'Tất cả',
+        className: 'check-all',
+        children: menuDefault,
+    }]
+    const [filteredNodes, setFilteredNodes] = useState(nodes);
 
-    console.log(checkedPer);
-    useEffect(()=> {
-        
-    },[selectCompany])
+    useEffect(() => {
+        filterTree();
+    }, [filterText])
 
-    const handleChange = (e) => {
-        const { checked, value } = e.target;
-        if(checked) {
-            if(value) {
-                setCheckedPer([...checkedPer, value])
-            }
+    const onCheck = (value) => {
+        setChecked(value);
+    };
+
+    const onExpand = (value) => {
+        setExpanded(value);
+    };
+
+    const filterNodes = (filtered, node) => {
+        const children = (node.children || []).reduce(filterNodes, []);
+
+        if (
+            // Node's label matches the search string
+            node.label.toLocaleLowerCase().indexOf(filterText.toLocaleLowerCase()) > -1 ||
+            // Or a children has a matching node
+            children.length
+        ) {
+            filtered.push({ ...node, children });
         }
-        else {
-            if(value) {
-                setCheckedPer(checkedPer.filter(e => e !== value))
-            }
-        }
+
+        return filtered;
     }
 
-    const handleCheckAll = () => {
+    const filterTree = () => {
+        // Reset nodes back to unfiltered state
+        console.log(filterText);
+        if (!filterText) {
+            setFilteredNodes(nodes);
+            return;
+        }
 
+        setFilteredNodes(nodes.reduce(filterNodes, []));
+    }
+
+    const onFilterChange = (e) => {
+        setFilterText(e.target.value)
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // const { name, checked, value } = e.target;
-        // const per = []
-        // const formCheck = {...per, [name]: value}
-        // console.log(formCheck.checkAll);
-
-        // if(e.target.hui.checked) {
-        //     per.push(e.target.hui.value)
-        // }
-        console.log(checkedPer);
+        const perIds = checked.filter(perId => perId !== 'all');
         const data = {
             organizationId: selectCompany,
             title: e.target.name.value,
             name: e.target.name.value,
+            permissionId: perIds,
         }
         
         if(!e.target.name.value) {
@@ -113,226 +134,23 @@ const AddAuthority = () => {
                     <div className='title'>
                         Danh sách chức năng
                     </div>
-                    <div className='form-check'>
-                        <div className='d-flex m-md-3 my-3 align-items-center justify-content-start'>
-                            <input type="select" className='form-control' placeholder='Nhập từ khóa tìm kiếm' />
-                        </div>
-                        <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                            <input 
-                                type="checkbox" 
-                                name='checkAll'
-                                id='checkAll'
-                                className='form-checkbox'
-                                onChange={handleCheckAll}
-                                value=''
-                                // checked={checked} 
-                            />
-                            <div>
-                                <label htmlFor="checkAll">Tất cả</label>
-                            </div>
-                        </div>
-                        <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                            <input 
-                                type="checkbox" 
-                                name='checkHome'
-                                id='checkHome'
-                                className='form-checkbox'
-                                onChange={handleChange}
-                                value={permissions?.find(per => per.title === "main-page")?._id}
-                                // checked={checked} 
-                            />
-                            <div>
-                                <label htmlFor="checkHome">Trang chủ</label>
-                            </div>
-                        </div>
-                        <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                            <input 
-                                type="checkbox" 
-                                name='checkCompany'
-                                id='checkCompany'
-                                className='form-checkbox'
-                                onChange={handleChange}
-                                value={permissions?.find(per => per.title === "manage-company")?._id}
-                                // checked={checked} 
-                            />
-                            <div>
-                                <label htmlFor="checkCompany">Quản lý công ty</label>
-                            </div>
-                        </div>
-                        <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                            <input 
-                                type="checkbox" 
-                                name='checkUser'
-                                id='checkUser'
-                                className='form-checkbox'
-                                onChange={handleChange}
-                                value=''
-                                // checked={checked}
-                            />
-                            <div className='w-75' >
-                                <label htmlFor="" className='d-flex align-items-center justify-content-between' onClick={()=>setMenuUser(!menuUser)}>
-                                    Quản lý người dùng
-                                    <i className={menuUser?"mx-3 fa-solid fa-chevron-up":"mx-3 fa-solid fa-chevron-down"}></i>
-                                </label>
-                            </div>
-                        </div>
-                        {menuUser &&
-                            <ul>
-                                <li className='nav-sub-item p-2'>
-                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                        <input 
-                                            type="checkbox" 
-                                            name='checkEmployee'
-                                            id='checkEmployee'
-                                            className='form-checkbox'
-                                            onChange={handleChange}
-                                            value=''
-                                            // checked={checked} 
-                                        />
-                                        <div>
-                                            <label htmlFor="checkEmployee">Nhân viên</label>
-                                        </div>
-                                    </div>
-                                    <ul className='mt-2'>
-                                        <li className='nav-sub-item p-2'>
-                                            <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                <input 
-                                                    type="checkbox" 
-                                                    name='addEmployee'
-                                                    id='addEmployee'
-                                                    className='form-checkbox'
-                                                    onChange={handleChange}
-                                                    value={permissions?.find(per => per.title === "manage-user/staff/add")?._id}
-                                                    // checked={checked} 
-                                                />
-                                                <div>
-                                                    <label htmlFor="addEmployee">Thêm</label>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li className='nav-sub-item p-2'>
-                                            <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                <input 
-                                                    type="checkbox" 
-                                                    name='updateEmployee'
-                                                    id='updateEmployee'
-                                                    className='form-checkbox'
-                                                    onChange={handleChange}
-                                                    value={permissions?.find(per => per.title === "manage-user/staff/update")?._id}
-                                                    // checked={checked} 
-                                                />
-                                                <div>
-                                                    <label htmlFor="updateEmployee">Cập nhập</label>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li className='nav-sub-item px-2'>
-                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                        <input 
-                                            type="checkbox" 
-                                            name='checkCustomer'
-                                            id='checkCustomer'
-                                            className='form-checkbox'
-                                            onChange={handleChange}
-                                            value=''
-                                            // checked={checked} 
-                                        />
-                                        <div>
-                                            <label htmlFor="checkCustomer">Khách hàng</label>
-                                        </div>
-                                    </div>
-                                    <ul className='mt-2'>
-                                        <li className='nav-sub-item p-2'>
-                                            <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                <input 
-                                                    type="checkbox" 
-                                                    name='addCustomer'
-                                                    id='addCustomer'
-                                                    className='form-checkbox'
-                                                    onChange={handleChange}
-                                                    value={permissions?.find(per => per.title === "manage-user/customer/add")?._id}                                                   
-                                                    // checked={checked} 
-                                                />
-                                                <div>
-                                                    <label htmlFor="addCustomer">Thêm</label>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li className='nav-sub-item p-2'>
-                                            <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                                <input 
-                                                    type="checkbox" 
-                                                    name='updateCustomer'
-                                                    id='updateCustomer'
-                                                    className='form-checkbox'
-                                                    onChange={handleChange}
-                                                    value={permissions?.find(per => per.title === "manage-user/customer/update")?._id}
-                                                    // checked={checked} 
-                                                />
-                                                <div>
-                                                    <label htmlFor="updateCustomer">Cập nhật</label>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        }
-                        <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                            <input 
-                                type="checkbox" 
-                                id='checkAllHui' 
-                                name="checkAllHui"
-                                className='form-checkbox'
-                                onChange={handleChange}
-                                value=''
-                                // checked={checked} 
-                            />
-                            <div className='w-75'>
-                                <label htmlFor="" className='d-flex align-items-center justify-content-between' onClick={()=>setMenuHui(!menuHui)}>
-                                    Quản lý hụi
-                                    <i className={menuHui?"mx-3 fa-solid fa-chevron-up":"mx-3 fa-solid fa-chevron-down"}></i>
-                                </label>
-                            </div>
-                        </div>
-                        {menuHui &&
-                            <ul>
-                                <li className='nav-sub-item p-2'>
-                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                        <input 
-                                            type="checkbox" 
-                                            name='checkHui'
-                                            id='checkHui'
-                                            className='form-checkbox'
-                                            onChange={handleChange}
-                                            value={permissions?.find(per => per.title === "manage-hui/manage")?._id}
-                                            // checked={checked} 
-                                        />
-                                        <div>
-                                            <label htmlFor="checkHui">Quản lý hụi</label>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li className='nav-sub-item px-2'>
-                                    <div className='d-flex mx-4 align-items-center justify-content-start'>
-                                        <input 
-                                            type="checkbox" 
-                                            name='checkReport'
-                                            id='checkReport'
-                                            className='form-checkbox'
-                                            onChange={handleChange}
-                                            value={permissions?.find(per => per.title === "manage-hui/report")?._id}
-                                            // checked={checked} 
-                                        />
-                                        <div>
-                                            <label htmlFor="checkReport">Báo cáo</label>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        }
+                    <div className='form-check filter-container'>
+                        <input
+                            className="filter-text form-control mt-1 mb-2"
+                            placeholder="Nhập từ khóa tìm kiếm"
+                            type="text"
+                            value={filterText}
+                            onChange={onFilterChange}
+                        />
+                        <CheckboxTree
+                            checked={checked}
+                            expanded={expanded}
+                            nodes={filteredNodes}
+                            onCheck={onCheck}
+                            onExpand={onExpand}
+                            showNodeIcon={false}
+                            checkModel={'all'}
+                        />
                     </div>
                 </div>
             </div>

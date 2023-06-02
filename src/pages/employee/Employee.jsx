@@ -26,7 +26,7 @@ const Employee = () => {
     const dispatch = useDispatch();
     const employees = useSelector(selectorEmployees)
     const userCompanies = useSelector(selectorUserCompanies)
-console.log(employees);
+
     useEffect(() => {
         if(selectCompany === 'all') {
             const data = {
@@ -222,12 +222,12 @@ console.log(employees);
                         }
                         </table>
                         <div className="p-2 mb-4 d-flex justify-content-between">
-                            <h6 className="mx-md-2 my-0">Tìm thấy: {employees.totalDocs?employees.totalDocs:0} nhân viên</h6>
+                            <h6 className="mx-md-2 my-0">Tìm thấy: {employees?.totalDocs?employees?.totalDocs:0} nhân viên</h6>
                             <div className="d-flex align-items-center mx-md-4">
                                 <i className="fa-solid fa-chevron-left" onClick={() => prevPage()}></i>
                                 <div className="d-flex mx-md-4">
-                                    <input className="input-page" value={employees.page} onChange={(e)=>setPage(e.target.value)}></input>
-                                    <div>/ {employees.totalPages?employees.totalPages:1}</div>
+                                    <input className="input-page" value={employees?.page} onChange={(e)=>setPage(e.target.value)}></input>
+                                    <div>/ {employees?.totalPages?employees?.totalPages:1}</div>
                                 </div>
                                 <i className="fa-solid fa-chevron-right" onClick={() => nextPage()}></i>
                             </div>

@@ -1,25 +1,33 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-// import CheckboxTree from 'react-checkbox-tree';
+import CheckboxTree from 'react-checkbox-tree';
+import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import alertify from 'alertifyjs';
 import { selectorUserCompanies } from '../../redux/slice/companySlice';
 import { selectorPermissions } from '../../redux/slice/permissionSlice';
-import PermissionAPI from '../../API/PermissionAPI';
 import CompanyAPI from '../../API/CompanyAPI';
 import RoleAPI from '../../API/RoleAPI';
+import { selectorMenuDefault } from '../../redux/slice/menuSlice';
 
 const UpdateAuthority = () => {
-    const [loading, setLoading] = useState(false);
     const [selectCompany, setSelectCompany] = useState(null);
     const [selectRole, setSelectRole] = useState(null);
-    const [roles, setRoles] = useState([]);
-    const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
-    const [menuUser, setMenuUser] = useState(false);
-    const [menuHui, setMenuHui] = useState(false);
+    const [error, setError] = useState(false);
+    const [roles, setRoles] = useState([]);
+    const [checked, setChecked] = useState([]);
+    const [expanded, setExpanded] = useState(['all', '646f8a5a4e4fb00d95ee26aa', '646f8a924e4fb00d95ee26ac', '646f8ad04e4fb00d95ee26ae', '6478a3238cf76c1e8a41e7fe']);
+    const [filterText, setFilterText] = useState('');
     const userCompanies = useSelector(selectorUserCompanies)
     const permissions = useSelector(selectorPermissions)
-    console.log(permissions);
+    const menuDefault = useSelector(selectorMenuDefault)
+    const nodes = [{
+        value: 'all',
+        label: 'Tất cả',
+        className: 'check-all',
+        children: menuDefault,
+    }]
+    const [filteredNodes, setFilteredNodes] = useState(nodes);
 
     useEffect(()=> {
         const fetchRoles = async () => {
@@ -30,7 +38,49 @@ const UpdateAuthority = () => {
         if(selectCompany) {
             fetchRoles()
         }
-    },[selectCompany,loading])
+    },[selectCompany])
+
+    useEffect(() => {
+        filterTree();
+    }, [filterText])
+
+    const onCheck = (value) => {
+        setChecked(value);
+    };
+
+    const onExpand = (value) => {
+        setExpanded(value);
+    };
+
+    const filterNodes = (filtered, node) => {
+        const children = (node.children || []).reduce(filterNodes, []);
+
+        if (
+            // Node's label matches the search string
+            node.label.toLocaleLowerCase().indexOf(filterText.toLocaleLowerCase()) > -1 ||
+            // Or a children has a matching node
+            children.length
+        ) {
+            filtered.push({ ...node, children });
+        }
+
+        return filtered;
+    }
+
+    const filterTree = () => {
+        // Reset nodes back to unfiltered state
+        console.log(filterText);
+        if (!filterText) {
+            setFilteredNodes(nodes);
+            return;
+        }
+
+        setFilteredNodes(nodes.reduce(filterNodes, []));
+    }
+
+    const onFilterChange = (e) => {
+        setFilterText(e.target.value)
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -51,7 +101,6 @@ const UpdateAuthority = () => {
                     setMessErr(null)
                     alertify.set('notifier', 'position', 'top-right');
                     alertify.success('Cập nhật thành công!');
-                    setLoading(!loading)
                 } else if(res.ResponseResult.Result.code === 11000) {
                     setError(false)
                     setMessErr('Tên nhóm quyền đã tồn tại!')
@@ -109,51 +158,33 @@ const UpdateAuthority = () => {
                     <div className='title'>
                         Danh sách chức năng
                     </div>
-                    <div className='form-check'>
-                        <div className='d-flex m-md-3 my-3 align-items-center justify-content-start'>
-                            <input type="select" className='form-control' placeholder='Nhập từ khóa tìm kiếm' />
-                        </div>
-                        <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                            <input 
-                                type="checkbox" 
-                                name='checkAll'
-                                id='checkAll'
-                                className='form-checkbox' 
-                            />
-                            <div>
-                                <label htmlFor="checkAll">Tất cả</label>
-                            </div>
-                        </div>
-                        {permissions?.filter(per => per.title === 'main-page').map(per => (
-                            <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                <input 
-                                    type="checkbox" 
-                                    name={per.title}
-                                    id={per.title}
-                                    className='form-checkbox' 
-                                    value={per.id}
-                                />
-                                <div>
-                                    <label htmlFor={per.title}>{per.name}</label>
-                                </div>
-                            </div>
-                        ))}
-                        {permissions?.filter(per => per.title.split('/')[0] === 'manage-user').map(per => (
-                            <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
-                                <input 
-                                    type="checkbox" 
-                                    name={per.title}
-                                    id={per.title}
-                                    className='form-checkbox' 
-                                    value={per.id}
-                                />
-                                <div>
-                                    <label htmlFor={per.title}>{per.name}</label>
-                                </div>
-                            </div>
-                        ))}
+                    <div className='form-check filter-container'>
+                        <input
+                            className="filter-text form-control mt-1 mb-2"
+                            placeholder="Nhập từ khóa tìm kiếm"
+                            type="text"
+                            value={filterText}
+                            onChange={onFilterChange}
+                        />
+                        <CheckboxTree
+                            checked={checked}
+                            expanded={expanded}
+                            nodes={filteredNodes}
+                            onCheck={onCheck}
+                            onExpand={onExpand}
+                            showNodeIcon={false}
+                            checkModel={'all'}
+                        />
                     </div>
                 </div>
+            </div>
+            <div className='m-auto mt-3 text-center'>
+                {error && 
+                    <div className="error-text">Vui lòng nhập đầy đủ thông tin.</div>
+                }
+                {messErr &&
+                    <div className="error-text">{messErr}</div>
+                }
             </div>
             <div className="d-flex justify-content-center m-4">
             <button className="btn btn-continue" type="submit">Cập nhật</button>
