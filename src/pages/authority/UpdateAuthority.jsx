@@ -40,10 +40,6 @@ const UpdateAuthority = () => {
         }
     },[selectCompany])
 
-    useEffect(() => {
-        filterTree();
-    }, [filterText])
-
     const onCheck = (value) => {
         setChecked(value);
     };

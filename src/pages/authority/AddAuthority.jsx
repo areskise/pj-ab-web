@@ -27,7 +27,7 @@ const AddAuthority = () => {
 
     useEffect(() => {
         filterTree();
-    }, [filterText])
+    }, [filterText, menuDefault])
 
     const onCheck = (value) => {
         setChecked(value);
