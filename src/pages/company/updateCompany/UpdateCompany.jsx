@@ -47,7 +47,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
             _id: showUpdate._id,
             name: e.target.name.value,
             title: e.target.code.value,
-            phone: +e.target.phone.value,
+            phone: e.target.phone.value,
             money: +e.target.money.value,
             startDate: e.target.startDate.value,
             status: e.target.status.value,
@@ -56,6 +56,9 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
         if(!e.target.name.value || !e.target.phone.value || !e.target.money.value || !e.target.startDate.value) {
             setError(true)
             setMessErr(null)
+        } else if(e.target.phone.value && e.target.phone.value.length !== 10) {
+            setError(null)
+            setMessErr('Số điện thoại phải gồm 10 chữ số')
         } else {
             try {
                 const res = await CompanyAPI.update(data);
@@ -71,14 +74,14 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                         setError(false)
                         setMessErr('Mã công ty đã tồn tại. Vui lòng nhập tên khác!')
                     } else {
-                        console.log(res.ResponseResult.Message);
+                        console.error(res.ResponseResult.Message);
                         setError(false)
                         setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
                     }
                 }
             }
             catch(err) {
-                console.log(err.message);
+                console.error(err)
                 setError(false)
                 setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
             }

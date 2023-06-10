@@ -9,7 +9,7 @@ function* fetchApplications(action) {
         yield put(applicationActions.setApplications(result));
     } 
     catch(err) {
-        console.log(err);
+        console.error(err);
     }
 };
 

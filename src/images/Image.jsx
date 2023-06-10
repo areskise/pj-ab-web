@@ -1,6 +1,7 @@
 import background from './background.png';
 import mask from './mask.png';
 import company from './company.png';
+import empty from './empty.png';
 import hui from './hui.png';
 import avatar from './avatar.jpg';
 import logoBlack from './logo-black.png';
@@ -14,6 +15,7 @@ const Image = {
 	avatar: avatar,
 	company: company,
 	hui: hui,
+	empty: empty,
 };
 
 export default Image;

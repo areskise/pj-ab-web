@@ -18,12 +18,10 @@ const CompanyAPI = {
     },
 
     getUsers: async (data) => {
-        console.log(data);
         return axiosClient.get(`/organization/getUsers?limit=${data.limit}&page=${data.page}&organizationId=${data.id}&status=${data.status}`);
     },
 
     getRoles: async (id) => {
-        console.log(id);
         return axiosClient.get(`/organization/getRoles?id=${id}`);
     },
 

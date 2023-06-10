@@ -6,7 +6,7 @@ const AuthAPI = {
     },
 
     refresh: async (body) => {
-        return axiosClient.put(`/auth/refresh`, body);
+        return axiosClient.post(`/auth/refresh`, body);
     },
 }
 

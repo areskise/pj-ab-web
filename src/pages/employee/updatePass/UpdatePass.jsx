@@ -10,7 +10,7 @@ const UpdatePass = ({setUpdatePass, updatePass}) => {
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
     const data = new FormData();
-console.log(updatePass);
+
     useEffect(() => {
     },[]);
 
@@ -18,7 +18,6 @@ console.log(updatePass);
         e.preventDefault();
         data.append('userName', e.target.userName.value);
         data.append('newPassword', e.target.rePassword.value);
-        console.log(e.target.userName.value);
         if(!e.target.rePassword.value || !e.target.password.value) {
             setError(true)
             setMessErr(null)
@@ -29,7 +28,6 @@ console.log(updatePass);
         else {
             try {
                 const res = await EmployeeAPI.setPass(data);
-                console.log(res);
                 if(res.ResponseResult.ErrorCode === 0){
                     setUpdatePass(false)
                     setError(false)
@@ -37,13 +35,13 @@ console.log(updatePass);
                     alertify.set('notifier', 'position', 'top-right');
                     alertify.success('Cập nhật thành công!');
                 } else {
-                    console.log(res.ResponseResult.Message);
+                    console.error(res.ResponseResult.Message);
                     setError(false)
                     setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
                 }
             }
             catch(err) {
-                console.log(err.message);
+                console.error(err.message);
                 setError(false)
                 setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
             }

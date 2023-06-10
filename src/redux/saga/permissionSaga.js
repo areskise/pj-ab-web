@@ -9,7 +9,7 @@ function* fetchPermissions(action) {
         yield put(permissionActions.setPermissions(result));
     } 
     catch(err) {
-        console.log(err);
+        console.error(err);
     }
 };
 

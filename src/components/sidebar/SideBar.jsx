@@ -13,7 +13,6 @@ const SideBar = () => {
     const fetchMenu = async () => {
         const res = await MenuAPI.getDefault()
         const result = res.ResponseResult.Result[0]?.menu
-        console.log(result);
         dispatch(menuActions.setDefault(result))
     }
     fetchMenu();

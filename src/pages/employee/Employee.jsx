@@ -1,5 +1,5 @@
 import './employee.css';
-import Spinner from 'react-bootstrap/Spinner';
+import img from '../../images/Image';
 import Header from "../../components/header/Header";
 import SideBar from "../../components/sidebar/SideBar";
 import { useEffect, useState } from 'react';
@@ -39,7 +39,6 @@ const Employee = () => {
                     setLoading(true);
                     const res = await CompanyAPI.getAllUsers(data);
                     const result = res.ResponseResult.Result;
-                    console.log(res);
                     dispatch(employeeActions.setEmployees(result));
                     setLoading(false);
                 } catch (error) {
@@ -60,7 +59,6 @@ const Employee = () => {
                     setLoading(true);
                     const res = await CompanyAPI.getUsers(data);
                     const result = res.ResponseResult.Result;
-                    console.log(res);
                     dispatch(employeeActions.setEmployees(result));
                     setLoading(false);
                 } catch (error) {
@@ -120,6 +118,19 @@ const Employee = () => {
                     <i className="mx-2 fa-solid fa-angles-right" style={{fontSize: '18px'}}></i> 
                     Nhân viên
                 </h5>
+                {loading && !employees.docs ?
+                <div className="bg-white content">
+                    <div className="d-flex p-4 align-items-center justify-content-center"> 
+                        <h3 className="title">DANH SÁCH CÔNG TY</h3>
+                        <i className="fa-solid fa-circle-plus plus" onClick={() => setShowAdd(true)}></i>
+                    </div>
+                    <div className="loading-container">
+                        <div>
+                            <i class="fa-solid fa-spinner fa-spin-pulse fa-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                :
                 <div className="bg-white content">
                     <div className="d-flex p-4 align-items-center justify-content-center"> 
                         <h3 className="title">DANH SÁCH NHÂN VIÊN</h3>
@@ -148,46 +159,37 @@ const Employee = () => {
                             ></i>
                         </button>
                     </div>
+                    {!employees.docs ? 
+                        <div className="loading-container">
+                            <div>
+                                <img src={img.empty} alt='logo' width="200" height="170" className='empty-img'/>
+                                <p>Chức năng chưa có dữ liệu</p>
+                                <p>Vui lòng thêm dữ liệu</p>
+                            </div>
+                        </div>
+                    :
                     <div className="employee-container">
                         <table className="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">Họ tên</th>
-                            <th scope="col">Số điện thoại</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Nhóm quyền</th>
-                            <th scope="col">
-                            <div className='d-flex align-items-end'>
-                                    Trạng thái 
-                                    <i 
-                                        className={iconStatus}
-                                        onClick={sortByStatus}
-                                    ></i>
-                                </div>
-                            </th>
-                            <th scope="col" className="employee-center">Chức năng</th>
-                        </tr>
-                        </thead>
-                        {loading?
+                            <thead>
+                            <tr>
+                                <th scope="col">Họ tên</th>
+                                <th scope="col">Số điện thoại</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Nhóm quyền</th>
+                                <th scope="col">
+                                <div className='d-flex align-items-end'>
+                                        Trạng thái 
+                                        <i 
+                                            className={iconStatus}
+                                            onClick={sortByStatus}
+                                        ></i>
+                                    </div>
+                                </th>
+                                <th scope="col" className="employee-center">Chức năng</th>
+                            </tr>
+                            </thead>
                             <tbody>
-                                <tr className="d-flex align-items-center">
-                                    <Spinner
-                                        as="span"
-                                        animation="border"
-                                        variant="secondary"
-                                        size="sm"
-                                        role="status"
-                                        aria-hidden="true"
-                                        className="spinner-loading"
-                                    />
-                                    <span className="text-loading">
-                                        Loading...
-                                    </span>
-                                </tr>
-                          </tbody>
-                        :
-                            <tbody>
-                                {employees && employees.docs?.map((employee, i) => (
+                                {employees.docs?.map((employee, i) => (
                                     <tr key={i}>
                                         <td scope="row" data-label="Họ tên:" onClick={() => setShowDetail(true)}>
                                             {employee.userId?.fullName}
@@ -219,7 +221,6 @@ const Employee = () => {
                                     </tr>
                                 ))}
                             </tbody>
-                        }
                         </table>
                         <div className="p-2 mb-4 d-flex justify-content-between">
                             <h6 className="mx-md-2 my-0">Tìm thấy: {employees?.totalDocs?employees?.totalDocs:0} nhân viên</h6>
@@ -233,7 +234,9 @@ const Employee = () => {
                             </div>
                         </div>
                     </div>
+                    }
                 </div>
+                }
             </div>
         </div>
     )

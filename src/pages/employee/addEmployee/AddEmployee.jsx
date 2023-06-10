@@ -56,6 +56,9 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
         } else if(e.target.password.value !== e.target.rePassword.value) {
             setMessErr('Nhập lại mật khẩu không chính xác!')
             setError(false)
+        } else if(e.target.phoneNumber.value && e.target.phoneNumber.value.length !== 10) {
+            setError(null)
+            setMessErr('Số điện thoại phải gồm 10 chữ số')
         } else {
             try {
                 const res = await EmployeeAPI.create(data);
@@ -68,18 +71,16 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                 } else {
                     if(res.ResponseResult.Result.code === 11000) {
                         setError(false)
-                        console.log(res.ResponseResult.Message);
-
                         setMessErr('Tên đăng nhập hoặc Email đã tồn tại!')
                     } else {
-                        console.log(res.ResponseResult.Message);
+                        console.error(res.ResponseResult.Message);
                         setError(false)
                         setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
                     }
                 }
             }
             catch(err) {
-                console.log(err);
+                console.error(err.me);
                 setError(false)
                 setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
             }

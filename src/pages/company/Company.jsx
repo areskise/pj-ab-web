@@ -1,5 +1,5 @@
 import "./company.css"; 
-import Spinner from 'react-bootstrap/Spinner';
+import img from '../../images/Image';
 import Header from "../../components/header/Header";
 import SideBar from "../../components/sidebar/SideBar";
 import { useEffect, useState } from 'react';
@@ -62,6 +62,10 @@ const Company = () => {
     }, [page, showAdd, showUpdate, sortMoney, sortDate, sortStatus]);
 
     const sortByMoney = () => {
+        setSortDate('')
+        setSortStatus('')
+        setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
+        setIcontDate('p-1 fa-solid fa-arrow-right-arrow-left')
         if(sortMoney === '') {
             setSortMoney(1)
             setIcontMoney('p-1 fa-solid fa-arrow-up-short-wide')
@@ -75,6 +79,10 @@ const Company = () => {
     }
 
     const sortByDate = () => {
+        setSortMoney('')
+        setSortStatus('')
+        setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
+        setIcontMoney('p-1 fa-solid fa-arrow-right-arrow-left')
         if(sortDate === '') {
             setSortDate(1)
             setIcontDate('p-1 fa-solid fa-arrow-up-short-wide')
@@ -88,6 +96,10 @@ const Company = () => {
     }
 
     const sortByStatus = () => {
+        setSortDate('')
+        setSortMoney('')
+        setIcontDate('p-1 fa-solid fa-arrow-right-arrow-left')
+        setIcontMoney('p-1 fa-solid fa-arrow-right-arrow-left')
         if(sortStatus === '') {
             setSortStatus(1)
             setIcontStatus('p-1 status-icon company-disable fa-solid fa-circle')
@@ -124,6 +136,19 @@ const Company = () => {
             <UpdateCompany showUpdate={showUpdate} setShowUpdate={setShowUpdate}/>
             <div className="main-container bg-light">
                 <h5 className="m-4">Quản lý công ty</h5>
+                {loading && !companies.docs ?
+                <div className="bg-white content">
+                    <div className="d-flex p-4 align-items-center justify-content-center"> 
+                        <h3 className="title">DANH SÁCH CÔNG TY</h3>
+                        <i className="fa-solid fa-circle-plus plus" onClick={() => setShowAdd(true)}></i>
+                    </div>
+                    <div className="loading-container">
+                        <div>
+                            <i class="fa-solid fa-spinner fa-spin-pulse fa-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                :
                 <div className="bg-white content">
                     <div className="d-flex p-4 align-items-center justify-content-center"> 
                         <h3 className="title">DANH SÁCH CÔNG TY</h3>
@@ -157,111 +182,103 @@ const Company = () => {
                             </button>
                         </div>
                     </div>
-                    <div className="company-container">
-                        <table className="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">Mã CT</th>
-                            <th scope="col">Tên công ty</th>
-                            <th scope="col">Số điện thoại</th>
-                            <th scope="col">
-                                <div className='d-flex align-items-end'> 
-                                    Số vốn 
-                                    <i 
-                                        className={iconMoney}
-                                        onClick={sortByMoney}
-                                    ></i>
-                                </div>
-                            </th>
-                            <th scope="col">
-                                <div className='d-flex align-items-end'>
-                                    Ngày hoạt động 
-                                    <i 
-                                        className={iconDate}
-                                        onClick={sortByDate}
-                                    ></i>
-                                </div>
-                            </th>
-                            <th scope="col">
-                                <div className='d-flex align-items-end'>
-                                    Trạng thái 
-                                    <i 
-                                        className={iconStatus}
-                                        onClick={sortByStatus}
-                                    ></i>
-                                </div>
-                            </th>
-                            <th scope="col" className="company-center">Chức năng</th>
-                        </tr>
-                        </thead>
-                        {loading?
-                            <tbody>
-                                <tr className="d-flex align-items-center">
-                                    <Spinner
-                                        as="span"
-                                        animation="border"
-                                        variant="secondary"
-                                        size="sm"
-                                        role="status"
-                                        aria-hidden="true"
-                                        className="spinner-loading"
-                                    />
-                                    <span className="text-loading">
-                                        Loading...
-                                    </span>
-                                </tr>
-                          </tbody>
-                        :
-                            <tbody>
-                                {companies.docs?.map((company, i) => (
-                                    <tr key={i}>
-                                        <td scope="row" data-label="Mã CT:">{company.title}</td>
-                                        <td data-label="Tên công ty:">{company.name}</td>
-                                        <td data-label="Số điện thoại:">{company.phone}</td>
-                                        <td data-label="Số vốn:">
-                                            {currencyFormatter.format(company.money, {
-                                            symbol: 'VND',
-                                            decimal: '*',
-                                            thousand: '.',
-                                            precision: 0,
-                                            format: '%v %s' // %s is the symbol and %v is the value
-                                            })}
-                                        </td>
-                                        <td data-label="Ngày hoạt động:">{format(new Date(company.startDate), 'dd/MM/yyyy')}</td>
-                                        <td data-label="Trạng thái:">
-                                            {company.status?
-                                                <div className="company-active">Hoạt động</div>
-                                            :
-                                                <div className="company-disable">Không hoạt động</div>
-                                            }
-                                        </td>
-                                        <td data-label="Chức năng:" className="company-center">
-                                            <i 
-                                                className="fa-solid fa-pen-to-square p-1"  
-                                                style={{color: '#6280EB'}}
-                                                onClick={() => {
-                                                    setShowUpdate(company)
-                                                }}
-                                            ></i>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        }
-                        </table>
-                        <div className="p-2 mb-4 d-flex justify-content-between">
-                            <h6 className="mx-md-2 my-0">Tìm thấy: {companies.totalDocs?companies.totalDocs:0} công ty</h6>
-                            <div className="d-flex align-items-center mx-md-4">
-                                <i className="p-1 fa-solid fa-chevron-left" onClick={() => prevPage()}></i>
-                                <div className="d-flex mx-md-4">
-                                    <input className="input-page" value={companies.page} onChange={(e)=>setPage(e.target.value)}></input>
-                                    <div>/ {companies.totalPages?companies.totalPages:1}</div>
-                                </div>
-                                <i className="p-1 fa-solid fa-chevron-right" onClick={() => nextPage()}></i>
+                    {!loading && !companies.docs ? 
+                        <div className="loading-container">
+                            <div>
+                                <img src={img.empty} alt='logo' width="200" height="170" className='empty-img'/>
+                                <p>Chức năng chưa có dữ liệu</p>
+                                <p>Vui lòng thêm dữ liệu</p>
                             </div>
                         </div>
-                    </div>
+                    :
+                        <div className="company-container">
+                            <table className="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Mã CT</th>
+                                    <th scope="col">Tên công ty</th>
+                                    <th scope="col">Số điện thoại</th>
+                                    <th scope="col">
+                                        <div className='d-flex align-items-end'> 
+                                            Số vốn 
+                                            <i 
+                                                className={iconMoney}
+                                                onClick={sortByMoney}
+                                            ></i>
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div className='d-flex align-items-end'>
+                                            Ngày hoạt động 
+                                            <i 
+                                                className={iconDate}
+                                                onClick={sortByDate}
+                                            ></i>
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div className='d-flex align-items-end'>
+                                            Trạng thái 
+                                            <i 
+                                                className={iconStatus}
+                                                onClick={sortByStatus}
+                                            ></i>
+                                        </div>
+                                    </th>
+                                    <th scope="col" className="company-center">Chức năng</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {companies.docs?.map((company, i) => (
+                                        <tr key={i}>
+                                            <td scope="row" data-label="Mã CT:">{company.title}</td>
+                                            <td data-label="Tên công ty:">{company.name}</td>
+                                            <td data-label="Số điện thoại:">{company.phone}</td>
+                                            <td data-label="Số vốn:">
+                                                {currencyFormatter.format(company.money, {
+                                                symbol: 'VND',
+                                                decimal: '*',
+                                                thousand: '.',
+                                                precision: 0,
+                                                format: '%v %s' // %s is the symbol and %v is the value
+                                                })}
+                                            </td>
+                                            <td data-label="Ngày hoạt động:">{format(new Date(company.startDate), 'dd/MM/yyyy')}</td>
+                                            <td data-label="Trạng thái:">
+                                                {company.status?
+                                                    <div className="company-active">Hoạt động</div>
+                                                :
+                                                    <div className="company-disable">Không hoạt động</div>
+                                                }
+                                            </td>
+                                            <td data-label="Chức năng:" className="company-center">
+                                                <i 
+                                                    className="fa-solid fa-pen-to-square p-1"  
+                                                    style={{color: '#6280EB'}}
+                                                    onClick={() => {
+                                                        setShowUpdate(company)
+                                                    }}
+                                                ></i>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            <div className="p-2 mb-4 d-flex justify-content-between">
+                                <h6 className="mx-md-2 my-0">Tìm thấy: {companies?.totalDocs} công ty</h6>
+                                <div className="d-flex align-items-center mx-md-4">
+                                    <i className="p-1 fa-solid fa-chevron-left" onClick={() => prevPage()}></i>
+                                    <div className="d-flex mx-md-4">
+                                        <input className="input-page" value={companies?.page} onChange={(e)=>setPage(e.target.value)}></input>
+                                        <div>/ {companies?.totalPages}</div>
+                                    </div>
+                                    <i className="p-1 fa-solid fa-chevron-right" onClick={() => nextPage()}></i>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
+                }
             </div>
         </div>
     )

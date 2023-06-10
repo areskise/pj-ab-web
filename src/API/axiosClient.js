@@ -1,10 +1,14 @@
 import axios from 'axios';
 import Cookies from 'universal-cookie';
+import AuthAPI from './AuthAPI';
+
+const cookies = new Cookies();
+const access_token = cookies.get('access_token');
 
 const axiosClient = axios.create({
 	baseURL: 'http://118.69.111.40:8001/api/v1',
 	headers: {
-		// 'Access-Control-Allow-Origin': '*',
+		'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
 	},
 	withCredentials: true,
@@ -25,8 +29,6 @@ axiosClient.interceptors.request.use(
 	async (config) => {
     // Do something before request is sent
 	// Handle token here ...
-	const cookies = new Cookies();
-	const access_token = cookies.get('access_token');
 	if (access_token) {
 		config.headers['Authorization'] = 'Bearer ' + access_token.token;
 	}
@@ -43,6 +45,12 @@ axiosClient.interceptors.response.use(
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
 		if (response && response.data) {
+			if(response.data.ResponseResult.ErrorCode === 400 && response.data.ResponseResult.Message === 'jwt expired'){
+				const data = {
+					refreshToken: access_token.refreshToken
+				}
+				const res = await AuthAPI.refresh(data);
+			};
 			return response.data;
 		}
     	return response;

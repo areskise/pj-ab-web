@@ -33,6 +33,7 @@ code {
 .content {
   margin: 24px;
   border-radius: 40px;
+  min-height: 800px;
 }
 
 .title {
@@ -135,6 +136,29 @@ i:hover {
 .text-loading {
   font-weight: 500;
   opacity: 0.7;
+}
+
+
+.loading-container {
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  min-height: 70vh;
+}
+
+.loading-container div{
+  margin: auto;
+  font-size: 25px;
+}
+
+.loading-container img {
+  margin-bottom: 34px;
+}
+
+.loading-container p {
+  font-size: 16px;
+  margin: 0;
+  text-align: center;
 }
 
 @media screen and (max-width: 1200px) {

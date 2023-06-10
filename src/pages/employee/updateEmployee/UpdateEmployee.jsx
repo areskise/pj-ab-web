@@ -72,10 +72,12 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
         if( !e.target.fullName.value ) {
             setError(true)
             setMessErr(null)
+        } else if(e.target.phoneNumber.value && e.target.phoneNumber.value.length !== 10) {
+            setError(null)
+            setMessErr('Số điện thoại phải gồm 10 chữ số')
         } else {
             try {
                 const res = await EmployeeAPI.update(data);
-                console.log(res);
                 if(res.ResponseResult.ErrorCode === 0){
                     setShowUpdate(false)
                     setError(false)
@@ -87,14 +89,14 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                         setError(false)
                         setMessErr('Mã công ty đã tồn tại. Vui lòng nhập tên khác!')
                     } else {
-                        console.log(res.ResponseResult.Message);
+                        console.error(res.ResponseResult.Message);
                         setError(false)
                         setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
                     }
                 }
             }
             catch(err) {
-                console.log(err.message);
+                console.error(err.message);
                 setError(false)
                 setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
             }
