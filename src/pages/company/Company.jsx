@@ -19,6 +19,8 @@ const Company = () => {
     const [showAdd, setShowAdd] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
     const [page, setPage] = useState(1);
+    const [sortItem, setSortItem] = useState('date');
+    const [sortBy, setSortBy] = useState('');
     const [sortMoney, setSortMoney] = useState('');
     const [sortDate, setSortDate] = useState('');
     const [sortStatus, setSortStatus] = useState('');
@@ -59,56 +61,141 @@ const Company = () => {
         } else {
             navigate('/');
         }
-    }, [page, showAdd, showUpdate, sortMoney, sortDate, sortStatus]);
+    }, [page, showAdd, showUpdate, sortMoney, sortDate, sortStatus, sortItem, sortBy]);
 
     const sortByMoney = () => {
+        setSortItem('money')
         setSortDate('')
         setSortStatus('')
         setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
         setIcontDate('p-1 fa-solid fa-arrow-right-arrow-left')
         if(sortMoney === '') {
-            setSortMoney(1)
+            setSortBy('1')
+            setSortMoney('1')
             setIcontMoney('p-1 fa-solid fa-arrow-up-short-wide')
-        } else if(sortMoney === 1) {
-            setSortMoney(-1)
+        } else if(sortMoney === '1') {
+            setSortBy('-1')
+            setSortMoney('-1')
             setIcontMoney('p-1 fa-solid fa-arrow-down-wide-short')
         } else {
+            setSortBy('')
             setSortMoney('')
             setIcontMoney('p-1 fa-solid fa-arrow-right-arrow-left')
         }
     }
 
     const sortByDate = () => {
+        setSortItem('date')
         setSortMoney('')
         setSortStatus('')
         setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
         setIcontMoney('p-1 fa-solid fa-arrow-right-arrow-left')
         if(sortDate === '') {
-            setSortDate(1)
+            setSortBy('1')
+            setSortDate('1')
             setIcontDate('p-1 fa-solid fa-arrow-up-short-wide')
-        } else if(sortDate === 1) {
-            setSortDate(-1)
+        } else if(sortDate === '1') {
+            setSortBy('-1')
+            setSortDate('-1')
             setIcontDate('p-1 fa-solid fa-arrow-down-wide-short')
         } else {
+            setSortBy('')
             setSortDate('')
             setIcontDate('p-1 fa-solid fa-arrow-right-arrow-left')
         }
     }
 
     const sortByStatus = () => {
+        setSortItem('status')
         setSortDate('')
         setSortMoney('')
         setIcontDate('p-1 fa-solid fa-arrow-right-arrow-left')
         setIcontMoney('p-1 fa-solid fa-arrow-right-arrow-left')
         if(sortStatus === '') {
-            setSortStatus(1)
+            setSortBy('1')
+            setSortStatus('1')
             setIcontStatus('p-1 status-icon company-disable fa-solid fa-circle')
-        } else if(sortStatus === 1) {
-            setSortStatus(-1)
+        } else if(sortStatus === '1') {
+            setSortBy('-1')
+            setSortStatus('-1')
             setIcontStatus('p-1 status-icon company-active fa-solid fa-circle')
         } else {
+            setSortBy('')
             setSortStatus('')
             setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
+        }
+    }
+
+    const selectByMoney = (value) => {
+        setSortDate('')
+        setSortStatus('')
+        setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
+        setIcontDate('p-1 fa-solid fa-arrow-right-arrow-left')
+        if(value === '') {
+            setSortMoney('')
+            setIcontMoney('p-1 fa-solid fa-arrow-right-arrow-left')
+        } else if(value === '1') {
+            setSortMoney('1')
+            setIcontMoney('p-1 fa-solid fa-arrow-up-wide-short')
+        } else {
+            setSortMoney('-1')
+            setIcontMoney('p-1 fa-solid fa-arrow-down-wide-short')
+        }
+    }
+
+    const selectByDate = (value) => {
+        setSortMoney('')
+        setSortStatus('')
+        setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
+        setIcontMoney('p-1 fa-solid fa-arrow-right-arrow-left')
+        if(value === '') {
+            setSortDate('')
+            setIcontDate('p-1 fa-solid fa-arrow-right-arrow-left')
+        } else if(value === '1') {
+            setSortDate('1')
+            setIcontDate('p-1 fa-solid fa-arrow-up-short-wide')
+        } else {
+            setSortDate('-1')
+            setIcontDate('p-1 fa-solid fa-arrow-down-wide-short')
+        }
+    }
+
+    const selectByStatus = (value) => {
+        setSortDate('')
+        setSortMoney('')
+        setIcontDate('p-1 fa-solid fa-arrow-right-arrow-left')
+        setIcontMoney('p-1 fa-solid fa-arrow-right-arrow-left')
+        if(value === '') {
+            setSortStatus('')
+            setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
+        } else if(value === '1') {
+            setSortStatus('1')
+            setIcontStatus('p-1 status-icon company-disable fa-solid fa-circle')
+        } else {
+            setSortStatus('-1')
+            setIcontStatus('p-1 status-icon company-active fa-solid fa-circle')
+        }
+    }
+
+    const changeSortItem = (value) => {
+        setSortItem(value)
+        if (value === 'date') {
+            selectByDate(sortBy)
+        } else if (value === 'status') {
+            selectByStatus(sortBy)
+        } else {
+            selectByMoney(sortBy)
+        }
+    }
+
+    const changeSortBy = (value) => {
+        setSortBy(value)
+        if (sortItem === 'date') {
+            selectByDate(value)
+        } else if (sortItem === 'status') {
+            selectByStatus(value)
+        } else {
+            selectByMoney(value)
         }
     }
 
@@ -144,7 +231,7 @@ const Company = () => {
                     </div>
                     <div className="loading-container">
                         <div>
-                            <i class="fa-solid fa-spinner fa-spin-pulse fa-2xl"></i>
+                            <i className="fa-solid fa-spinner fa-spin-pulse fa-2xl"></i>
                         </div>
                     </div>
                 </div>
@@ -159,27 +246,76 @@ const Company = () => {
                             <label htmlFor="">Sắp xếp:</label>
                         </div>
                         <div className='btn-sort-container'>
-                            <button className='btn btn-sort'>
-                                Vốn
-                                <i 
-                                    className={iconMoney} 
-                                    onClick={sortByMoney}
-                                ></i>
-                            </button>
-                            <button className='btn btn-sort'>
-                                Ngày hoạt động
-                                <i 
-                                    className={iconDate}
-                                    onClick={sortByDate}
-                                ></i>
-                            </button>
-                            <button className='btn btn-sort'>
-                                Trạng thái
-                                <i 
-                                    className={iconStatus}
-                                    onClick={sortByStatus}
-                                ></i>
-                            </button>
+                            <select className='btn-sort' onChange={(e)=>changeSortItem(e.target.value)}>
+                                {sortItem==='date' && (<>
+                                    <option value='date'>Ngày hoạt động</option>
+                                    <option value='status'>Trạng thái</option>
+                                    <option value='money'>Số vốn</option>
+                                </>)}
+                                {sortItem==='status' && (<>
+                                    <option value='status'>Trạng thái</option>
+                                    <option value='date'>Ngày hoạt động</option>
+                                    <option value='money'>Số vốn</option>
+                                </>)}
+                                {sortItem==='money' && (<>
+                                    <option value='money'>Số vốn</option>
+                                    <option value='date'>Ngày hoạt động</option>
+                                    <option value='status'>Trạng thái</option>
+                                </>)}                                
+                            </select>
+                            <select className='btn-sort' onChange={(e)=>changeSortBy(e.target.value)}>
+                                {sortItem==='date' && (<>
+                                    {sortBy==='' && (<>
+                                        <option value={''}>Mặc định</option>
+                                        <option value={-1}>Mới -{">"} Cũ</option>
+                                        <option value={1}>Cũ -{">"} Mới</option>
+                                    </>)}
+                                    {sortBy==='-1' && (<>
+                                        <option value={-1}>Mới -{">"} Cũ</option>
+                                        <option value={''}>Mặc định</option>
+                                        <option value={1}>Cũ -{">"} Mới</option>
+                                    </>)}
+                                    {sortBy==='1' && (<>
+                                        <option value={1}>Cũ -{">"} Mới</option>
+                                        <option value={''}>Mặc định</option>
+                                        <option value={-1}>Mới -{">"} Cũ</option>
+                                    </>)}
+                                </>)}
+                                {sortItem==='status' && (<>
+                                    {sortBy==='' && (<>
+                                        <option value={''}>Mặc định</option>
+                                        <option value={-1}>Hoạt động</option>
+                                        <option value={1}>Không hoạt động</option>
+                                    </>)}
+                                    {sortBy==='-1' && (<>
+                                        <option value={-1}>Hoạt động</option>
+                                        <option value={''}>Mặc định</option>
+                                        <option value={1}>Không hoạt động</option>
+                                    </>)}
+                                    {sortBy==='1' && (<>
+                                        <option value={1}>Không hoạt động</option>
+                                        <option value={''}>Mặc định</option>
+                                        <option value={-1}>Hoạt động</option>
+                                    </>)}
+                                </>)}
+                                {sortItem==='money' && (<>
+                                    {sortBy==='' && (<>
+                                        <option value={''}>Mặc định</option>
+                                        <option value={1}>Thấp -{">"} Cao</option>
+                                        <option value={-1}>Cao -{">"} Thấp</option>
+                                    </>)}
+                                    {sortBy==='1' && (<>
+                                        <option value={1}>Thấp -{">"} Cao</option>
+                                        <option value={''}>Mặc định</option>
+                                        <option value={-1}>Cao -{">"} Thấp</option>
+                                    </>)}
+                                    {sortBy==='-1' && (<>
+                                        <option value={-1}>Cao -{">"} Thấp</option>
+                                        <option value={''}>Mặc định</option>
+                                        <option value={1}>Thấp -{">"} Cao</option>
+                                    </>)}
+                                </>)}
+                            </select>
                         </div>
                     </div>
                     {!loading && !companies.docs ? 
@@ -231,34 +367,37 @@ const Company = () => {
                                 <tbody>
                                     {companies.docs?.map((company, i) => (
                                         <tr key={i}>
-                                            <td scope="row" data-label="Mã CT:">{company.title}</td>
-                                            <td data-label="Tên công ty:">{company.name}</td>
-                                            <td data-label="Số điện thoại:">{company.phone}</td>
-                                            <td data-label="Số vốn:">
+                                            <td scope="row" data-label="Mã CT:"><span>{company.title}</span></td>
+                                            <td data-label="Tên công ty:"><span>{company.name}</span></td>
+                                            <td data-label="Số điện thoại:"><span>{company.phone}</span></td>
+                                            <td data-label="Số vốn:"><span>
                                                 {currencyFormatter.format(company.money, {
                                                 symbol: 'VND',
                                                 decimal: '*',
                                                 thousand: '.',
                                                 precision: 0,
                                                 format: '%v %s' // %s is the symbol and %v is the value
-                                                })}
+                                                })}</span>
                                             </td>
-                                            <td data-label="Ngày hoạt động:">{format(new Date(company.startDate), 'dd/MM/yyyy')}</td>
+                                            <td data-label="Ngày hoạt động:"><span>{format(new Date(company.startDate), 'dd/MM/yyyy')}</span></td>
                                             <td data-label="Trạng thái:">
                                                 {company.status?
-                                                    <div className="company-active">Hoạt động</div>
+                                                    <span className="company-active">Hoạt động</span>
                                                 :
-                                                    <div className="company-disable">Không hoạt động</div>
+                                                    <span className="company-disable">Không hoạt động</span>
                                                 }
                                             </td>
                                             <td data-label="Chức năng:" className="company-center">
-                                                <i 
-                                                    className="fa-solid fa-pen-to-square p-1"  
-                                                    style={{color: '#6280EB'}}
+                                                <span><i 
+                                                    className="fa-solid fa-pen-to-square p-1 f"  
+                                                    style={{
+                                                        color: '#6280EB', 
+                                                        float: 'left'
+                                                    }}
                                                     onClick={() => {
                                                         setShowUpdate(company)
                                                     }}
-                                                ></i>
+                                                ></i></span>
                                             </td>
                                         </tr>
                                     ))}

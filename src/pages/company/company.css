@@ -24,6 +24,15 @@
   overflow: hidden;
   display: flex;
   justify-content: space-between;
+  padding: 0 12px;
+}
+
+.company .btn-sort:hover {
+  cursor: pointer;
+}
+
+.company .btn-sort:focus-visible {
+  cursor: pointer;
 }
 
 .company-container {
@@ -119,11 +128,15 @@
   }
   
   .company-container table td {
-    display: block;
-    text-align: right;
+    display: flex;
+    justify-content: space-between;
     max-width: 100%;
     padding: 6px 12px !important;
     min-height: 36px;
+  }
+
+  .company-container table td span{
+    width: 57%;
   }
   
   .company-container table td::before {
@@ -134,6 +147,7 @@
     content: attr(data-label);
     float: left;
     font-weight: bold;
+    max-width: 43%;
   }
   
   .company-container table td:last-child {
@@ -154,10 +168,6 @@
 }
 
 @media screen and (max-width: 576px) {
-  .company .btn-sort-container {
-    display: block;
-  }
-  
   .company-container {
     padding: .5rem;
   }

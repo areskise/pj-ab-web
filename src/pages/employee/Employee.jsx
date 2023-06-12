@@ -126,7 +126,7 @@ const Employee = () => {
                     </div>
                     <div className="loading-container">
                         <div>
-                            <i class="fa-solid fa-spinner fa-spin-pulse fa-2xl"></i>
+                            <i className="fa-solid fa-spinner fa-spin-pulse fa-2xl"></i>
                         </div>
                     </div>
                 </div>

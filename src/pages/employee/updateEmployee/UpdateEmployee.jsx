@@ -44,8 +44,8 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
 
     useEffect(() => {
         const fetchRole = async () => {
-        if(company._id) {
-            const resRoles = await CompanyAPI.getRoles(company._id);
+        if(company?._id) {
+            const resRoles = await CompanyAPI.getRoles(company?._id);
             const rolesResult = resRoles.ResponseResult.Result
             setRoles(rolesResult)
         } else {
