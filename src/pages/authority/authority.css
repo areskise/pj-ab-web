@@ -10,8 +10,9 @@
     width: 208px;
     height: 48px;
     border: 1px solid #D8E2E9;
-    border-radius: 20px;
+    border-radius: 25px;
     line-height: 48px;
+    margin: 16px;
 }
 
 .authority-container .title {
@@ -47,7 +48,7 @@
     border: 1px solid #D8E2E9;
     border-radius: 20px;
     margin: 16px 16px 0 16px;
-    padding: 2em;
+    padding: 1.5em;
 }
 
 .authority-container .form-checkbox {
@@ -74,7 +75,6 @@
 }
 
 .check-all>.rct-text>.rct-collapse {
-    position: relative;
     padding: 0 10px;
 }
 
@@ -96,8 +96,13 @@
 }
 
 .react-checkbox-tree ol ol {
+    padding-left: 0 !important;
+}
+
+.react-checkbox-tree ol ol ol{
     border-left: 2px solid #777;
     margin-left: 12px;
+    padding-left: 24px !important;
 }
 
 .check-all>ol {
@@ -112,9 +117,8 @@
 
 @media screen and (max-width: 576px) {
     .authority-container .btn-control {
-        height: 62px;
+        margin: 0px;
     }
-
     .authority-container .title {
         margin-left: 0;
         padding-top: 16px;

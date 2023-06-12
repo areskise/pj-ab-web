@@ -130,15 +130,17 @@ const AddAuthority = () => {
                 <h5 className="m-4">Quản lý phân quyền</h5>
                 <div className="bg-white content">
                     <div className="authority-container">
-                        <div className="d-flex justify-content-center align-items-center m-3">
+                        <div className="d-flex justify-content-center align-items-center">
                         <NavLink
                             to={"/quan-ly-phan-quyen/them-moi"} 
-                            className='btn btn-control m-2 nav-link link-color active'
+                            className='btn btn-control nav-link link-color active'
+                            style={{marginRight: '6px'}}
                             activeclassname="active"
                         >Thêm mới</NavLink>
                         <NavLink
                             to={"/quan-ly-phan-quyen/cap-nhat"} 
-                            className='btn btn-control m-2 nav-link link-color'
+                            className='btn btn-control nav-link link-color'
+                            style={{marginLeft: '6px'}}
                             activeclassname="active" 
                         >Cập nhật</NavLink>
                         </div>
@@ -174,7 +176,7 @@ const AddAuthority = () => {
                                     </div>
                                     <div className='form-check filter-container'>
                                         <input
-                                            className="filter-text form-control mt-1 mb-2"
+                                            className="filter-text form-control mb-2"
                                             placeholder="Nhập từ khóa tìm kiếm"
                                             type="text"
                                             value={filterText}
@@ -200,7 +202,7 @@ const AddAuthority = () => {
                                         <div className="error-text">{messErr}</div>
                                     }
                                     </div>
-                            <div className="d-flex justify-content-center m-4">
+                            <div className="d-flex justify-content-center mt-4">
                                 <button className="btn btn-continue" type="submit">Thêm mới</button>
                             </div>
                         </form>
