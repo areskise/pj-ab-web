@@ -246,7 +246,7 @@ const Company = () => {
                             <label htmlFor="">Sắp xếp:</label>
                         </div>
                         <div className='btn-sort-container'>
-                            <select className='btn-sort' onChange={(e)=>changeSortItem(e.target.value)}>
+                            <select className='form-select btn-sort' onChange={(e)=>changeSortItem(e.target.value)}>
                                 {sortItem==='date' && (<>
                                     <option value='date'>Ngày hoạt động</option>
                                     <option value='status'>Trạng thái</option>
@@ -263,7 +263,7 @@ const Company = () => {
                                     <option value='status'>Trạng thái</option>
                                 </>)}                                
                             </select>
-                            <select className='btn-sort' onChange={(e)=>changeSortBy(e.target.value)}>
+                            <select className='form-select btn-sort' onChange={(e)=>changeSortBy(e.target.value)}>
                                 {sortItem==='date' && (<>
                                     {sortBy==='' && (<>
                                         <option value={''}>Mặc định</option>
@@ -389,11 +389,7 @@ const Company = () => {
                                             </td>
                                             <td data-label="Chức năng:" className="company-center">
                                                 <span><i 
-                                                    className="fa-solid fa-pen-to-square p-1 f"  
-                                                    style={{
-                                                        color: '#6280EB', 
-                                                        float: 'left'
-                                                    }}
+                                                    className="fa-solid fa-pen-to-square p-1"
                                                     onClick={() => {
                                                         setShowUpdate(company)
                                                     }}

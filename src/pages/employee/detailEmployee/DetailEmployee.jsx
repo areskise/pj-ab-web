@@ -7,7 +7,7 @@ const DetailEmployee = ({employeeId, setShowDetail, showDetail}) => {
     const [subMenu, setSubMenu] = useState(false);
 
     return (
-        <Modal dialogClassName="modal-add" show={showDetail} onHide={() => setShowDetail(false)}>
+        <Modal dialogClassName="modal-detail" show={showDetail} onHide={() => setShowDetail(false)}>
             <Modal.Header className='justify-content-center'>
                 <Modal.Title className='title'>THÔNG TIN NHÂN VIÊN</Modal.Title>
             </Modal.Header>

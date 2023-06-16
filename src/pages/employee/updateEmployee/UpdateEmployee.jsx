@@ -135,7 +135,7 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                                 {selectCompany==='all'?
                                     <select 
                                         name="company" 
-                                        className='select-company'
+                                        className='form-select select-company'
                                         onChange={handleChange}
                                     >
                                         <option value={defaultCompany?defaultCompany.organizationId?._id:null} hidden>{defaultCompany?defaultCompany.organizationId?.name:null}</option>
@@ -146,7 +146,7 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     :
                                     <select 
                                         name="company" 
-                                        className='select-company'
+                                        className='form-select select-company'
                                         onChange={handleChange}
                                     >
                                         <option value={company?company._id:null} >{company?company.name:null}</option>
@@ -217,7 +217,7 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                                 </div>
                                 <select 
                                     name="role" 
-                                    className='select-company'
+                                    className='form-select select-company'
                                 >
                                     {role ? 
                                     <option value={role.roleId} hidden>{role.name}</option> 
@@ -229,14 +229,14 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     ))}
                                 </select>
                             </div>
-                            <div className='d-flex m-3 align-items-center justify-content-center'>
-                                <div className='d-flex mx-4 align-items-center justify-content-center'>
+                            <div className='d-flex m-3 align-items-center justify-content-between'>
+                                <div className='d-flex mx-3 align-items-center justify-content-center'>
                                     <input type="radio" id="Active" className='form-checkbox' name='status' value={true} defaultChecked/>
                                     <div>
                                         <label htmlFor="Active" className='employee-active'>Hoạt động</label>
                                     </div>
                                 </div>
-                                <div className='d-flex mx-4 align-items-center justify-content-center'>
+                                <div className='d-flex mx-3 align-items-center justify-content-center'>
                                     <input type="radio" id='Disable' className='form-checkbox' name='status'value={false}/>
                                     <div>
                                         <label htmlFor="Disable" className='employee-disable'>Không hoạt động</label>

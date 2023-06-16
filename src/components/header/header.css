@@ -59,6 +59,11 @@ header .dropdown-menu {
   --bs-dropdown-min-width: none;
 }
 
+header .dropdown-item:hover {
+  border-radius: 0.375rem;
+  background-color: #D8E2E9;
+}
+
 .modal-logout {
   height: 100%;
   width: 100%;
@@ -85,7 +90,7 @@ header .dropdown-menu {
 
 @media screen and (max-width: 992px) {
   header .logo-img, .avatar {
-    display: none;
+    display: none !important;
   }
 
   header .menu-avatar {

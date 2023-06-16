@@ -30,6 +30,7 @@ const UpdateAuthority = () => {
         value: 'all',
         label: 'Tất cả',
         className: 'check-all',
+        title: 'all',
         children: menuDefault,
     }]
     const [filteredNodes, setFilteredNodes] = useState(nodes);
@@ -165,15 +166,17 @@ const UpdateAuthority = () => {
                 </div>
                 :
                 <div className="authority-container">
-                    <div className="d-flex justify-content-center align-items-center m-3">
+                    <div className="d-flex justify-content-center align-items-center">
                         <NavLink
                             to={"/quan-ly-phan-quyen/them-moi"} 
-                            className='btn btn-control m-2 nav-link link-color'
+                            className='btn btn-control nav-link link-color'
+                            style={{marginRight: '6px'}}
                             activeclassname="active" 
                         >Thêm mới</NavLink>
                         <NavLink
                             to={"/quan-ly-phan-quyen/cap-nhat"} 
-                            className='btn btn-control m-2 nav-link link-color'
+                            className='btn btn-control nav-link link-color'
+                            style={{marginLeft: '6px'}}
                             activeclassname="active" 
                         >Cập nhật</NavLink>
                     </div>
@@ -184,7 +187,7 @@ const UpdateAuthority = () => {
                                         <div className='label'>
                                             <label htmlFor="">Công ty:</label>
                                         </div>
-                                        <select className='select-company' name="company" onChange={(e) => setSelectCompany(e.target.value)}>
+                                        <select className='form-select select-company' name="company" onChange={(e) => setSelectCompany(e.target.value)}>
                                             <option value={null} hidden>Chọn công ty</option>
                                             {userCompanies?.map((company, i) => (
                                                 <option key={i} value={company._id}>{company.name}</option>
@@ -197,7 +200,7 @@ const UpdateAuthority = () => {
                                         </div>
                                         {selectCompany?
                                             <select 
-                                                className='select-company' name="role" 
+                                                className='form-select select-company' name="role" 
                                                 onChange={(e) => setSelectRole(e.target.value)}
                                             >
                                                 <option value='' hidden>Chọn nhóm quyền</option>
@@ -207,7 +210,7 @@ const UpdateAuthority = () => {
                                             </select>
                                         :
                                             <select 
-                                                className='select-company' name="role" 
+                                                className='form-select select-company' name="role" 
                                                 disabled
                                             >
                                                 <option value='' hidden>Chọn công ty trước</option>

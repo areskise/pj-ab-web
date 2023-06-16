@@ -1,4 +1,4 @@
-.modal-add {
+.modal-detail {
     min-height: 100%;
     width: 100%;
     max-width: 805px;
@@ -8,17 +8,17 @@
     margin: auto;
 }
 
-.modal-add>.modal-content {
+.modal-detail>.modal-content {
     width: auto;
     border-radius: 40px;
 
 }
 
-.modal-add .modal-body {
+.modal-detail .modal-body {
     padding: 8px;
 }
 
-.modal-add .form-control {
+.modal-detail .form-control {
     width: 242px;
     height: 38px;
     padding: 10px 15px;
@@ -26,15 +26,15 @@
     border-radius: 20px;
 }
 
-.modal-add .form-container {
+.modal-detail .form-container {
     display: flex;
 }
 
-.modal-add .form-money {
+.modal-detail .form-money {
     padding-right: 38px !important;
 }
 
-.modal-add .money {
+.modal-detail .money {
     position: absolute;
     width: 38px;
     height: 38px;
@@ -47,7 +47,7 @@
     line-height: 34px;
 }
 
-.modal-add .form-check {
+.modal-detail .form-check {
     border: 1px solid #D8E2E9;
     border-radius: 20px;
     margin: 16px 16px 0 16px;
@@ -55,7 +55,7 @@
     padding-bottom: 1rem;
 }
 
-.modal-add .form-checkbox {
+.modal-detail .form-checkbox {
     width: 18px;
     height: 18px;
     border: 2px solid #454545;
@@ -63,7 +63,7 @@
     margin-right: 12px;
 }
 
-.modal-add .label {
+.modal-detail .label {
     width: 125px;
     height: 20px;
     font-weight: 700;
@@ -75,13 +75,13 @@
 }
 
 @media screen and (max-width: 992px) {
-    .modal-add .form-container {
+    .modal-detail .form-container {
         display: block;
     }
 }
 
 @media screen and (max-width: 576px) {
-    .modal-add .form-control {
+    .modal-detail .form-control {
         width: 100%;
         max-width: 240px;
     }

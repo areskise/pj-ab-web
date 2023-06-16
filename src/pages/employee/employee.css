@@ -31,19 +31,34 @@
 
 .employee .sort-container {
   display: none;
+  align-items: center;
+  justify-content: center;
+  margin: 0 8px;
+}
+
+.employee .btn-sort-container {
+  display: flex;
 }
 
 .employee .btn-sort {
   width: 100%;
   height: 38px;
   border: 2px solid #D8E2E9;
-  max-width: 218px;
   border-radius: 20px;
-  margin-left: 16px;
+  margin: 8px;
   text-align: start;
   overflow: hidden;
   display: flex;
   justify-content: space-between;
+  padding: 0 12px;
+}
+
+.employee .btn-sort:hover {
+  cursor: pointer;
+}
+
+.employee .btn-sort:focus-visible {
+  cursor: pointer;
 }
 
 .employee-container {
@@ -67,6 +82,10 @@
   
 .employee-center {
     text-align: center;
+}
+
+.employee-center span i{
+  color: #6280EB;
 }
   
 .employee-container th {
@@ -117,6 +136,14 @@
 }
   
 @media screen and (max-width: 768px) {
+  .employee-container {
+    padding: .5rem;
+  }
+
+  .employee-container table tr {
+    padding: 4px 8px !important;
+  }
+
   .employee .func-icon {
     display: flex;
   }
@@ -134,10 +161,7 @@
 
 
   .employee .sort-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 16px;
+    display: block;
   }
 
   .employee-container table {
@@ -206,14 +230,6 @@
   }
   
 @media screen and (max-width: 576px) {
-  .employee-container {
-    padding: .5rem;
-  }
-
-  .employee-container table tr {
-      padding: 4px 8px !important;
-    }
-  
     .employee-container table td {
       padding: .5em;
     }

@@ -44,7 +44,7 @@ const Header = ({showAdd, showUpdate}) => {
                             <img src={img.logoBlack} alt='logo' width="32" height="32" className='logo-img'/>
                         </a>
                     <div className='d-flex'>
-                        <select className='select-company' onChange={(e) => setSelectCompany(e.target.value)}>
+                        <select className='form-select select-company' onChange={(e) => setSelectCompany(e.target.value)}>
                             {userCompanies?.map((company, i) => (
                                 <option key={i} value={company.name}>{company.name}</option>
                             ))}
@@ -55,20 +55,20 @@ const Header = ({showAdd, showUpdate}) => {
                     <div className='d-flex'>
                         {/* <i className="fa-regular fa-bell notify-icon"></i> */}
                         <div className="d-flex dropdown text-end">
-                            <a href="#" className="avatar link-dark text-decoration-none p-1 border rounded" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a href="#" className="d-flex align-items-center avatar link-dark text-decoration-none p-1 border rounded" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src={img.avatar} alt="mdo" width="32" height="32" className="rounded-circle" />
                                 <span className='p-1'>{userName}</span>
-                                <i className={"fa-solid fa-chevron-down p-1"}></i>
+                                <i className="fa-solid fa-angle-down p-1 mt-1"></i>
                             </a>
-                            <ul className="p-1 dropdown-menu text-small">
+                            <ul className="p-0 dropdown-menu text-small">
                                 <li>
-                                <button className='btn dropdown-item' onClick={() => setShowModal(true)}>
+                                <button className='p-2 px-3 btn dropdown-item' onClick={() => setShowModal(true)}>
                                     Đăng xuất
                                 </button>
                                 </li>
                             </ul>
                             <a href="#" className="menu-avatar link-dark text-decoration-none p-1" onClick={() => setShowMenu(true)}>
-                                <i className={"menu-icon fa-solid fa-bars p-1"}></i>
+                                <i className="menu-icon fa-solid fa-bars p-1"></i>
                             </a>
                         </div>
                     </div>
@@ -124,13 +124,15 @@ const Header = ({showAdd, showUpdate}) => {
                                     className="nav-item nav-user"
                                     onClick={()=>setNavUser(!navUser)}
                                 >
-                                    <NavLink 
-                                    to={"/quan-ly-nguoi-dung"} 
-                                    className="d-flex nav-link link-color justify-content-between align-items-center disabled"
-                                    >
-                                    Quản lý người dùng
-                                    <i className="fa-solid fa-chevron-down"></i>
-                                    </NavLink>
+                                    <div className='link-color'>
+                                        <NavLink 
+                                        to={"/quan-ly-nguoi-dung"} 
+                                        className="d-flex nav-link justify-content-between align-items-center disabled"
+                                        >
+                                        Quản lý người dùng
+                                        <i className="fa-solid fa-angle-down"></i>
+                                        </NavLink>
+                                    </div>
                                 </li>
                                     {navUser &&
                                     <ul>

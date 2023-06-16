@@ -1,5 +1,5 @@
 .modal-add {
-    min-height: 100%;
+    height: 100%;
     width: 100%;
     max-width: 805px;
     align-items: center;
@@ -15,7 +15,7 @@
 }
 
 .modal-add .modal-body {
-    padding: 8px;
+    padding: 12px;
 }
 
 .modal-add .form-control {
@@ -44,7 +44,7 @@
     border-radius: 20px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    line-height: 34px;
+    line-height: 36px;
 }
 
 .modal-add .form-check {
@@ -74,9 +74,17 @@
     text-align: start;
 }
 
+.modal-add .form-check .form-control {
+    max-width: 100%;
+}
+
 @media screen and (max-width: 992px) {
     .modal-add .form-container {
         display: block;
+    }
+
+    .modal-add .form-check .form-control {
+        width: 100%;
     }
 }
 
@@ -84,5 +92,9 @@
     .modal-add .form-control {
         width: 100%;
         max-width: 240px;
+    }
+
+    .modal-add .form-check {
+        margin: 16px 0 0 0;
     }
 }

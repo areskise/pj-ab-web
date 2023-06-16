@@ -151,7 +151,7 @@ const AddAuthority = () => {
                                             <div className='label'>
                                                 <label htmlFor="">Công ty:</label>
                                             </div>
-                                            <select className='select-company' onChange={(e) => setSelectCompany(e.target.value)}>
+                                            <select className='form-select select-company' onChange={(e) => setSelectCompany(e.target.value)}>
                                                 <option value='' hidden>Chọn công ty</option>
                                                 {userCompanies?.map((company, i) => (
                                                     <option key={i} value={company._id}>{company.name}</option>

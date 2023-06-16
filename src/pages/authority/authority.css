@@ -80,13 +80,21 @@
 
 .rct-text {
     position: relative;
+    margin: 8px;
 }
 
 .rct-collapse {
     position: absolute;
     right: 0;
-    margin: 4px 8px;
+    margin: 8px 0;
     font-size: 16px !important;
+}
+
+.rct-icons-fa4 .rct-icon-expand-open::before {
+    content: "\f106" !important;
+}
+.rct-icons-fa4 .rct-icon-expand-close::before {
+    content: "\f107" !important;
 }
 
 .rct-icons-fa4 .rct-icon-uncheck::before,
@@ -101,7 +109,7 @@
 
 .react-checkbox-tree ol ol ol{
     border-left: 2px solid #777;
-    margin-left: 12px;
+    margin-left: 20px;
     padding-left: 24px !important;
 }
 

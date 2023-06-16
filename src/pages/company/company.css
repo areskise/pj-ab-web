@@ -10,12 +10,13 @@
   justify-content: center;
   margin: 0 8px;
 }
+
 .company .btn-sort-container {
   display: flex;
 }
 
 .company .btn-sort {
-  width: 95%;
+  width: 100%;
   height: 38px;
   border: 2px solid #D8E2E9;
   border-radius: 20px;
@@ -59,6 +60,10 @@
   text-align: center;
 }
 
+.company-center span i{
+  color: #6280EB;
+}
+
 .company-container th {
   position: relative;
   padding: 12px !important;
@@ -97,6 +102,14 @@
 }
 
 @media screen and (max-width: 768px) {
+  .company-container {
+    padding: .5rem;
+  }
+
+  .company-container table tr {
+    padding: 4px 8px !important;
+  }
+
   .company .sort-container {
     display: block;
   }
@@ -162,20 +175,12 @@
     padding: 1rem;
   }
 
-  .company-center {
-      text-align: right;
+  .company-center span i{
+    float: left;
   }
 }
 
 @media screen and (max-width: 576px) {
-  .company-container {
-    padding: .5rem;
-  }
-
-  .company-container table tr {
-    padding: 4px 8px !important;
-  }
-
   .company-container table td {
     padding: .5em;
   }

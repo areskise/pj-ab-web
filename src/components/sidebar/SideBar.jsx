@@ -59,13 +59,15 @@ const SideBar = () => {
             className="nav-item nav-user"
             onClick={()=>setNavUser(!navUser)}
           >
-            <NavLink 
-              to={"/quan-ly-nguoi-dung"} 
-              className="d-flex nav-link link-color justify-content-between align-items-center disabled"
-              >
-              Quản lý người dùng
-              <i className="fa-solid fa-chevron-down"></i>
-            </NavLink>
+            <div className='link-color'>
+              <NavLink 
+                to={"/quan-ly-nguoi-dung"} 
+                className="d-flex nav-link justify-content-between align-items-center disabled"
+                >
+                Quản lý người dùng
+                <i className="fa-solid fa-angle-down mt-1"></i>
+              </NavLink>
+            </div>
           </li>
             {navUser &&
             <ul>

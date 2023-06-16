@@ -19,6 +19,12 @@ const AddCompany = ({setShowAdd, showAdd}) => {
         setCode(companyCode(formValues.name))
     },[formValues]);
     
+    const handleKeyDown = (e) => {
+        if(e.key === "Enter") {
+            e.preventDefault();
+        }
+    }
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValues({...formValues, [name]: value})
@@ -26,6 +32,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(e);
         const defaultApp = applications.find(app => app.title === 'default')
         const huiApp = applications.find(app => app.title === 'hui')
         const app = [defaultApp._id]
@@ -52,6 +59,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
         } else {
             try {
                 const res = await CompanyAPI.create(data);
+                console.log(res);
                 if(res.ResponseResult.ErrorCode === 0){
                     setShowAdd(false)
                     setCode(null)
@@ -115,7 +123,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                     <div className='label'>
-                                        <label htmlFor="">Mã TC</label>
+                                        <label htmlFor="">Mã CT</label>
                                     </div>
                                     <input 
                                         type="text" 
@@ -148,7 +156,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                                     />
                                     <span className='money'>VND</span>
                                 </div>
-                                <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
+                                <div className='d-flex m-md-3 my-3 align-items-center text-align-center justify-content-end'>
                                     <div className='label'>
                                         <label htmlFor="">Ngày hoạt động</label>
                                     </div>
@@ -164,10 +172,10 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                         <div>
                             <h5 className='title'>THÊM CHỨC NĂNG</h5>
                             <div className='form-check'>
-                                <div className='d-flex m-md-3 my-3 align-items-center justify-content-start'>
+                                <div className='d-flex my-3 align-items-center justify-content-center'>
                                     <input type="text" className='form-control' placeholder='Nhập từ khóa tìm kiếm' />
                                 </div>
-                                <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
+                                <div className='d-flex m-2 align-items-center justify-content-start'>
                                     <input 
                                         type="checkbox" 
                                         className='form-checkbox' 

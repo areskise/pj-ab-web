@@ -8,31 +8,25 @@ import { selectorUserCompanies } from "../../../redux/slice/companySlice";
 import CompanyAPI from "../../../API/CompanyAPI";
 
 const AddEmployee = ({setShowAdd, showAdd}) => {
+    const [selectCompany, setSelectCompany] = useState(null);
     const [visiblePass, setVisiblePass] = useState(false);
     const [visibleRePass, setVisibleRePass] = useState(false);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
     const [roles, setRoles] = useState([]);
-    const [formValues, setFormValues] = useState({});
     const data = new FormData();
     const userCompanies = useSelector(selectorUserCompanies)
     
     useEffect(() => {
-        const fetchRoles = async () => {
-            const res = await CompanyAPI.getRoles(formValues.company);
-            const result = res.ResponseResult.Result
-            setRoles(result)
-        }
-        if(formValues.company) {
+        if(selectCompany) {
+            const fetchRoles = async () => {
+                const res = await CompanyAPI.getRoles(selectCompany);
+                const result = res.ResponseResult.Result
+                setRoles(result)
+            }
             fetchRoles();
         }
-    },[formValues]);
-    
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormValues({...formValues, [name]: value})
-    }
+    },[selectCompany]);
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -92,12 +86,14 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
         setError(false)
         setShowAdd(false)
         setMessErr(null)
+        setSelectCompany(null)
     }
 
     const onHide = () => {
         setError(false)
         setShowAdd(false)
         setMessErr(null)
+        setSelectCompany(null)
     }
 
     return (
@@ -118,8 +114,8 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                 </div>
                                 <select 
                                     name="company" 
-                                    className='select-company' 
-                                    onChange={handleChange}
+                                    className='form-select select-company' 
+                                    onChange={(e) => setSelectCompany(e.target.value)}
                                 >   
                                     <option value={null} hidden>Chọn công ty</option>
                                     {userCompanies?.map((company, i) => (
@@ -220,15 +216,23 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                         <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
-                                <select 
-                                    name="role" 
-                                    className='select-company'
-                                >
-                                    <option value='' hidden>Chọn nhóm quyền</option>
-                                    {roles && roles.map((role, i) => (
-                                        <option key={i} value={role._id}>{role.name}</option>
-                                    ))}
-                                </select>
+                                {selectCompany?
+                                    <select 
+                                        className='form-select select-company' name="role"
+                                    >
+                                        <option value='' hidden>Chọn nhóm quyền</option>
+                                        {roles && roles.map((role, i) => (
+                                            <option key={i} value={role._id}>{role.name}</option>
+                                        ))}
+                                    </select>
+                                :
+                                    <select 
+                                        className='form-select select-company' name="role" 
+                                        disabled
+                                    >
+                                        <option value='' hidden>Chọn công ty trước</option>
+                                    </select>
+                                }
                             </div>
                         </div>
                     </div>

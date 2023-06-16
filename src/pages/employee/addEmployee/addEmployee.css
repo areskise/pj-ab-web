@@ -15,7 +15,7 @@
 }
 
 .add-employee .modal-body {
-    padding: 8px;
+    padding: 12px;
 }
 
 .add-employee .form-container {
@@ -23,6 +23,7 @@
 }
 
 .add-employee .form-control {
+    width: 242px;
     height: 38px;
     padding: 10px 15px;
     border: 2px solid #D8E2E9;
@@ -32,7 +33,7 @@
 .add-employee .select-company {
     padding: 0 12px;
     height: 38px;    
-    width: 100%;
+    width: 242px;
     border: 2px solid #D8E2E9;
     border-radius: 20px;
 }
@@ -75,7 +76,7 @@
 }
 
 .add-employee .label {
-    width: 250px;
+    width: 148px;
     height: 20px;
     font-weight: 700;
     font-size: 16px;
@@ -104,6 +105,10 @@
   opacity: 1;
 }
 
+.add-employee .form-check .form-control {
+    max-width: 100%;
+}
+
 @media screen and (max-width: 992px) {
     .add-employee .form-container {
         display: block;
@@ -115,9 +120,5 @@
     .add-employee .select-company {
         width: 100%;
         max-width: 240px;
-    }
-
-    .add-employee .label {
-        width: 160px;
     }
 }

@@ -74,9 +74,17 @@
     text-align: start;
 }
 
+.modal-update .form-check .form-control {
+    max-width: 100%;
+}
+
 @media screen and (max-width: 992px) {
     .modal-update .form-container {
         display: block;
+    }
+
+    .modal-update .form-check .form-control {
+        width: 100%;
     }
 }
 
@@ -84,5 +92,14 @@
     .modal-update .form-control {
         width: 100%;
         max-width: 240px;
+    }
+    
+    .modal-update .modal-body {
+        padding: 12px;
+    }
+
+    .modal-update .form-check {
+        margin: 16px 0 0 0;
+        max-width: 100%;
     }
 }

@@ -130,7 +130,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                     <div className='label'>
-                                        <label htmlFor="">Mã TC</label>
+                                        <label htmlFor="">Mã CT</label>
                                     </div>
                                     <input 
                                         type="text" 
@@ -217,11 +217,11 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                         <div>
                             <h5 className='title'>THÊM CHỨC NĂNG</h5>
                             <div className='form-check'>
-                                <div className='d-flex m-md-3 my-3 align-items-center justify-content-start'>
+                                <div className='d-flex my-3 align-items-center justify-content-start'>
                                     <input type="text" className='form-control' placeholder='Nhập từ khóa tìm kiếm'/>
                                 </div>
                                 {selectHui ? 
-                                    <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
+                                    <div className='d-flex m-2 align-items-center justify-content-start'>
                                         <input 
                                             type="checkbox" 
                                             id='hui' 
@@ -233,7 +233,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                             <label htmlFor="hui">Quản lý hụi</label>
                                         </div>
                                     </div> 
-                                :   <div className='d-flex m-2 mx-4 align-items-center justify-content-start'>
+                                :   <div className='d-flex m-2 align-items-center justify-content-start'>
                                         <input 
                                             type="checkbox" 
                                             className='form-checkbox'

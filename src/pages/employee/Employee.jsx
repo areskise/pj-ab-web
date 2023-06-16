@@ -21,6 +21,7 @@ const Employee = () => {
     const [selectCompany, setSelectCompany] = useState('all');
     const [page, setPage] = useState(1);
     const [sortStatus, setSortStatus] = useState('');
+    const [sortBy, setSortBy] = useState('');
     const [iconStatus, setIcontStatus] = useState("p-1 fa-solid fa-arrow-right-arrow-left");
     const limit = 5;
     const dispatch = useDispatch();
@@ -68,7 +69,7 @@ const Employee = () => {
             }
             fetchEmployee();
         }
-    }, [page, limit, selectCompany, showAdd, showUpdate, updatePass, showDetail, sortStatus]);
+    }, [page, limit, selectCompany, showAdd, showUpdate, updatePass, showDetail, sortStatus, sortBy]);
 
     const sortByStatus = () => {
         if(sortStatus === '') {
@@ -83,9 +84,31 @@ const Employee = () => {
         }
     }
 
+    const selectByStatus = (value) => {
+        if(value === '') {
+            setSortStatus('')
+            setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
+        } else if(value === '1') {
+            setSortStatus('1')
+            setIcontStatus('p-1 status-icon company-disable fa-solid fa-circle')
+        } else {
+            setSortStatus('-1')
+            setIcontStatus('p-1 status-icon company-active fa-solid fa-circle')
+        }
+    }
+
     const changeCompany = (e) => {
         setSelectCompany(e.target.value)
         setPage(1)
+    }
+
+    const changeSortBy = (value) => {
+        setSortBy(value)
+        selectByStatus(value)
+    }
+
+    const changeSortItem = () => {
+        selectByStatus(sortBy)
     }
 
     const nextPage = () => {
@@ -136,11 +159,12 @@ const Employee = () => {
                         <h3 className="title">DANH SÁCH NHÂN VIÊN</h3>
                         <i className="fa-solid fa-circle-plus plus" onClick={() => setShowAdd(true)}></i>
                     </div>
+                    
                     <div className="select-company-container"> 
                         <div className='label'>
                             <label htmlFor="">Công ty:</label>
                         </div>
-                        <select className='select-company' onChange={changeCompany}>
+                        <select className='form-select select-company' onChange={changeCompany}>
                             <option value='all'>Tất cả</option>
                             {userCompanies?.map((company, i) => (
                                 <option key={i} value={company._id}>{company.name}</option>
@@ -148,16 +172,31 @@ const Employee = () => {
                         </select>
                     </div>
                     <div className="sort-container"> 
-                        <div className='label'>
+                        <div className='px-2'>
                             <label htmlFor="">Sắp xếp:</label>
                         </div>
-                        <button className='btn btn-sort'>
-                            Trạng thái
-                            <i 
-                                className={iconStatus}
-                                onClick={sortByStatus}
-                            ></i>
-                        </button>
+                        <div className='btn-sort-container'>
+                            <select className='form-select btn-sort' onChange={(e)=>changeSortItem(e.target.value)}>
+                                <option value='status'>Trạng thái</option>
+                            </select>
+                            <select className='form-select btn-sort' onChange={(e)=>changeSortBy(e.target.value)}>
+                                {sortBy==='' && (<>
+                                    <option value={''}>Mặc định</option>
+                                    <option value={-1}>Hoạt động</option>
+                                    <option value={1}>Không hoạt động</option>
+                                </>)}
+                                {sortBy==='-1' && (<>
+                                    <option value={-1}>Hoạt động</option>
+                                    <option value={''}>Mặc định</option>
+                                    <option value={1}>Không hoạt động</option>
+                                </>)}
+                                {sortBy==='1' && (<>
+                                    <option value={1}>Không hoạt động</option>
+                                    <option value={''}>Mặc định</option>
+                                    <option value={-1}>Hoạt động</option>
+                                </>)}
+                            </select>
+                        </div>
                     </div>
                     {!employees.docs ? 
                         <div className="loading-container">
