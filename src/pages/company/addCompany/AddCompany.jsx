@@ -22,6 +22,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
     const handleKeyDown = (e) => {
         if(e.key === "Enter") {
             e.preventDefault();
+            document.getElementById('submitBtn').click();
         }
     }
     
@@ -100,7 +101,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
     }
 
     return (
-        <Modal dialogClassName="modal-add" show={showAdd} onHide={onHide}>
+        <Modal dialogClassName="modal-add" show={showAdd} onHide={onHide} keyboard={false}>
             <form onSubmit={handleSubmit}>
                 <Modal.Header className='justify-content-center'>
                     <Modal.Title className='title'>THÊM CÔNG TY</Modal.Title>
@@ -119,6 +120,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                                         className='form-control' 
                                         placeholder='Nhập tên công ty'
                                         onChange={handleChange}
+                                        onKeyDown={handleKeyDown}
                                     />
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -142,6 +144,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                                         name="phone"
                                         className='form-control' 
                                         placeholder='Nhập SĐT' 
+                                        onKeyDown={handleKeyDown}
                                     />
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -153,6 +156,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                                         name="money"
                                         className='form-control form-money' 
                                         placeholder='Nhập số vốn'
+                                        onKeyDown={handleKeyDown}
                                     />
                                     <span className='money'>VND</span>
                                 </div>
@@ -166,6 +170,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                                         className='form-control' 
                                         defaultValue={format(new Date(), 'yyyy-MM-dd')} 
                                         min={format(new Date(), 'yyyy-MM-dd')}
+                                        onKeyDown={handleKeyDown}
                                     />
                                 </div>
                         </div>
@@ -173,7 +178,12 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                             <h5 className='title'>THÊM CHỨC NĂNG</h5>
                             <div className='form-check'>
                                 <div className='d-flex my-3 align-items-center justify-content-center'>
-                                    <input type="text" className='form-control' placeholder='Nhập từ khóa tìm kiếm' />
+                                    <input 
+                                        type="text" 
+                                        className='form-control' 
+                                        placeholder='Nhập từ khóa tìm kiếm' 
+                                        onKeyDown={handleKeyDown}
+                                    />
                                 </div>
                                 <div className='d-flex m-2 align-items-center justify-content-start'>
                                     <input 
@@ -181,6 +191,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                                         className='form-checkbox' 
                                         id='hui' 
                                         name="hui"
+                                        onKeyDown={handleKeyDown}
                                     />
                                     <div>
                                         <label htmlFor="hui">Quản lý hụi</label>
@@ -202,7 +213,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                     <button className='mx-3 btn btn-cancle' onClick={handleClose}>
                         Đóng
                     </button>
-                    <button className='mx-3 btn btn-continue' type="submit">
+                    <button className='mx-3 btn btn-continue' id='submitBtn' type="submit">
                         Thêm mới
                     </button>
                 </Modal.Footer>

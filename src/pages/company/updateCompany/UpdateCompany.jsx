@@ -27,6 +27,13 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
     useEffect(() => {
         setCode(companyCode(formValues.name))
     },[formValues]);
+
+    const handleKeyDown = (e) => {
+        if(e.key === "Enter") {
+            e.preventDefault();
+            document.getElementById('submitBtn').click();
+        }
+    }
     
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -126,6 +133,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                         placeholder='Nhập tên công ty' 
                                         defaultValue={showUpdate.name}
                                         onChange={handleChange}
+                                        onKeyDown={handleKeyDown}
                                     />
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -153,6 +161,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                         placeholder='Nhập số điện thoại' 
                                         defaultValue={showUpdate.phone}
                                         onChange={handleChange}
+                                        onKeyDown={handleKeyDown}
                                     />
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -165,6 +174,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                         className='form-control form-money' 
                                         defaultValue={showUpdate.money}
                                         onChange={handleChange}
+                                        onKeyDown={handleKeyDown}
                                     />
                                     <span className='money'>VND</span>
                                 </div>
@@ -180,18 +190,34 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                         defaultValue={showUpdate.startDate?format(new Date(showUpdate.startDate), 'yyyy-MM-dd'):format(new Date(), 'yyyy-MM-dd')}
                                         min={showUpdate.startDate?format((new Date(showUpdate.startDate)<new Date())?new Date(showUpdate.startDate):new Date(), 'yyyy-MM-dd'):format(new Date(), 'yyyy-MM-dd')}
                                         onChange={handleChange}
+                                        onKeyDown={handleKeyDown}
                                     />
                                 </div>
                                 {showUpdate.status?
                                 <div className='d-flex m-3 align-items-center justify-content-center'>
                                     <div className='d-flex mx-4 align-items-center justify-content-center'>
-                                        <input type="radio" id="Active" className='form-checkbox' name='status' value={true} defaultChecked/>
+                                        <input 
+                                            type="radio" 
+                                            id="Active" 
+                                            className='form-checkbox' 
+                                            name='status' 
+                                            value={true} 
+                                            onKeyDown={handleKeyDown}
+                                            defaultChecked
+                                        />
                                         <div>
                                             <label htmlFor="Active" className='company-active'>Hoạt động</label>
                                         </div>
                                     </div>
                                     <div className='d-flex mx-4 align-items-center justify-content-center'>
-                                        <input type="radio" id="Disable" className='form-checkbox' name='status' value={false}/>
+                                        <input 
+                                            type="radio" 
+                                            id="Disable" 
+                                            className='form-checkbox' 
+                                            name='status' 
+                                            value={false}
+                                            onKeyDown={handleKeyDown}
+                                        />
                                         <div>
                                             <label htmlFor="Disable" className='company-disable'>Không hoạt động</label>
                                         </div>
@@ -200,13 +226,28 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                 :
                                 <div className='d-flex m-3 align-items-center justify-content-center'>
                                     <div className='d-flex mx-4 align-items-center justify-content-center'>
-                                        <input type="radio" id="Active" className='form-checkbox' name='status' value={true}/>
+                                        <input 
+                                            type="radio" 
+                                            id="Active" 
+                                            className='form-checkbox' 
+                                            name='status' 
+                                            value={true}
+                                            onKeyDown={handleKeyDown}
+                                        />
                                         <div>
                                             <label htmlFor="Active" className='company-active'>Hoạt động</label>
                                         </div>
                                     </div>
                                     <div className='d-flex mx-4 align-items-center justify-content-center'>
-                                        <input type="radio" id="Disable" className='form-checkbox' name='status' value={false} defaultChecked/>
+                                        <input 
+                                            type="radio" 
+                                            id="Disable" 
+                                            className='form-checkbox' 
+                                            name='status' 
+                                            value={false} 
+                                            onKeyDown={handleKeyDown}
+                                            defaultChecked
+                                        />
                                         <div>
                                             <label htmlFor="Disable" className='company-disable'>Không hoạt động</label>
                                         </div>
@@ -218,7 +259,12 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                             <h5 className='title'>THÊM CHỨC NĂNG</h5>
                             <div className='form-check'>
                                 <div className='d-flex my-3 align-items-center justify-content-start'>
-                                    <input type="text" className='form-control' placeholder='Nhập từ khóa tìm kiếm'/>
+                                    <input 
+                                        type="text" 
+                                        className='form-control' 
+                                        placeholder='Nhập từ khóa tìm kiếm'
+                                        onKeyDown={handleKeyDown}
+                                    />
                                 </div>
                                 {selectHui ? 
                                     <div className='d-flex m-2 align-items-center justify-content-start'>
@@ -226,7 +272,8 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                             type="checkbox" 
                                             id='hui' 
                                             name="hui"
-                                            className='form-checkbox' 
+                                            className='form-checkbox'
+                                            onKeyDown={handleKeyDown} 
                                             defaultChecked
                                         />
                                         <div>
@@ -239,6 +286,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                                             className='form-checkbox'
                                             id='hui' 
                                             name="hui"
+                                            onKeyDown={handleKeyDown}
                                         />
                                         <div>
                                             <label htmlFor="hui">Quản lý hụi</label>
@@ -261,7 +309,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                     <button className='mx-3 btn btn-cancle' onClick={handleClose}>
                         Đóng
                     </button>
-                    <button className='mx-3 btn btn-continue' type="submit">
+                    <button className='mx-3 btn btn-continue' type="submit" id='submitBtn'>
                         Cập nhật
                     </button>
                 </Modal.Footer>

@@ -54,6 +54,13 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
         }
         fetchRole()
     },[company, formValues]);
+
+    const handleKeyDown = (e) => {
+        if(e.key === "Enter") {
+            e.preventDefault();
+            document.getElementById('submitBtn').click();
+        }
+    }
     
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -182,6 +189,7 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     className='form-control'
                                     placeholder='Nhập họ tên'
                                     defaultValue={showUpdate.userId?.fullName}
+                                    onKeyDown={handleKeyDown}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -194,6 +202,7 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     className='form-control' 
                                     placeholder='Nhập Email' 
                                     defaultValue={showUpdate.userId?.email}
+                                    onKeyDown={handleKeyDown}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -206,6 +215,7 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     className='form-control' 
                                     placeholder='Nhập SĐT' 
                                     defaultValue={showUpdate.userId?.phoneNumber}
+                                    onKeyDown={handleKeyDown}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -231,13 +241,28 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                             </div>
                             <div className='d-flex m-3 align-items-center justify-content-between'>
                                 <div className='d-flex mx-3 align-items-center justify-content-center'>
-                                    <input type="radio" id="Active" className='form-checkbox' name='status' value={true} defaultChecked/>
+                                    <input 
+                                        type="radio" 
+                                        id="Active" 
+                                        className='form-checkbox' 
+                                        name='status' 
+                                        value={true} 
+                                        onKeyDown={handleKeyDown}
+                                        defaultChecked
+                                    />
                                     <div>
                                         <label htmlFor="Active" className='employee-active'>Hoạt động</label>
                                     </div>
                                 </div>
                                 <div className='d-flex mx-3 align-items-center justify-content-center'>
-                                    <input type="radio" id='Disable' className='form-checkbox' name='status'value={false}/>
+                                    <input 
+                                        type="radio" 
+                                        id='Disable' 
+                                        className='form-checkbox' 
+                                        name='status'
+                                        value={false}
+                                        onKeyDown={handleKeyDown}
+                                    />
                                     <div>
                                         <label htmlFor="Disable" className='employee-disable'>Không hoạt động</label>
                                     </div>
@@ -258,7 +283,7 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                     <button className='mx-3 btn btn-cancle' onClick={handleClose}>
                         Đóng
                     </button>
-                    <button className='mx-3 btn btn-continue' type="submit">
+                    <button className='mx-3 btn btn-continue' type="submit" id='submitBtn'>
                         Cập nhật
                     </button>
                 </Modal.Footer>

@@ -27,6 +27,13 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
             fetchRoles();
         }
     },[selectCompany]);
+
+    const handleKeyDown = (e) => {
+        if(e.key === "Enter") {
+            e.preventDefault();
+            document.getElementById('submitBtn').click();
+        }
+    }
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -135,6 +142,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     name="userName"
                                     className='form-control'
                                     placeholder="Nhập tên đăng nhập"
+                                    onKeyDown={handleKeyDown}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -150,6 +158,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     className="form-control" 
                                     id="floatingPassword" 
                                     placeholder="Nhập mật khẩu"
+                                    onKeyDown={handleKeyDown}
                                 />
                                 <span toggle="#floatingPassword" 
                                 className={ visiblePass ? 'toggle-password fa-regular fa-eye-slash' : 'toggle-password fa-regular fa-eye' } 
@@ -168,6 +177,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     className="form-control" 
                                     id="floatingRePassword" 
                                     placeholder="Nhập lại mật khẩu"
+                                    onKeyDown={handleKeyDown}
                                 />
                                 <span toggle="#loatingRePassword" 
                                 className={ visibleRePass ? 'toggle-password fa-regular fa-eye-slash' : 'toggle-password fa-regular fa-eye' } 
@@ -185,6 +195,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     name="fullName"
                                     className='form-control'
                                     placeholder="Nhập họ tên"
+                                    onKeyDown={handleKeyDown}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -196,6 +207,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     name="email"
                                     className='form-control' 
                                     placeholder='Nhập Email' 
+                                    onKeyDown={handleKeyDown}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -207,6 +219,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     name="phoneNumber"
                                     className='form-control' 
                                     placeholder='Nhập SĐT' 
+                                    onKeyDown={handleKeyDown}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -249,7 +262,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                     <button className='mx-3 btn btn-cancle' onClick={handleClose}>
                         Đóng
                     </button>
-                    <button className='mx-3 btn btn-continue' type="submit">
+                    <button className='mx-3 btn btn-continue'  id='submitBtn'>
                         Thêm mới
                     </button>
                 </Modal.Footer>
