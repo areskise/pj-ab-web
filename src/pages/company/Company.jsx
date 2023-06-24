@@ -246,7 +246,7 @@ const Company = () => {
                             <label htmlFor="">Sắp xếp:</label>
                         </div>
                         <div className='btn-sort-container'>
-                            <select className='form-select btn-sort' onChange={(e)=>changeSortItem(e.target.value)}>
+                            {/* <select className='form-select btn-sort' onChange={(e)=>changeSortItem(e.target.value)}>
                                 {sortItem==='date' && (<>
                                     <option value='date'>Ngày hoạt động</option>
                                     <option value='status'>Trạng thái</option>
@@ -262,8 +262,53 @@ const Company = () => {
                                     <option value='date'>Ngày hoạt động</option>
                                     <option value='status'>Trạng thái</option>
                                 </>)}                                
-                            </select>
-                            <select className='form-select btn-sort' onChange={(e)=>changeSortBy(e.target.value)}>
+                            </select> */}
+                            <div className="d-flex m-2 w-100 dropdown text-end" style={{maxWidth: '218px'}}>
+                                <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select btn-sort" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {sortItem==='date' &&
+                                        <span className='selected-company p-2'>Ngày hoạt động</span>
+                                    }
+                                    {sortItem==='status' &&
+                                        <span className='selected-company p-2'>Trạng thái</span>
+                                    }
+                                    {sortItem==='money' &&
+                                        <span className='selected-company p-2'>Số vốn</span>
+                                    }
+                                </a>
+                                <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
+                                    <li>
+                                        <button 
+                                            className='p-2 px-3 btn dropdown-item'
+                                            type='button'
+                                            style={sortItem==='date'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                            onClick={() => changeSortItem('date')}
+                                        >
+                                            Ngày hoạt động
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button 
+                                            className='p-2 px-3 btn dropdown-item'
+                                            type='button'
+                                            style={sortItem==='status'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                            onClick={() => changeSortItem('status')}
+                                        >
+                                            Trạng thái
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button 
+                                            className='p-2 px-3 btn dropdown-item'
+                                            type='button'
+                                            style={sortItem==='money'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                            onClick={() => changeSortItem('money')}
+                                        >
+                                            Số vốn
+                                        </button>
+                                    </li>                                    
+                                </ul>
+                            </div>
+                            {/* <select className='form-select btn-sort' onChange={(e)=>changeSortBy(e.target.value)}>
                                 {sortItem==='date' && (<>
                                     {sortBy==='' && (<>
                                         <option value={''}>Mặc định</option>
@@ -315,7 +360,116 @@ const Company = () => {
                                         <option value={1}>Thấp -{">"} Cao</option>
                                     </>)}
                                 </>)}
-                            </select>
+                            </select> */}
+                            <div className="d-flex m-2 w-100 dropdown text-end" style={{maxWidth: '218px'}}>
+                                <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select btn-sort" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {sortBy==='' && (<>
+                                        <span className='selected-company p-2'>Mặc định</span>
+                                    </>)}
+                                    {sortItem==='date' && (<>
+                                        {sortBy==='-1' && (<>
+                                            <span className='selected-company p-2'>Mới -{">"} Cũ</span>
+                                        </>)}
+                                        {sortBy==='1' && (<>
+                                            <span className='selected-company p-2'>Cũ -{">"} Mới</span>
+                                        </>)}
+                                    </>)}
+                                    {sortItem==='status' && (<>
+                                        {sortBy==='-1' && (<>
+                                            <span className='selected-company p-2'>Hoạt động -{">"} Không hoạt động</span>
+                                        </>)}
+                                        {sortBy==='1' && (<>
+                                            <span className='selected-company p-2'>Không hoạt động -{">"} Hoạt động</span>
+                                        </>)}
+                                    </>)}
+                                    {sortItem==='money' && (<>
+                                        {sortBy==='-1' && (<>
+                                            <span className='selected-company p-2'>Cao -{">"} Thấp</span>
+                                        </>)}
+                                        {sortBy==='1' && (<>
+                                            <span className='selected-company p-2'>Thấp -{">"} Cao</span>
+                                        </>)}
+                                    </>)}
+                                </a>
+                                <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
+                                    <li>
+                                        <button 
+                                            className='p-2 px-3 btn dropdown-item'
+                                            type='button'
+                                            style={sortBy===''?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                            onClick={() => changeSortBy('')}
+                                        >
+                                            Mặc định
+                                        </button>
+                                    </li>
+                                    {sortItem==='date' && (<>
+                                        <li>
+                                            <button 
+                                                className='p-2 px-3 btn dropdown-item'
+                                                type='button'
+                                                style={sortBy==='-1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                onClick={() => changeSortBy('-1')}
+                                            >
+                                                Mới -{">"} Cũ
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button 
+                                                className='p-2 px-3 btn dropdown-item'
+                                                type='button'
+                                                style={sortBy==='1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                onClick={() => changeSortBy('1')}
+                                            >
+                                                Cũ -{">"} Mới
+                                            </button>
+                                        </li>
+                                    </>)}
+                                    {sortItem==='status' && (<>
+                                        <li>
+                                            <button 
+                                                className='p-2 px-3 btn dropdown-item'
+                                                type='button'
+                                                style={sortBy==='-1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                onClick={() => changeSortBy('-1')}
+                                            >
+                                                Hoạt động -{">"} Không hoạt động
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button 
+                                                className='p-2 px-3 btn dropdown-item'
+                                                type='button'
+                                                style={sortBy==='1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                onClick={() => changeSortBy('1')}
+                                            >
+                                                Không hoạt động -{">"} Hoạt động
+                                            </button>
+                                        </li>
+                                    </>)}
+                                    {sortItem==='money' && (<>
+                                        <li>
+                                            <button 
+                                                className='p-2 px-3 btn dropdown-item'
+                                                type='button'
+                                                style={sortBy==='-1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                onClick={() => changeSortBy('-1')}
+                                            >
+                                                Cao -{">"} Thấp
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button 
+                                                className='p-2 px-3 btn dropdown-item'
+                                                type='button'
+                                                style={sortBy==='1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                onClick={() => changeSortBy('1')}
+                                            >
+                                                Thấp -{">"} Cao
+                                            </button>
+                                        </li>
+                                    </>)}              
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     {!loading && !companies.docs ? 

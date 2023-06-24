@@ -29,6 +29,57 @@
     background-color: #e9ecef;
 }
 
+.authority-container .select-company {
+    padding: 0 12px;
+    height: 38px;
+    width: 218px;    
+    border: 2px solid #D8E2E9;
+    border-radius: 20px;
+  }
+  
+  .authority-container .select-company:hover {
+    cursor: pointer;
+  }
+  
+  .authority-container .select-company:focus-visible {
+    outline-offset: 0;
+    outline: none;
+  }
+  
+  .authority-container .form-control-dark {
+    border-color: var(--bs-gray);
+  }
+  .authority-container .form-control-dark:focus {
+    border-color: #fff;
+    box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
+  }
+  
+  .authority-container .dropdown-toggle {
+    outline: 0;
+  }
+  
+  .authority-container .dropdown-menu {
+    --bs-dropdown-min-width: none;
+    width: 100%;
+  }
+  
+  .authority-container .dropdown-item {
+    white-space: normal;
+  }
+  
+  .authority-container .dropdown-item:hover {
+    border-radius: 0.375rem;
+    background-color: #D8E2E9;
+  }
+  
+  .authority-container .selected-company {
+    display: flex;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 88%;
+    text-align: right;
+  }
+
 .authority-container .form-control {
     height: 38px;
     padding: 10px 15px;

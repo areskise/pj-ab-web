@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 
 const DetailEmployee = ({employeeId, setShowDetail, showDetail}) => {
-    const [subMenu, setSubMenu] = useState(false);
+    console.log(showDetail);
 
     return (
         <Modal dialogClassName="modal-detail" show={showDetail} onHide={() => setShowDetail(false)}>
@@ -24,19 +24,19 @@ const DetailEmployee = ({employeeId, setShowDetail, showDetail}) => {
                                     <div className='label'>
                                         <label htmlFor="">Tên đăng nhập</label>
                                     </div>
-                                    <input type="text" className='form-control' value='thanh_123' disabled/>
+                                    <input type="text" className='form-control' value={showDetail?.userId?.userName} disabled/>
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                     <div className='label'>
                                         <label htmlFor="">Mã TC</label>
                                     </div>
-                                    <input type="email" className='form-control' value={'thanh_123@gmail.com'} disabled />
+                                    <input type="email" className='form-control' value={showDetail?.userId?.email} disabled />
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                     <div className='label'>
                                         <label htmlFor="">Trạng thái</label>
                                     </div>
-                                    <input type="text" className='form-control' value={'Không Hoạt động'} disabled/>
+                                    <input type="text" className='form-control' value={showDetail?.userId?.status?'Hoạt động':'Không hoạt động'} disabled/>
                                 </div>
                             </div>
                             <div className="mx-3">
@@ -44,13 +44,13 @@ const DetailEmployee = ({employeeId, setShowDetail, showDetail}) => {
                                     <div className='label'>
                                         <label htmlFor="">Họ tên</label>
                                     </div>
-                                    <input type="text" className='form-control' value={'Hoài Thanh'} disabled/>
+                                    <input type="text" className='form-control' value={showDetail?.userId?.fullName} disabled/>
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                     <div className='label'>
                                         <label htmlFor="">Số điện thoại</label>
                                     </div>
-                                    <input type="number" className='form-control' value={'0903127954'} disabled/>
+                                    <input type="number" className='form-control' value={showDetail?.userId?.phoneNumber} disabled/>
                                 </div>
                             </div>
                         </div>
@@ -65,7 +65,7 @@ const DetailEmployee = ({employeeId, setShowDetail, showDetail}) => {
                                     <div className='label'>
                                         <label htmlFor="">Nhóm quyền</label>
                                     </div>
-                                    <input type="text" className='form-control' value={'Adimn'} disabled/>
+                                    <input type="text" className='form-control' value={showDetail?.roleId?.name} disabled/>
                                 </div>
                             </div>
                             <div className="mx-3">
@@ -73,7 +73,7 @@ const DetailEmployee = ({employeeId, setShowDetail, showDetail}) => {
                                     <div className='label'>
                                         <label htmlFor="">Công ty</label>
                                     </div>
-                                    <input type="text" className='form-control' value={'Công ty 7'} disabled/>
+                                    <input type="text" className='form-control' value={showDetail?.organizationId?.name} disabled/>
                                 </div>
                             </div>
                         </div>

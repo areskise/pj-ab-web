@@ -4,6 +4,37 @@
   right: 50px;
 }
 
+.company .btn-sort-container .dropdown-toggle {
+  outline: 0;
+}
+
+.company .btn-sort-container .dropdown-menu {
+  --bs-dropdown-min-width: none;
+  width: 100%;
+}
+
+.company .btn-sort-container .dropdown-item {
+  white-space: normal;
+}
+
+.company .btn-sort-container .dropdown-item:hover {
+  border-radius: 0.375rem;
+  background-color: #D8E2E9;
+}
+
+.company .btn-sort-container .selected-company {
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 88%;
+  text-align: right;
+}
+
+.company .btn-sort-container .select-dropdown {
+  width: 100%;
+}
+
+
 .company .sort-container {
   display: none;
   align-items: center;
@@ -13,6 +44,7 @@
 
 .company .btn-sort-container {
   display: flex;
+  justify-content: space-around;
 }
 
 .company .btn-sort {
@@ -20,12 +52,12 @@
   height: 38px;
   border: 2px solid #D8E2E9;
   border-radius: 20px;
-  margin: 8px;
   text-align: start;
   overflow: hidden;
   display: flex;
   justify-content: space-between;
   padding: 0 12px;
+  min-width: 108px;
 }
 
 .company .btn-sort:hover {

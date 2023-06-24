@@ -4,12 +4,17 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import Cookies from 'universal-cookie';
 import AuthAPI from '../../API/AuthAPI';
+// import CompanyAPI from '../../API/CompanyAPI';
+// import { companyActions } from '../../redux/slice/companySlice';
+// import { useDispatch } from 'react-redux';
 
 const SignIn = () => {
+  const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [userName, setUserName] = useState(null);
   const [password, setPassword] = useState(null);
   const [remember, setRemember] = useState(false);
+  const [messErr, setMessErr] = useState(null);
   const [error, setError] = useState(false);
   
 	const cookies = new Cookies();
@@ -33,15 +38,20 @@ const SignIn = () => {
         password: password,
       }
       try {
+        setLoading(true);
         const res = await AuthAPI.login(data);
         const result = res.ResponseResult.Result
         if(res.ResponseResult.ErrorCode === 0) {
           if(remember) {
-            cookies.set('access_token', result, {maxAge: 604800})
+            cookies.set('access_token', result, {maxAge: 604800})  
             navigate('/trang-chu');
+            window.location.reload();
+            setLoading(false);
           } else {
             cookies.set('access_token', result)
             navigate('/trang-chu');
+            window.location.reload();
+            setLoading(false);
           }
         } else {
           setError(true);
@@ -49,7 +59,8 @@ const SignIn = () => {
       } 
       catch(err) {
         console.error(err);
-        setError(true);
+        setError(false)
+        setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
       }
     }
   }
@@ -109,6 +120,11 @@ const SignIn = () => {
               <div className="error-text">Thông tin đăng nhập không hợp lệ.</div>
               <div className="error-text">Vui lòng kiểm tra lại.</div>
             </div>
+            }
+            {messErr &&
+              <div className='m-auto mb-3 text-center'>
+                <div className="error-text">{messErr}</div>
+              </div>
             }
             <button 
               className="btn btn-lg btn-continue"

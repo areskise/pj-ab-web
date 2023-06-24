@@ -25,6 +25,10 @@ const EmployeeAPI = {
         return axiosClient.put(`/user`, body);
     },
 
+    updateRole: async (body) => {
+        return axiosClient.put(`/user/updateRole`, body);
+    },
+
     changePass: async (body) => {
         return axiosClient.put(`/user/password`, body);
     },

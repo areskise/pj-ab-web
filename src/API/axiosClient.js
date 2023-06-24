@@ -50,6 +50,8 @@ axiosClient.interceptors.response.use(
 					refreshToken: access_token.refreshToken
 				}
 				const res = await AuthAPI.refresh(data);
+				
+				console.log(res);
 			};
 			return response.data;
 		}

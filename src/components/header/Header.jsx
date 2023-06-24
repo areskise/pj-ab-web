@@ -1,7 +1,7 @@
 import './header.css';
 import img from '../../images/Image';
 import { useEffect, useState } from 'react';
-import { useNavigate, NavLink, Link } from "react-router-dom";
+import { useNavigate, NavLink, Link, useRe } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
 import { companyActions, selectorUserCompanies } from "../../redux/slice/companySlice";
 import Cookies from 'universal-cookie';
@@ -12,7 +12,6 @@ const Header = ({showAdd, showUpdate}) => {
     const [showModal, setShowModal] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const [navUser, setNavUser] = useState(false);
-    const [selectComany, setSelectCompany] = useState([]);
     
 	const cookies = new Cookies();
     const access_token = cookies.get('access_token');
@@ -20,19 +19,25 @@ const Header = ({showAdd, showUpdate}) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const userCompanies = useSelector(selectorUserCompanies);
+    const [selectCompany, setSelectCompany] = useState(null);
     
     useEffect(() => {
-        const fetchUserCompanies = async () => {
-            const res = await CompanyAPI.getAll()
-            const result = res.ResponseResult.Result
-            dispatch(companyActions.setUserCompanies(result))
+        if (access_token) {
+            const fetchUserCompanies = async () => {
+                const res = await CompanyAPI.getAll()
+                const result = res.ResponseResult.Result
+                dispatch(companyActions.setUserCompanies(result))
+                setSelectCompany(result[0])
+            }
+            fetchUserCompanies()
+        } else {
+            navigate('/')
         }
-        access_token?fetchUserCompanies():navigate('/')
     }, [showAdd, showUpdate]);
 
     const handleLogout = () => {
         cookies.remove('access_token');
-        navigate('/');
+        navigate('/')
     }
 
     return (
@@ -43,12 +48,25 @@ const Header = ({showAdd, showUpdate}) => {
                         <a href="/trang-chu" className="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
                             <img src={img.logoBlack} alt='logo' width="32" height="32" className='logo-img'/>
                         </a>
-                    <div className='d-flex'>
-                        <select className='form-select select-company' onChange={(e) => setSelectCompany(e.target.value)}>
-                            {userCompanies?.map((company, i) => (
-                                <option key={i} value={company.name}>{company.name}</option>
-                            ))}
-                        </select>
+                    <div className='d-flex mx-3'>
+                        <div className="d-flex dropdown text-end">
+                            <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span className='selected-company p-2'>{selectCompany?selectCompany?.name:'Loading...'}</span>
+                            </a>
+                            <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
+                                {userCompanies?.map((company, i) => (
+                                    <li key={i}>
+                                        <button 
+                                            className='p-2 px-3 btn dropdown-item'
+                                            style={selectCompany?._id===company._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                            onClick={() => setSelectCompany(company)}
+                                        >
+                                            {company.name}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
                     </div>
 
@@ -62,7 +80,7 @@ const Header = ({showAdd, showUpdate}) => {
                             </a>
                             <ul className="p-0 dropdown-menu text-small">
                                 <li>
-                                <button className='p-2 px-3 btn dropdown-item' onClick={() => setShowModal(true)}>
+                                <button className='d-flex justify-content-center p-2 btn dropdown-item' onClick={() => setShowModal(true)}>
                                     Đăng xuất
                                 </button>
                                 </li>

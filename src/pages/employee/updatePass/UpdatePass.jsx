@@ -62,7 +62,7 @@ const UpdatePass = ({setUpdatePass, updatePass}) => {
     }
 
     return (
-        <Modal dialogClassName="update-employee" show={updatePass} onHide={onHide}>
+        <Modal dialogClassName="update-pass" show={updatePass} onHide={onHide}>
             <form onSubmit={handleSubmit}>
                 <Modal.Header className='justify-content-center'>
                     <Modal.Title className='title'>CẬP NHẬT MẬT KHẨU</Modal.Title>

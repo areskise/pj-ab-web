@@ -12,6 +12,7 @@ import RoleAPI from '../../API/RoleAPI';
 import { menuActions, selectorMenuDefault } from '../../redux/slice/menuSlice';
 import { NavLink } from "react-router-dom";
 import MenuAPI from "../../API/MenuAPI";
+import { permissionActions } from "../../redux/slice/permissionSlice";
 
 const UpdateAuthority = () => {
     const [loading, setLoading] = useState(false);
@@ -43,6 +44,7 @@ const UpdateAuthority = () => {
             const res = await MenuAPI.getDefault()
             const result = res.ResponseResult.Result[0]?.menu
             dispatch(menuActions.setDefault(result))
+            dispatch(permissionActions.setPermissions())
             setLoading(false)
         }
         fetchMenu();
@@ -52,7 +54,7 @@ const UpdateAuthority = () => {
         if(selectCompany) {
             setRoles([])
             const fetchRoles = async () => {
-                const res = await CompanyAPI.getRoles(selectCompany);
+                const res = await CompanyAPI.getRoles(selectCompany._id);
                 const result = res.ResponseResult.Result;
                 setRoleName(null);
                 setSelectRole(null);
@@ -66,7 +68,7 @@ const UpdateAuthority = () => {
     useEffect(()=> {
         if(selectRole) {
             const fetchRole = async () => {
-                const res = await RoleAPI.getById(selectRole)
+                const res = await RoleAPI.getById(selectRole._id)
                 const result = res.ResponseResult.Result;
                 setRoleName(result.name);
                 setChecked(result.permissionId.map(per => per._id));
@@ -187,33 +189,72 @@ const UpdateAuthority = () => {
                                         <div className='label'>
                                             <label htmlFor="">Công ty:</label>
                                         </div>
-                                        <select className='form-select select-company' name="company" onChange={(e) => setSelectCompany(e.target.value)}>
+                                        {/* <select className='form-select select-company' name="company" onChange={(e) => setSelectCompany(e.target.value)}>
                                             <option value={null} hidden>Chọn công ty</option>
                                             {userCompanies?.map((company, i) => (
                                                 <option key={i} value={company._id}>{company.name}</option>
                                             ))}
-                                        </select>
+                                        </select> */}
+                                        <div className="d-flex w-100 dropdown text-end">
+                                            <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <span className='selected-company p-2'>{selectCompany?selectCompany?.name:'Chọn công ty'}</span>
+                                            </a>
+                                            <ul className="p-0 my-1 dropdown-menu text-small">
+                                                {userCompanies?.map((company, i) => (
+                                                    <li key={i}>
+                                                        <button 
+                                                            className='p-2 px-3 btn dropdown-item'
+                                                            type='button'
+                                                            style={selectCompany?._id===company._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                            onClick={() => setSelectCompany(company)}
+                                                        >
+                                                            {company.name}
+                                                        </button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
                                     </div>
                                     <div className='d-flex m-md-3 my-3 align-items-center justify-content-start'>
                                         <div className='label'>
                                             <label htmlFor="">Tên nhóm quyền:</label>
                                         </div>
                                         {selectCompany?
-                                            <select 
-                                                className='form-select select-company' name="role" 
-                                                onChange={(e) => setSelectRole(e.target.value)}
-                                            >
-                                                <option value='' hidden>Chọn nhóm quyền</option>
-                                                {roles && roles.map((role, i) => (
-                                                    <option key={i} value={role._id}>{role.name}</option>
-                                                ))}
-                                            </select>
+                                            // <select 
+                                            //     className='form-select select-company' name="role" 
+                                            //     onChange={(e) => setSelectRole(e.target.value)}
+                                            // >
+                                            //     <option value='' hidden>Chọn nhóm quyền</option>
+                                            //     {roles?.map((role, i) => (
+                                            //         <option key={i} value={role._id}>{role.name}</option>
+                                            //     ))}
+                                            // </select>
+                                            <div className="d-flex w-100 dropdown text-end">
+                                                <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span className='selected-company p-2'>{selectRole?selectRole?.name:'Chọn nhóm quyền'}</span>
+                                                </a>
+                                                <ul className="p-0 my-1 dropdown-menu text-small">
+                                                    {roles?.map((role, i) => (
+                                                        <li key={i}>
+                                                            <button 
+                                                                className='p-2 px-3 btn dropdown-item'
+                                                                type='button'
+                                                                style={selectRole?._id===role._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                                onClick={() => setSelectRole(role)}
+                                                            >
+                                                                {role.name}
+                                                            </button>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
                                         :
                                             <select 
                                                 className='form-select select-company' name="role" 
                                                 disabled
                                             >
                                                 <option value='' hidden>Chọn công ty trước</option>
+                                                
                                             </select>
                                         }
                                     </div>
@@ -236,7 +277,7 @@ const UpdateAuthority = () => {
                                 </div>
                                 <div className='form-check filter-container'>
                                     <input
-                                        className="filter-text form-control mt-1 mb-2"
+                                        className="filter-text form-control mb-2"
                                         placeholder="Nhập từ khóa tìm kiếm"
                                         type="text"
                                         value={filterText}

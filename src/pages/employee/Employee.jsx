@@ -52,7 +52,7 @@ const Employee = () => {
             const data = {
                 limit: limit,
                 page: page,
-                id: selectCompany,
+                id: selectCompany._id,
                 status: sortStatus,
             }
             const fetchEmployee = async () => {
@@ -97,18 +97,9 @@ const Employee = () => {
         }
     }
 
-    const changeCompany = (e) => {
-        setSelectCompany(e.target.value)
-        setPage(1)
-    }
-
     const changeSortBy = (value) => {
         setSortBy(value)
         selectByStatus(value)
-    }
-
-    const changeSortItem = () => {
-        selectByStatus(sortBy)
     }
 
     const nextPage = () => {
@@ -131,9 +122,9 @@ const Employee = () => {
         <div className="employee body-container bg-light">
             <Header/>
             <SideBar/>
-            <AddEmployee selectCompany={selectCompany} showAdd={showAdd} setShowAdd={setShowAdd} />
-            <UpdateEmployee selectCompany={selectCompany} showUpdate={showUpdate} setShowUpdate={setShowUpdate}/>
-            <UpdatePass updatePass={updatePass} setUpdatePass={setUpdatePass}/>
+            <AddEmployee selectCompany={selectCompany} showAdd={showAdd} setShowAdd={setShowAdd} setLoading={setLoading}/>
+            <UpdateEmployee selectCompany={selectCompany} showUpdate={showUpdate} setShowUpdate={setShowUpdate} setLoading={setLoading}/>
+            <UpdatePass updatePass={updatePass} setUpdatePass={setUpdatePass} setLoading={setLoading}/>
             <DetailEmployee showDetail={showDetail} setShowDetail={setShowDetail}/>
             <div className="main-container bg-light">
                 <h5 className="m-4">
@@ -164,19 +155,48 @@ const Employee = () => {
                         <div className='label'>
                             <label htmlFor="">Công ty:</label>
                         </div>
-                        <select className='form-select select-company' onChange={changeCompany}>
+                        {/* <select className='form-select select-company' onChange={changeCompany}>
                             <option value='all'>Tất cả</option>
                             {userCompanies?.map((company, i) => (
                                 <option key={i} value={company._id}>{company.name}</option>
                             ))}
-                        </select>
+                        </select> */}
+                        <div className="d-flex w-100 dropdown text-end" style={{maxWidth: '218px'}}>
+                            <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span className='selected-company p-2'>{selectCompany?.name?selectCompany?.name:'Tất cả'}</span>
+                            </a>
+                            <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
+                                <li key={'all'}>
+                                    <button 
+                                        className='p-2 px-3 btn dropdown-item'
+                                        type='button'
+                                        style={selectCompany==='all'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                        onClick={() => setSelectCompany('all')}
+                                    >
+                                        Tất cả
+                                    </button>
+                                </li>
+                                {userCompanies?.map((company, i) => (
+                                    <li key={i}>
+                                        <button 
+                                            className='p-2 px-3 btn dropdown-item'
+                                            type='button'
+                                            style={selectCompany?._id===company._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                            onClick={() => setSelectCompany(company)}
+                                        >
+                                            {company.name}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
                     <div className="sort-container"> 
                         <div className='px-2'>
                             <label htmlFor="">Sắp xếp:</label>
                         </div>
                         <div className='btn-sort-container'>
-                            <select className='form-select btn-sort' onChange={(e)=>changeSortItem(e.target.value)}>
+                            {/* <select className='form-select btn-sort' onChange={(e)=>changeSortItem(e.target.value)}>
                                 <option value='status'>Trạng thái</option>
                             </select>
                             <select className='form-select btn-sort' onChange={(e)=>changeSortBy(e.target.value)}>
@@ -195,7 +215,68 @@ const Employee = () => {
                                     <option value={''}>Mặc định</option>
                                     <option value={-1}>Hoạt động</option>
                                 </>)}
-                            </select>
+                            </select> */}
+                            <div className="d-flex m-2 w-100 dropdown text-end" style={{maxWidth: '218px'}}>
+                                <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select btn-sort" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span className='selected-company p-2'>Trạng thái</span>
+                                </a>
+                                <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
+                                    <li>
+                                        <button 
+                                            className='p-2 px-3 btn dropdown-item'
+                                            type='button'
+                                            style={{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}}
+                                        >
+                                            Trạng thái
+                                        </button>
+                                    </li>                        
+                                </ul>
+                            </div>
+                            <div className="d-flex m-2 w-100 dropdown text-end" style={{maxWidth: '218px'}}>
+                                <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select btn-sort" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {sortBy==='' && (<>
+                                        <span className='selected-company p-2'>Mặc định</span>
+                                    </>)}
+                                    {sortBy==='-1' && (<>
+                                        <span className='selected-company p-2'>Hoạt động -{">"} Không hoạt động</span>
+                                    </>)}
+                                    {sortBy==='1' && (<>
+                                        <span className='selected-company p-2'>Không hoạt động -{">"} Hoạt động</span>
+                                    </>)}
+                                </a>
+                                <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
+                                    <li>
+                                        <button 
+                                            className='p-2 px-3 btn dropdown-item'
+                                            type='button'
+                                            style={sortBy===''?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                            onClick={() => changeSortBy('')}
+                                        >
+                                            Mặc định
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button 
+                                            className='p-2 px-3 btn dropdown-item'
+                                            type='button'
+                                            style={sortBy==='-1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                            onClick={() => changeSortBy('-1')}
+                                        >
+                                            Hoạt động -{">"} Không hoạt động
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button 
+                                            className='p-2 px-3 btn dropdown-item'
+                                            type='button'
+                                            style={sortBy==='1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                            onClick={() => changeSortBy('1')}
+                                        >
+                                            Không hoạt động -{">"} Hoạt động
+                                        </button>
+                                    </li>              
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     {!employees.docs ? 
@@ -230,7 +311,7 @@ const Employee = () => {
                             <tbody>
                                 {employees.docs?.map((employee, i) => (
                                     <tr key={i}>
-                                        <td scope="row" data-label="Họ tên:" onClick={() => setShowDetail(true)}>
+                                        <td className='detail' scope="row" data-label="Họ tên:" onClick={() => setShowDetail(employee)}>
                                             {employee.userId?.fullName}
                                             <div>({employee.userId?.userName})</div>
                                         </td>

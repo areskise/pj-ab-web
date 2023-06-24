@@ -22,6 +22,49 @@
     display: flex;
 }
 
+.add-employee .form-container .select-company:hover {
+    cursor: pointer;
+  }
+  
+  .add-employee .form-container .select-company:focus-visible {
+    outline-offset: 0;
+    outline: none;
+  }
+  
+  .add-employee .form-container .form-control-dark {
+    border-color: var(--bs-gray);
+  }
+  .add-employee .form-container .form-control-dark:focus {
+    border-color: #fff;
+    box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
+  }
+  
+  .add-employee .form-container .dropdown-toggle {
+    outline: 0;
+  }
+  
+  .add-employee .form-container .dropdown-menu {
+    --bs-dropdown-min-width: none;
+    width: 100%;
+  }
+  
+  .add-employee .form-container .dropdown-item {
+    white-space: normal;
+  }
+  
+  .add-employee .form-container .dropdown-item:hover {
+    border-radius: 0.375rem;
+    background-color: #D8E2E9;
+  }
+  
+  .add-employee .form-container .selected-company {
+    display: flex;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 88%;
+    text-align: right;
+  }
+
 .add-employee .form-control {
     width: 242px;
     height: 38px;
@@ -120,5 +163,11 @@
     .add-employee .select-company {
         width: 100%;
         max-width: 240px;
+    }
+
+    .add-employee .form-container .select-dropdown {
+        width: 100%;
+        max-width: 240px;
+        justify-content: end;
     }
 }

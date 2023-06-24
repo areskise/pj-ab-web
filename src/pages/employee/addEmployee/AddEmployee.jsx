@@ -9,6 +9,7 @@ import CompanyAPI from "../../../API/CompanyAPI";
 
 const AddEmployee = ({setShowAdd, showAdd}) => {
     const [selectCompany, setSelectCompany] = useState(null);
+    const [selectRole, setSelectRole] = useState(null);
     const [visiblePass, setVisiblePass] = useState(false);
     const [visibleRePass, setVisibleRePass] = useState(false);
     const [error, setError] = useState(false);
@@ -20,9 +21,10 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
     useEffect(() => {
         if(selectCompany) {
             const fetchRoles = async () => {
-                const res = await CompanyAPI.getRoles(selectCompany);
+                const res = await CompanyAPI.getRoles(selectCompany._id);
                 const result = res.ResponseResult.Result
                 setRoles(result)
+                setSelectRole(null)
             }
             fetchRoles();
         }
@@ -37,20 +39,20 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        data.append('organizationId', e.target.company.value);
+        data.append('organizationId', selectCompany._id);
         data.append('userName', e.target.userName.value);
         data.append('password', e.target.password.value);
         data.append('fullName', e.target.fullName.value);
         data.append('email', e.target.email.value);
         data.append('phoneNumber', e.target.phoneNumber.value);
-        data.append('roleId', e.target.role.value);
+        data.append('roleId', selectRole._id);
         if(
-            !e.target.company.value || 
+            !selectCompany || 
             !e.target.userName.value || 
             !e.target.password.value || 
             !e.target.rePassword.value || 
             !e.target.fullName.value || 
-            !e.target.role.value
+            !selectRole
         ) {
             setError(true)
             setMessErr(null)
@@ -94,6 +96,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
         setShowAdd(false)
         setMessErr(null)
         setSelectCompany(null)
+        setSelectRole(null)
     }
 
     const onHide = () => {
@@ -101,6 +104,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
         setShowAdd(false)
         setMessErr(null)
         setSelectCompany(null)
+        setSelectRole(null)
     }
 
     return (
@@ -119,7 +123,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                         <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
-                                <select 
+                                {/* <select 
                                     name="company" 
                                     className='form-select select-company' 
                                     onChange={(e) => setSelectCompany(e.target.value)}
@@ -128,7 +132,26 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     {userCompanies?.map((company, i) => (
                                         <option key={i} value={company._id}>{company.name}</option>
                                     ))}
-                                </select>
+                                </select> */}
+                                <div className="d-flex dropdown select-dropdown text-end">
+                                    <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span className='selected-company p-2'>{selectCompany?selectCompany?.name:'Chọn công ty'}</span>
+                                    </a>
+                                    <ul className="p-0 my-1 dropdown-menu text-small">
+                                        {userCompanies?.map((company, i) => (
+                                            <li key={i}>
+                                                <button 
+                                                    className='p-2 px-3 btn dropdown-item'
+                                                    type='button'
+                                                    style={selectCompany?._id===company._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                    onClick={() => setSelectCompany(company)}
+                                                >
+                                                    {company.name}
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                 <div className='label'>
@@ -230,14 +253,33 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     </label>
                                 </div>
                                 {selectCompany?
-                                    <select 
-                                        className='form-select select-company' name="role"
-                                    >
-                                        <option value='' hidden>Chọn nhóm quyền</option>
-                                        {roles && roles.map((role, i) => (
-                                            <option key={i} value={role._id}>{role.name}</option>
-                                        ))}
-                                    </select>
+                                    // <select 
+                                    //     className='form-select select-company' name="role"
+                                    // >
+                                    //     <option value='' hidden>Chọn nhóm quyền</option>
+                                    //     {roles && roles.map((role, i) => (
+                                    //         <option key={i} value={role._id}>{role.name}</option>
+                                    //     ))}
+                                    // </select>
+                                    <div className="d-flex select-dropdown dropdown text-end">
+                                        <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span className='selected-company p-2'>{selectRole?selectRole?.name:'Chọn nhóm quyền'}</span>
+                                        </a>
+                                        <ul className="p-0 my-1 dropdown-menu text-small">
+                                            {roles?.map((role, i) => (
+                                                <li key={i}>
+                                                    <button 
+                                                        className='p-2 px-3 btn dropdown-item'
+                                                        type='button'
+                                                        style={selectRole?._id===role._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                        onClick={() => setSelectRole(role)}
+                                                    >
+                                                        {role.name}
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
                                 :
                                     <select 
                                         className='form-select select-company' name="role" 
