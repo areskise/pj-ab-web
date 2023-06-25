@@ -12,6 +12,7 @@ import { menuActions, selectorMenuDefault } from '../../redux/slice/menuSlice';
 import { NavLink } from "react-router-dom";
 import MenuAPI from "../../API/MenuAPI";
 import { permissionActions, selectorPermissions } from "../../redux/slice/permissionSlice";
+import menuApp from "../../helpers/menuApp";
 
 const AddAuthority = () => {
     const [loading, setLoading] = useState(false);
@@ -51,7 +52,6 @@ const AddAuthority = () => {
     }, [filterText, menuDefault])
 
     const onCheck = (value) => {
-        console.log(value);
         setChecked(value);
     };
 
@@ -91,44 +91,22 @@ const AddAuthority = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const perIds = checked.filter(perId => perId !== 'all');
-        let menu = [...menuDefault]
-        for (let i = 0; i < menu.length; i++) {
-            if(!perIds.includes(menu[i]?.value) && !menu[i]?.sub) {
-                console.log(menu[i]);
-                menu.splice(i,1);
-            }
-            if(menu[i].sub) {
-                for (let j = 0; j < menu[i].children.length; j++) {
-                    if(!perIds.includes(menu[i].children[j].value) && !menu[i].children[j].sub) {
-                        console.log(menu[i].children[j]);
-                        menu[i].children[j] = null
-                    }
-                    if (menu[i].children[j].sub) {
-                        for (let n = 0; n < menu[i].children[j].children.length; n++) {
-                            if(!perIds.includes(menu[i].children[j].children[n].value)) {
-                                console.log(menu[i].children[j].children[n]);
-                                menu[i].children[j].children[n] = null
-                            }
-                    }
-                }
-            }
-        }}
-        console.log(menu);
+        const menu = menuApp(menuDefault,perIds)
         const data = {
             role: {
-                organizationId: selectCompany._id,
+                organizationId: selectCompany?._id,
                 title: e.target.name.value,
                 name: e.target.name.value,
                 permissionId: perIds,
             },
-            // menu: {
-            //     "menu_type": "web",
-            //     "status": e.target.name.value,
-            //     "name": e.target.name.value,
-            //     "menu": menu,
-            // }
+            menu: {
+                "menu_type": "web",
+                "status": e.target.name.value,
+                "name": e.target.name.value,
+                "menu": menu,
+            }
         }
-        if(!e.target.name.value) {
+        if(!e.target.name.value || !selectCompany?._id) {
             setError(true)
             setMessErr(null)
         } else {

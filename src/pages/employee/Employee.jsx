@@ -52,7 +52,7 @@ const Employee = () => {
             const data = {
                 limit: limit,
                 page: page,
-                id: selectCompany._id,
+                id: selectCompany?._id,
                 status: sortStatus,
             }
             const fetchEmployee = async () => {

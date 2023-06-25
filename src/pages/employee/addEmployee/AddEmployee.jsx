@@ -21,7 +21,7 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
     useEffect(() => {
         if(selectCompany) {
             const fetchRoles = async () => {
-                const res = await CompanyAPI.getRoles(selectCompany._id);
+                const res = await CompanyAPI.getRoles(selectCompany?._id);
                 const result = res.ResponseResult.Result
                 setRoles(result)
                 setSelectRole(null)
@@ -39,20 +39,20 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        data.append('organizationId', selectCompany._id);
+        data.append('organizationId', selectCompany?._id);
         data.append('userName', e.target.userName.value);
         data.append('password', e.target.password.value);
         data.append('fullName', e.target.fullName.value);
         data.append('email', e.target.email.value);
         data.append('phoneNumber', e.target.phoneNumber.value);
-        data.append('roleId', selectRole._id);
+        data.append('roleId', selectRole?._id);
         if(
-            !selectCompany || 
+            !selectCompany?._id || 
             !e.target.userName.value || 
             !e.target.password.value || 
             !e.target.rePassword.value || 
             !e.target.fullName.value || 
-            !selectRole
+            !selectRole?._id
         ) {
             setError(true)
             setMessErr(null)

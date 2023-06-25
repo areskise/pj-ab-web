@@ -40,12 +40,10 @@ const UpdateAuthority = () => {
 
     useEffect(() => {
         const fetchMenu = async () => {
-            setLoading(true)
             const res = await MenuAPI.getDefault()
             const result = res.ResponseResult.Result[0]?.menu
             dispatch(menuActions.setDefault(result))
             dispatch(permissionActions.setPermissions())
-            setLoading(false)
         }
         fetchMenu();
     }, []);
@@ -65,6 +63,7 @@ const UpdateAuthority = () => {
         }
     },[selectCompany])
 
+    
     useEffect(()=> {
         if(selectRole) {
             const fetchRole = async () => {
@@ -121,28 +120,38 @@ const UpdateAuthority = () => {
         e.preventDefault();
         const perIds = checked.filter(perId => perId !== 'all');
         const data = {
-            _id: e.target.role.value,
+            _id: selectRole?._id,
             name: e.target.name.value,
             permissionId: perIds,
         }
         
-        if(!e.target.name.value) {
+        if(!e.target.name.value || !selectRole?._id) {
             setError(true)
+            setMessErr(null)
         } else {
             try {
+                setLoading(true);
                 const res = await RoleAPI.update(data);
+                console.log(res.ResponseResult.Result);
                 if(res.ResponseResult.ErrorCode === 0){
+                    const resSelect = await RoleAPI.getById(selectRole._id)
+                    const resultSelect = resSelect.ResponseResult.Result;
+                    setSelectRole(resultSelect);
+                    setRoleName(e.target.name.value)
                     setError(false)
                     setMessErr(null)
                     alertify.set('notifier', 'position', 'top-right');
                     alertify.success('Cập nhật thành công!');
+                    setLoading(false);
                 } else if(res.ResponseResult.Result.code === 11000) {
                     setError(false)
                     setMessErr('Tên nhóm quyền đã tồn tại!')
+                    setLoading(false);
                 } else {
                     console.error(res.ResponseResult.Message);
                     setError(false)
                     setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+                    setLoading(false);
                 }
             }
             catch(err) {
