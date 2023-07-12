@@ -15,6 +15,7 @@ import { applicationActions } from "../../redux/slice/applicationSlice";
 import CompanyAPI from "../../API/CompanyAPI";
 
 const Company = () => {
+    const [reload, setReload] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showAdd, setShowAdd] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
@@ -61,7 +62,7 @@ const Company = () => {
         } else {
             navigate('/');
         }
-    }, [page, showAdd, showUpdate, sortMoney, sortDate, sortStatus, sortItem, sortBy]);
+    }, [page, reload, sortMoney, sortDate, sortStatus, sortItem, sortBy]);
 
     const sortByMoney = () => {
         setSortItem('money')
@@ -217,13 +218,13 @@ const Company = () => {
 
     return(
         <div className="company body-container bg-light">
-            <Header showAdd={showAdd} showUpdate={showUpdate}/>
+            <Header reload={reload}/>
             <SideBar/>
-            <AddCompany showAdd={showAdd} setShowAdd={setShowAdd} />
-            <UpdateCompany showUpdate={showUpdate} setShowUpdate={setShowUpdate}/>
+            <AddCompany showAdd={showAdd} setShowAdd={setShowAdd} reload={reload} setReload={setReload} />
+            <UpdateCompany showUpdate={showUpdate} setShowUpdate={setShowUpdate} setReload={setReload} />
             <div className="main-container bg-light">
                 <h5 className="m-4">Quản lý công ty</h5>
-                {loading && !companies.docs ?
+                {loading && !companies?.docs ?
                 <div className="bg-white content">
                     <div className="d-flex p-4 align-items-center justify-content-center"> 
                         <h3 className="title">DANH SÁCH CÔNG TY</h3>
@@ -246,23 +247,6 @@ const Company = () => {
                             <label htmlFor="">Sắp xếp:</label>
                         </div>
                         <div className='btn-sort-container'>
-                            {/* <select className='form-select btn-sort' onChange={(e)=>changeSortItem(e.target.value)}>
-                                {sortItem==='date' && (<>
-                                    <option value='date'>Ngày hoạt động</option>
-                                    <option value='status'>Trạng thái</option>
-                                    <option value='money'>Số vốn</option>
-                                </>)}
-                                {sortItem==='status' && (<>
-                                    <option value='status'>Trạng thái</option>
-                                    <option value='date'>Ngày hoạt động</option>
-                                    <option value='money'>Số vốn</option>
-                                </>)}
-                                {sortItem==='money' && (<>
-                                    <option value='money'>Số vốn</option>
-                                    <option value='date'>Ngày hoạt động</option>
-                                    <option value='status'>Trạng thái</option>
-                                </>)}                                
-                            </select> */}
                             <div className="d-flex m-2 w-100 dropdown text-end" style={{maxWidth: '218px'}}>
                                 <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select btn-sort" data-bs-toggle="dropdown" aria-expanded="false">
                                     {sortItem==='date' &&
@@ -472,7 +456,7 @@ const Company = () => {
                             </div>
                         </div>
                     </div>
-                    {!loading && !companies.docs ? 
+                    {!loading && !companies?.docs ? 
                         <div className="loading-container">
                             <div>
                                 <img src={img.empty} alt='logo' width="200" height="170" className='empty-img'/>
@@ -519,7 +503,7 @@ const Company = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    {companies.docs?.map((company, i) => (
+                                    {companies?.docs?.map((company, i) => (
                                         <tr key={i}>
                                             <td scope="row" data-label="Mã CT:"><span>{company.title}</span></td>
                                             <td data-label="Tên công ty:"><span>{company.name}</span></td>

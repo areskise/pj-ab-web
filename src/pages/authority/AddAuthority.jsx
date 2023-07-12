@@ -91,11 +91,14 @@ const AddAuthority = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const perIds = checked.filter(perId => perId !== 'all');
+        const aa = [...menuDefault]
+        console.log(aa);
+        
         const menu = menuApp(menuDefault,perIds)
         const data = {
             role: {
                 organizationId: selectCompany?._id,
-                title: e.target.name.value,
+                title: selectCompany?.title + '-' + e.target.name.value,
                 name: e.target.name.value,
                 permissionId: perIds,
             },
@@ -184,7 +187,8 @@ const AddAuthority = () => {
                                                 <span className='selected-company p-2'>{selectCompany?selectCompany?.name:'Chọn công ty'}</span>
                                             </a>
                                             <ul className="p-0 my-1 dropdown-menu text-small">
-                                                {userCompanies?.map((company, i) => (
+                                                {userCompanies && 
+                                                userCompanies?.map((company, i) => (
                                                     <li key={i}>
                                                         <button 
                                                             className='p-2 px-3 btn dropdown-item'

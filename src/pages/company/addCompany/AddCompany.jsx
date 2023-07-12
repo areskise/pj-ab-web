@@ -8,7 +8,7 @@ import CompanyAPI from "../../../API/CompanyAPI";
 import { useSelector } from "react-redux";
 import { selectorApplications } from "../../../redux/slice/applicationSlice";
 
-const AddCompany = ({setShowAdd, showAdd}) => {
+const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
     const [code, setCode] = useState(null);
@@ -33,7 +33,6 @@ const AddCompany = ({setShowAdd, showAdd}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(e);
         const defaultApp = applications.find(app => app.title === 'default')
         const huiApp = applications.find(app => app.title === 'hui')
         const app = [defaultApp._id]
@@ -66,6 +65,7 @@ const AddCompany = ({setShowAdd, showAdd}) => {
                     setCode(null)
                     setError(false)
                     setMessErr(null)
+                    setReload(!reload)
                     alertify.set('notifier', 'position', 'top-right');
                     alertify.success('Thêm mới thành công!');
                 } else if(res.ResponseResult.Result.code === 11000) {

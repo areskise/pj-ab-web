@@ -2,15 +2,15 @@ import axiosClient from "./axiosClient";
 
 const PermissionAPI = {
     getAll: async () =>  {
-        return axiosClient.get(`/permission/getAll`);
+        return await axiosClient.get(`/permission/getAll`);
     },
 
     getById: async (id) => {
-        return axiosClient.get(`/permission?id=${id}`);
+        return await axiosClient.get(`/permission?id=${id}`);
     },
 
     getByRole: async (role) => {
-        return axiosClient.get(`/permission?role=${role}`);
+        return await axiosClient.get(`/permission?role=${role}`);
     },
 }
 

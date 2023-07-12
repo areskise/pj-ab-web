@@ -2,11 +2,9 @@ import axios from 'axios';
 import Cookies from 'universal-cookie';
 import AuthAPI from './AuthAPI';
 
-const cookies = new Cookies();
-const access_token = cookies.get('access_token');
-
 const axiosClient = axios.create({
 	baseURL: 'http://118.69.111.40:8001/api/v1',
+	// baseURL: 'http://localhost:8001/api/v1',
 	headers: {
 		'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
@@ -27,14 +25,16 @@ const axiosClient = axios.create({
 // Add a request interceptor
 axiosClient.interceptors.request.use(
 	async (config) => {
-    // Do something before request is sent
+	// Do something before request is sent
+	const cookies = new Cookies();
+	const access_token = cookies.get('access_token');
 	// Handle token here ...
 	if (access_token) {
 		config.headers['Authorization'] = 'Bearer ' + access_token.token;
 	}
     	return config;
   	}, 
-	  async (error) => {
+	async (error) => {
     // Do something with request error
     	return Promise.reject(error);
   	});
@@ -46,18 +46,25 @@ axiosClient.interceptors.response.use(
     // Do something with response data
 		if (response && response.data) {
 			if(response.data.ResponseResult.ErrorCode === 400 && response.data.ResponseResult.Message === 'jwt expired'){
+				const cookies = new Cookies();
+				const access_token = cookies.get('access_token');
 				const data = {
-					refreshToken: access_token.refreshToken
+					refreshToken: await access_token.refreshToken
 				}
 				const res = await AuthAPI.refresh(data);
-				
-				console.log(res);
+				if(res.ResponseResult.ErrorCode === 0){
+						cookies.set('access_token', res.ResponseResult.Result)
+				} else {
+					cookies.remove('access_token')
+				}
+				window.location.reload();
+				return res;
 			};
 			return response.data;
 		}
     	return response;
   	}, 
-	  async (error) => {
+	async (error) => {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     	return Promise.reject(error);

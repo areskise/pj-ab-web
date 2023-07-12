@@ -297,7 +297,7 @@ const Employee = () => {
                                 <th scope="col">Email</th>
                                 <th scope="col">Nhóm quyền</th>
                                 <th scope="col">
-                                <div className='d-flex align-items-end'>
+                                    <div className='d-flex align-items-end'>
                                         Trạng thái 
                                         <i 
                                             className={iconStatus}

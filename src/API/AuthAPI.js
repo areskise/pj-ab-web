@@ -2,11 +2,11 @@ import axiosClient from "./axiosClient";
 
 const AuthAPI = {
     login: async (body) => {
-        return axiosClient.post(`/auth/login`, body);
+        return await axiosClient.post(`/auth/login`, body);
     },
 
     refresh: async (body) => {
-        return axiosClient.post(`/auth/refresh`, body);
+        return await axiosClient.post(`/auth/refresh`, body);
     },
 }
 

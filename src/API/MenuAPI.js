@@ -2,7 +2,7 @@ import axiosClient from "./axiosClient";
 
 const MenuAPI = {
     getDefault: async () =>  {
-        return axiosClient.get(`/menu/getDefault`);
+        return await axiosClient.get(`/menu/getDefault`);
     },
 }
 

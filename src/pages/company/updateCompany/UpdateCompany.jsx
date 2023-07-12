@@ -8,7 +8,7 @@ import companyCode from "../../../helpers/companyCode";
 import { selectorApplications } from "../../../redux/slice/applicationSlice";
 import { useSelector } from "react-redux";
 
-const UpdateCompany = ({setShowUpdate, showUpdate}) => {
+const UpdateCompany = ({setShowUpdate, showUpdate, setReload, reload}) => {
     const [error, setError] = useState(false);
     const [selectHui, setSelectHui] = useState(false);
     const [code, setCode] = useState(null);
@@ -74,6 +74,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate}) => {
                     setCode(null)
                     setError(false)
                     setMessErr(null)
+                    setReload(!reload)
                     alertify.set('notifier', 'position', 'top-right');
                     alertify.success('Cập nhật thành công!');
                 } else {

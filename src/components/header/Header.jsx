@@ -8,7 +8,7 @@ import Cookies from 'universal-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import CompanyAPI from '../../API/CompanyAPI';
 
-const Header = ({showAdd, showUpdate}) => {
+const Header = ({reload}) => {
     const [showModal, setShowModal] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const [navUser, setNavUser] = useState(false);
@@ -33,7 +33,7 @@ const Header = ({showAdd, showUpdate}) => {
         } else {
             navigate('/')
         }
-    }, [showAdd, showUpdate]);
+    }, [reload]);
 
     const handleLogout = () => {
         cookies.remove('access_token');
@@ -54,7 +54,7 @@ const Header = ({showAdd, showUpdate}) => {
                                 <span className='selected-company p-2'>{selectCompany?selectCompany?.name:'Loading...'}</span>
                             </a>
                             <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
-                                {userCompanies?.map((company, i) => (
+                                {userCompanies && userCompanies?.map((company, i) => (
                                     <li key={i}>
                                         <button 
                                             className='p-2 px-3 btn dropdown-item'

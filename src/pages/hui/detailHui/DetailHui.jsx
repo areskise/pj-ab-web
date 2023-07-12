@@ -1,9 +1,11 @@
-import "./detailEmployee.css";
+import "./detailHui.css";
 import Modal from 'react-bootstrap/Modal';
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 
-const DetailEmployee = ({employeeId, setShowDetail, showDetail}) => {
+const DetailHui = ({employeeId, setShowDetail, showDetail}) => {
+    console.log(showDetail);
+
     return (
         <Modal dialogClassName="modal-detail" show={showDetail} onHide={() => setShowDetail(false)}>
             <Modal.Header className='justify-content-center'>
@@ -87,4 +89,4 @@ const DetailEmployee = ({employeeId, setShowDetail, showDetail}) => {
     )
 }
 
-export default DetailEmployee;
+export default DetailHui;
