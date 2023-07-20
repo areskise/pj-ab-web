@@ -26,7 +26,7 @@ const DetailEmployee = ({employeeId, setShowDetail, showDetail}) => {
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                     <div className='label'>
-                                        <label htmlFor="">Mã TC</label>
+                                        <label htmlFor="">Email</label>
                                     </div>
                                     <input type="email" className='form-control' value={showDetail?.userId?.email} disabled />
                                 </div>

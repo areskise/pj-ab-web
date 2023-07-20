@@ -165,7 +165,7 @@ const Employee = () => {
                             <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span className='selected-company p-2'>{selectCompany?.name?selectCompany?.name:'Tất cả'}</span>
                             </a>
-                            <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
+                            <ul className="p-0 my-1 dropdown-menu text-small selected-dropdown">
                                 <li key={'all'}>
                                     <button 
                                         className='p-2 px-3 btn dropdown-item'

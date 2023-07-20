@@ -7,7 +7,6 @@ const CustomerAPI = {
 
     getList: async (body) => {
         const {limit, page, status, organizationId} = body
-        console.log(organizationId);
         return await axiosClient.get(`/cus/list?organizationId=${organizationId}`);
     },
 

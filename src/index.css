@@ -97,6 +97,11 @@ input[type=number] {
   list-style: none;
 }
 
+.selected-dropdown {
+  max-height: 402px;
+  overflow-y: scroll;
+}
+
 .modal-logout .modal-content {
   border-radius: 40px;
 }

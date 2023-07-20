@@ -9,24 +9,24 @@ import CompanyAPI from "../../../API/CompanyAPI";
 
 const AddCustomer = ({setShowAdd, showAdd}) => {
     const [selectCompany, setSelectCompany] = useState(null);
-    const [selectRole, setSelectRole] = useState(null);
     const [visiblePass, setVisiblePass] = useState(false);
     const [visibleRePass, setVisibleRePass] = useState(false);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
-    const [roles, setRoles] = useState([]);
+    const [code, setCode] = useState([]);
     const data = new FormData();
     const userCompanies = useSelector(selectorUserCompanies)
     
     useEffect(() => {
         if(selectCompany) {
-            const fetchRoles = async () => {
-                const res = await CompanyAPI.getRoles(selectCompany?._id);
-                const result = res.ResponseResult.Result
-                setRoles(result)
-                setSelectRole(null)
+            const fetchCode = async () => {
+                const resCom = await CompanyAPI.getById(selectCompany?._id);
+                const title = resCom.ResponseResult.Result.title
+                const resCount = await CustomerAPI.getCount()
+                const count = resCount.ResponseResult.Result.count
+                setCode('KH'+count+title)
             }
-            fetchRoles();
+            fetchCode();
         }
     },[selectCompany]);
 
@@ -94,7 +94,7 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
         setShowAdd(false)
         setMessErr(null)
         setSelectCompany(null)
-        setSelectRole(null)
+        setCode(null)
     }
 
     const onHide = () => {
@@ -102,11 +102,11 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
         setShowAdd(false)
         setMessErr(null)
         setSelectCompany(null)
-        setSelectRole(null)
+        setCode(null)
     }
 
     return (
-        <Modal dialogClassName="add-employee" show={showAdd} onHide={onHide}>
+        <Modal dialogClassName="add-customer" show={showAdd} onHide={onHide}>
             <form onSubmit={handleSubmit}>
                 <Modal.Header className='justify-content-center'>
                     <Modal.Title className='title'>THÊM KHÁCH HÀNG</Modal.Title>
@@ -135,7 +135,7 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
                                     <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span className='selected-company p-2'>{selectCompany?selectCompany?.name:'Chọn công ty'}</span>
                                     </a>
-                                    <ul className="p-0 my-1 dropdown-menu text-small">
+                                    <ul className="p-0 my-1 dropdown-menu selected-dropdown text-small">
                                         {userCompanies?.map((company, i) => (
                                             <li key={i}>
                                                 <button 
@@ -163,6 +163,8 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
                                     name="code"
                                     className='form-control'
                                     onKeyDown={handleKeyDown}
+                                    value={code}
+                                    disabled
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -223,7 +225,7 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
                                 <textarea 
                                     rows="4"
                                     name="address"
-                                    className='form-control' 
+                                    className='form-control form-textarea' 
                                     placeholder='Nhập địa chỉ' 
                                     onKeyDown={handleKeyDown}
                                 />

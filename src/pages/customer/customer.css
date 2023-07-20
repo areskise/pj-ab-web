@@ -1,7 +1,317 @@
-.form-control {
-    width: 218px;
+.customer .form-control {
+    width: 206px;
     height: 38px;
     padding: 10px 15px;
     border: 2px solid #D8E2E9;
     border-radius: 20px;
+}
+
+.customer .plus {
+    position: absolute;
+    font-size: 32px;
+    right: 50px;
+}
+
+.customer .select-company-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.customer .select-company-container .label {
+  margin-right: 16px;
+}
+
+.customer .select-company-container .select-company {
+  padding: 0 12px;
+  height: 38px;
+  width: 100%;
+  max-width: 218px;    
+  border: 2px solid #D8E2E9;
+  border-radius: 20px;
+}
+
+.customer .select-company-container .select-company:hover {
+  cursor: pointer;
+}
+
+.customer .select-company-container .select-company:focus-visible {
+  outline-offset: 0;
+  outline: none;
+}
+
+.customer .select-company-container .select-company:hover {
+  cursor: pointer;
+}
+
+.customer .select-company-container .select-company:focus-visible {
+  outline-offset: 0;
+  outline: none;
+}
+
+.customer .select-company-container .form-control-dark {
+  border-color: var(--bs-gray);
+}
+.customer .select-company-container .form-control-dark:focus {
+  border-color: #fff;
+  box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
+}
+
+.customer .dropdown-toggle {
+  outline: 0;
+}
+
+.customer .dropdown-menu {
+  --bs-dropdown-min-width: none;
+  width: 100%;
+}
+
+.customer .dropdown-item {
+  white-space: normal;
+}
+
+.customer .dropdown-item:hover {
+  border-radius: 0.375rem;
+  background-color: #D8E2E9;
+}
+
+.customer .selected-company {
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 88%;
+  text-align: right;
+}
+
+.customer .select-dropdown {
+  width: 100%;
+}
+
+.customer .sort-container {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  margin: 0 8px;
+}
+
+.customer .btn-sort-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.customer .btn-sort {
+  width: 100%;
+  height: 38px;
+  border: 2px solid #D8E2E9;
+  border-radius: 20px;
+  text-align: start;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 12px;
+  min-width: 108px;
+}
+
+.customer .btn-sort:hover {
+  cursor: pointer;
+}
+
+.customer .btn-sort:focus-visible {
+  cursor: pointer;
+}
+
+.customer-container {
+  padding: 2rem;
+}
+
+.customer-container .table {
+    margin-bottom: 0;
+}
+  
+.customer-container td {
+    border: 0;
+    background-color: #F7F7F7 !important;
+    /* max-width: 132px; */
+    padding: 12px !important;
+}
+  
+.customer-word {
+    word-break: break-word;
+}
+  
+.customer-center {
+    text-align: center;
+}
+
+.customer-center span i{
+  color: #6280EB;
+}
+  
+.customer-container th {
+    position: relative;
+    padding: 12px !important;
+  
+}
+  
+.customer-container tbody, thead, tfoot, tr {
+    border: 16px solid white;
+}
+  
+.customer .status-icon {
+    text-align: center;
+    align-items: center;
+    font-size: 12px;
+    padding: 6px;
+}
+
+.customer .func-icon {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+  
+.customer-active {
+    font-weight: 700;
+    color: #339822;
+}
+  
+.customer-disable {
+    font-weight: 600;
+    color: #454545;
+}
+
+.detail:hover {
+  cursor: pointer;
+}
+  
+@media screen and (max-width: 1200px) {
+    .customer-container {
+      padding: 1rem;
+    }
+
+    .customer-container .table-container {
+      padding: 0;
+    }
+
+    .customer .func-icon {
+      display: block;
+    }
+}
+  
+@media screen and (max-width: 768px) {
+  .customer-container {
+    padding: .5rem;
+  }
+
+  .customer-container table tr {
+    padding: 4px 8px !important;
+  }
+
+  .customer .func-icon {
+    display: flex;
+  }
+
+  .customer .select-company-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 16px;
+  }
+
+  .customer .select-company { 
+    max-width: 836px;
+  }
+
+
+  .customer .sort-container {
+    display: block;
+  }
+
+  .customer-container table {
+      border: 0;
+      border-collapse: separate;
+}
+  
+.customer-container table caption {
+      font-size: 1.3em;
+    }
+    
+    .customer-container table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+    
+    .customer-container table tr {
+      display: block;
+      margin-bottom: .625em;
+      padding: 1em;
+    }
+    
+    .customer-container table td {
+      display: block;
+      text-align: right;
+      max-width: 100%;
+      padding: 6px 12px !important;
+      min-height: 36px;
+    }
+    
+    .customer-container table td::before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+    }
+    
+    .customer-container table td:last-child {
+      border-bottom: 0;
+    }
+  
+    .customer-container tbody, thead, tfoot, tr {
+        border: none;
+    }
+  
+    .customer-container .table-container {
+      padding: 1rem;
+    }
+  
+    .customer-center {
+        text-align: right;
+    }
+
+    .customer-container .func-icon {
+        justify-content: end;
+      }
+  }
+  
+@media screen and (max-width: 576px) {
+    .customer-container table td {
+      padding: .5em;
+    }
+  
+    .customer .plus {
+      font-size: 24px;
+      right: 36px;
+    }
+
+    .customer .title {
+      font-size: 18px;
+    }
+
+    .select-company-container {
+      justify-content: space-between;
+      margin: 0 16px;
+    }
+
+    .select-company-container .select-company {
+      max-width: 270px;
+    }
 }

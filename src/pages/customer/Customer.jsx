@@ -51,10 +51,10 @@ const Customer = () => {
     const sortByStatus = () => {
         if(sortStatus === '') {
             setSortStatus(1)
-            setIcontStatus('p-1 status-icon employee-disable fa-solid fa-circle')
+            setIcontStatus('p-1 status-icon customer-disable fa-solid fa-circle')
         } else if(sortStatus === 1) {
             setSortStatus(-1)
-            setIcontStatus('p-1 status-icon employee-active fa-solid fa-circle')
+            setIcontStatus('p-1 status-icon customer-active fa-solid fa-circle')
         } else {
             setSortStatus('')
             setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
@@ -96,7 +96,7 @@ const Customer = () => {
     }
 
     return(
-        <div className="employee body-container bg-light">
+        <div className="customer body-container bg-light">
             <Header/>
             <SideBar/>
             <AddCustomer selectCompany={selectCompany} showAdd={showAdd} setShowAdd={setShowAdd} setLoading={setLoading}/>
@@ -140,7 +140,7 @@ const Customer = () => {
                             <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span className='selected-company p-2'>{selectCompany?.name?selectCompany?.name:'Tất cả'}</span>
                             </a>
-                            <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
+                            <ul className="p-0 my-1 dropdown-menu text-small selected-dropdown">
                                 <li key={'all'}>
                                     <button 
                                         className='p-2 px-3 btn dropdown-item'
@@ -179,29 +179,26 @@ const Customer = () => {
                             <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span className='selected-company p-2'>{selectCompany?.name?selectCompany?.name:'Số điện thoại'}</span>
                             </a>
-                            <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
-                                <li key={'all'}>
+                            <ul className="p-0 my-1 dropdown-menu text-small">
+                                <li>
                                     <button 
                                         className='p-2 px-3 btn dropdown-item'
                                         type='button'
                                         style={selectCompany==='all'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                        onClick={() => setSelectCompany('all')}
+                                        onClick={() => setSelectCompany('sdt')}
                                     >
-                                        Tất cả
+                                        Số điện thoại
                                     </button>
                                 </li>
-                                {userCompanies?.map((company, i) => (
-                                    <li key={i}>
-                                        <button 
-                                            className='p-2 px-3 btn dropdown-item'
-                                            type='button'
-                                            style={selectCompany?._id===company._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                            onClick={() => setSelectCompany(company)}
-                                        >
-                                            {company.name}
-                                        </button>
-                                    </li>
-                                ))}
+                                <li>
+                                    <button 
+                                        className='p-2 px-3 btn dropdown-item'
+                                        type='button'
+                                        onClick={() => setSelectCompany('cccd')}
+                                    >
+                                        CMND/CCCD
+                                    </button>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -302,7 +299,7 @@ const Customer = () => {
                             </div>
                         </div>
                     :
-                    <div className="employee-container">
+                    <div className="customer-container">
                         <table className="table">
                             <thead>
                             <tr>
@@ -312,7 +309,7 @@ const Customer = () => {
                                 <th scope="col">Số CMND/CCCD</th>
                                 <th scope="col">Telegram</th>
                                 <th scope="col">Địa chỉ</th>
-                                <th scope="col" className="employee-center">Chức năng</th>
+                                <th scope="col" className="customer-center">Chức năng</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -328,12 +325,12 @@ const Customer = () => {
                                         <td data-label="Số CMND/CCCD:">{customer.cccd}</td>
                                         <td data-label="Telegram:">{customer.idChanel}</td>
                                         <td data-label="Địa chỉ:">{customer.address}</td>
-                                        <td data-label="Chức năng:" className="employee-center">
+                                        <td data-label="Chức năng:" className="customer-center">
                                             <div className='func-icon'>
                                                 <i 
                                                     className="fa-solid fa-pen-to-square p-1 m-1"  
                                                     style={{color: '#6280EB'}}
-                                                    onClick={() => setShowUpdate(customer)}
+                                                    onClick={() => setShowUpdate(customer._id)}
                                                 ></i>
                                             </div>
                                         </td>

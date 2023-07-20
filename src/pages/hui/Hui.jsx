@@ -146,7 +146,7 @@ const Hui = () => {
                             <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span className='selected-company p-2'>{selectCompany?.name?selectCompany?.name:'Tất cả'}</span>
                             </a>
-                            <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
+                            <ul className="p-0 my-1 dropdown-menu text-small selected-dropdown">
                                 <li key={'all'}>
                                     <button 
                                         className='p-2 px-3 btn dropdown-item'
@@ -311,10 +311,10 @@ const Hui = () => {
                                         </td>
                                         <td data-label="Ngày mở:">{format(new Date(hui.startDate), 'dd/MM/yyyy')}</td>
                                         <td data-label="Ngày kết thúc:">{format(new Date(hui.endDate), 'dd/MM/yyyy')}</td>
-                                        <td data-label="Khui:">{hui.khui}</td>
+                                        <td data-label="Khui:">{hui.type.num} {hui.type.name}</td>
                                         <td data-label="Dây hụi:">{hui.money}</td>
                                         <td data-label="Số phần:">{hui.partNum}</td>
-                                        <td data-label="Trạng thái:">{hui.status}</td>
+                                        <td data-label="Trạng thái:">{hui.type.num}{hui.type.type}</td>
                                         <td data-label="Chức năng:" className="employee-center">
                                             <div className='func-icon'>
                                                 <i 

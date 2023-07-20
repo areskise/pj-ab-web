@@ -9,43 +9,28 @@ import { selectorUserCompanies } from "../../../redux/slice/companySlice";
 
 const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
     const [selectedCompany, setSelectedCompany] = useState(null);
-    const [selectRole, setSelectRole] = useState(null);
+    const [customer, setCustomer] = useState(null);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
-    const [roles, setRoles] = useState([]);
     const data = new FormData();
     const userCompanies = useSelector(selectorUserCompanies)
-    
+
     useEffect(() => {
         const fetchCompany = async () => {
             if(showUpdate) {
-                setSelectedCompany(showUpdate.organizationId)
-                setSelectRole(showUpdate.roleId)
+                const res = await CustomerAPI.get(showUpdate);
+                const result = res.ResponseResult.Result
+                console.log(result);
+                setSelectedCompany(result.organizationId)
+                setCustomer(result)
             } else {
                 setSelectedCompany(null)
-                setSelectRole(null)
+                setCustomer(null)
             }
         }
         fetchCompany()
     },[showUpdate]);
 
-    useEffect(() => {
-        const fetchRole = async () => {
-        if(selectedCompany?._id) {
-            const resRoles = await CompanyAPI.getRoles(selectedCompany?._id);
-            const rolesResult = resRoles.ResponseResult.Result
-            if(selectedCompany?._id!==showUpdate.organizationId._id) {
-                setSelectRole(null)
-            } else {
-                setSelectRole(showUpdate.roleId)
-            }
-            setRoles(rolesResult)
-        } else {
-            setRoles(null)
-        }
-        }
-        fetchRole()
-    },[selectedCompany]);
 
     const handleKeyDown = (e) => {
         if(e.key === "Enter") {
@@ -119,7 +104,7 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
     }
 
     return (
-        <Modal dialogClassName="update-employee" show={showUpdate} onHide={onHide}>
+        <Modal dialogClassName="update-customer" show={showUpdate} onHide={onHide}>
             <form onSubmit={handleSubmit}>
                 <Modal.Header className='justify-content-center'>
                     <Modal.Title className='title'>CẬP NHẬT KHÁCH HÀNG</Modal.Title>
@@ -139,7 +124,7 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span className='selected-company p-2'>{selectedCompany?selectedCompany?.name:'Loading...'}</span>
                                     </a>
-                                    <ul className="p-0 my-1 dropdown-menu text-small">
+                                    <ul className="p-0 my-1 dropdown-menu selected-dropdown text-small">
                                         {userCompanies?.map((company, i) => (
                                             <li key={i}>
                                                 <button 
@@ -175,7 +160,7 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                                 type="text" 
                                 name="code"
                                 className='form-control'
-                                defaultValue={showUpdate.userId?.userName}
+                                defaultValue={customer?.code}
                                 disabled
                             />
                             </div>
@@ -191,7 +176,7 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     name="name"
                                     className='form-control'
                                     placeholder='Nhập tên KH'
-                                    defaultValue={showUpdate.userId?.fullName}
+                                    defaultValue={customer?.fullName}
                                     onKeyDown={handleKeyDown}
                                 />
                             </div>
@@ -201,10 +186,10 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                                 </div>
                                 <input 
                                     type="number" 
-                                    name="phone"
+                                    name="phoneNumber"
                                     className='form-control' 
                                     placeholder='Nhập SĐT' 
-                                    defaultValue={showUpdate.userId?.phoneNumber}
+                                    defaultValue={customer?.phoneNumber}
                                     onKeyDown={handleKeyDown}
                                 />
                             </div>
@@ -213,11 +198,11 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     <label htmlFor="">CMND/CCCD</label>
                                 </div>
                                 <input 
-                                    type="number" 
-                                    name="cmnd"
+                                    type="text" 
+                                    name="cccd"
                                     className='form-control' 
                                     placeholder='Nhập CMND/CCCD' 
-                                    defaultValue={showUpdate.userId?.phoneNumber}
+                                    defaultValue={customer?.cccd}
                                     onKeyDown={handleKeyDown}
                                 />
                             </div>
@@ -230,7 +215,7 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     name="telegram"
                                     className='form-control' 
                                     placeholder='Nhập ID Telegram' 
-                                    defaultValue={showUpdate.userId?.email}
+                                    defaultValue={customer?.idChanel}
                                     onKeyDown={handleKeyDown}
                                 />
                             </div>
@@ -241,9 +226,9 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                                 <textarea 
                                     rows="4"
                                     name="address"
-                                    className='form-control' 
+                                    className='form-control form-textarea' 
                                     placeholder='Nhập địa chỉ' 
-                                    defaultValue={showUpdate.userId?.email}
+                                    defaultValue={customer?.address}
                                     onKeyDown={handleKeyDown}
                                 />
                             </div>

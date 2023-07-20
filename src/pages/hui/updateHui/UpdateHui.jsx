@@ -142,7 +142,7 @@ const UpdateHui = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span className='selected-company p-2'>{selectedCompany?selectedCompany?.name:'Loading...'}</span>
                                     </a>
-                                    <ul className="p-0 my-1 dropdown-menu text-small">
+                                    <ul className="p-0 my-1 dropdown-menu selected-dropdown text-small">
                                         {userCompanies?.map((company, i) => (
                                             <li key={i}>
                                                 <button 
