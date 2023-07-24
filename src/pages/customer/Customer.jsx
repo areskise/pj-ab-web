@@ -15,6 +15,8 @@ const Customer = () => {
     const [showAdd, setShowAdd] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
     const [selectCompany, setSelectCompany] = useState('all');
+    const [search, setSearch] = useState('sdt');
+    const [keyword, setKeyword] = useState(null);
     const [page, setPage] = useState(1);
     const [sortStatus, setSortStatus] = useState('');
     const [sortBy, setSortBy] = useState('');
@@ -23,7 +25,19 @@ const Customer = () => {
     const dispatch = useDispatch();
     const customers = useSelector(selectorCustomers)
     const userCompanies = useSelector(selectorUserCompanies)
-
+    let list = keyword?customers.docs.filter(doc => {
+        let hasDoc
+        if(search==='sdt') {
+            hasDoc = doc.phoneNumber.includes(keyword)
+        }
+        if(search==='cccd') {
+            hasDoc = doc.cccd.includes(keyword)
+        }
+        if(hasDoc) {
+            return doc
+        }
+    }):customers.docs
+    
     useEffect(() => {
         const data = {
             limit: limit,
@@ -46,38 +60,7 @@ const Customer = () => {
             }
         }
         fetchCustomer();
-    }, [page, limit, selectCompany, showAdd, showUpdate, sortStatus, sortBy]);
-
-    const sortByStatus = () => {
-        if(sortStatus === '') {
-            setSortStatus(1)
-            setIcontStatus('p-1 status-icon customer-disable fa-solid fa-circle')
-        } else if(sortStatus === 1) {
-            setSortStatus(-1)
-            setIcontStatus('p-1 status-icon customer-active fa-solid fa-circle')
-        } else {
-            setSortStatus('')
-            setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
-        }
-    }
-
-    const selectByStatus = (value) => {
-        if(value === '') {
-            setSortStatus('')
-            setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
-        } else if(value === '1') {
-            setSortStatus('1')
-            setIcontStatus('p-1 status-icon company-disable fa-solid fa-circle')
-        } else {
-            setSortStatus('-1')
-            setIcontStatus('p-1 status-icon company-active fa-solid fa-circle')
-        }
-    }
-
-    const changeSortBy = (value) => {
-        setSortBy(value)
-        selectByStatus(value)
-    }
+    }, [page, limit, selectCompany, showAdd, showUpdate]);
 
     const nextPage = () => {
         if(customers.hasNextPage) {
@@ -107,7 +90,7 @@ const Customer = () => {
                     <i className="mx-2 fa-solid fa-angles-right" style={{fontSize: '18px'}}></i> 
                     Khách hàng
                 </h5>
-                {loading && !customers.docs ?
+                {loading && !list ?
                 <div className="bg-white content">
                     <div className="d-flex p-4 align-items-center justify-content-center"> 
                         <h3 className="title">DANH SÁCH KHÁCH HÀNG</h3>
@@ -130,12 +113,6 @@ const Customer = () => {
                         <div className='label'>
                             <label htmlFor="">Công ty:</label>
                         </div>
-                        {/* <select className='form-select select-company' onChange={changeCompany}>
-                            <option value='all'>Tất cả</option>
-                            {userCompanies?.map((company, i) => (
-                                <option key={i} value={company._id}>{company.name}</option>
-                            ))}
-                        </select> */}
                         <div className="d-flex w-100 dropdown text-end" style={{maxWidth: '218px'}}>
                             <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span className='selected-company p-2'>{selectCompany?.name?selectCompany?.name:'Tất cả'}</span>
@@ -170,22 +147,23 @@ const Customer = () => {
                         <div className='label'>
                             <input 
                                 type="text" 
-                                name="code"
+                                name="keyword"
                                 className='form-control'
                                 placeholder='Nhập nội dung tìm kiếm'
+                                onChange={(e) => setKeyword(e.target.value)}
                             />
                         </div>
                         <div className="d-flex w-100 dropdown text-end" style={{maxWidth: '140px'}}>
                             <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span className='selected-company p-2'>{selectCompany?.name?selectCompany?.name:'Số điện thoại'}</span>
+                                <span className='selected-company p-2'>{search==='sdt'?'Số điện thoại':'CMND/CCCD'}</span>
                             </a>
                             <ul className="p-0 my-1 dropdown-menu text-small">
                                 <li>
                                     <button 
                                         className='p-2 px-3 btn dropdown-item'
                                         type='button'
-                                        style={selectCompany==='all'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                        onClick={() => setSelectCompany('sdt')}
+                                        style={search==='sdt'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                        onClick={() => setSearch('sdt')}
                                     >
                                         Số điện thoại
                                     </button>
@@ -194,7 +172,8 @@ const Customer = () => {
                                     <button 
                                         className='p-2 px-3 btn dropdown-item'
                                         type='button'
-                                        onClick={() => setSelectCompany('cccd')}
+                                        style={search==='cccd'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                        onClick={() => setSearch('cccd')}
                                     >
                                         CMND/CCCD
                                     </button>
@@ -202,95 +181,7 @@ const Customer = () => {
                             </ul>
                         </div>
                     </div>
-                    <div className="sort-container"> 
-                        <div className='px-2'>
-                            <label htmlFor="">Sắp xếp:</label>
-                        </div>
-                        <div className='btn-sort-container'>
-                            {/* <select className='form-select btn-sort' onChange={(e)=>changeSortItem(e.target.value)}>
-                                <option value='status'>Trạng thái</option>
-                            </select>
-                            <select className='form-select btn-sort' onChange={(e)=>changeSortBy(e.target.value)}>
-                                {sortBy==='' && (<>
-                                    <option value={''}>Mặc định</option>
-                                    <option value={-1}>Hoạt động</option>
-                                    <option value={1}>Không hoạt động</option>
-                                </>)}
-                                {sortBy==='-1' && (<>
-                                    <option value={-1}>Hoạt động</option>
-                                    <option value={''}>Mặc định</option>
-                                    <option value={1}>Không hoạt động</option>
-                                </>)}
-                                {sortBy==='1' && (<>
-                                    <option value={1}>Không hoạt động</option>
-                                    <option value={''}>Mặc định</option>
-                                    <option value={-1}>Hoạt động</option>
-                                </>)}
-                            </select> */}
-                            <div className="d-flex m-2 w-100 dropdown text-end" style={{maxWidth: '218px'}}>
-                                <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select btn-sort" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span className='selected-company p-2'>Trạng thái</span>
-                                </a>
-                                <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
-                                    <li>
-                                        <button 
-                                            className='p-2 px-3 btn dropdown-item'
-                                            type='button'
-                                            style={{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}}
-                                        >
-                                            Trạng thái
-                                        </button>
-                                    </li>                        
-                                </ul>
-                            </div>
-                            <div className="d-flex m-2 w-100 dropdown text-end" style={{maxWidth: '218px'}}>
-                                <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select btn-sort" data-bs-toggle="dropdown" aria-expanded="false">
-                                    {sortBy==='' && (<>
-                                        <span className='selected-company p-2'>Mặc định</span>
-                                    </>)}
-                                    {sortBy==='-1' && (<>
-                                        <span className='selected-company p-2'>Hoạt động -{">"} Không hoạt động</span>
-                                    </>)}
-                                    {sortBy==='1' && (<>
-                                        <span className='selected-company p-2'>Không hoạt động -{">"} Hoạt động</span>
-                                    </>)}
-                                </a>
-                                <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
-                                    <li>
-                                        <button 
-                                            className='p-2 px-3 btn dropdown-item'
-                                            type='button'
-                                            style={sortBy===''?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                            onClick={() => changeSortBy('')}
-                                        >
-                                            Mặc định
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button 
-                                            className='p-2 px-3 btn dropdown-item'
-                                            type='button'
-                                            style={sortBy==='-1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                            onClick={() => changeSortBy('-1')}
-                                        >
-                                            Hoạt động -{">"} Không hoạt động
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button 
-                                            className='p-2 px-3 btn dropdown-item'
-                                            type='button'
-                                            style={sortBy==='1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                            onClick={() => changeSortBy('1')}
-                                        >
-                                            Không hoạt động -{">"} Hoạt động
-                                        </button>
-                                    </li>              
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    {!customers.docs ? 
+                    {!list ? 
                         <div className="loading-container">
                             <div>
                                 <img src={img.empty} alt='logo' width="200" height="170" className='empty-img'/>
@@ -313,7 +204,7 @@ const Customer = () => {
                             </tr>
                             </thead>
                             <tbody>
-                                {customers.docs?.map((customer, i) => (
+                                {list?.map((customer, i) => (
                                     <tr key={i}>
                                         <td scope="row" data-label="Mã KH:">
                                             {customer.code}
@@ -339,7 +230,7 @@ const Customer = () => {
                             </tbody>
                         </table>
                         <div className="p-2 mb-4 d-flex justify-content-between">
-                            <h6 className="mx-md-2 my-0">Tìm thấy: {customers?.totalDocs?customers?.totalDocs:0} khách hàng</h6>
+                            <h6 className="mx-md-2 my-0">Tìm thấy: {list.length} khách hàng</h6>
                             <div className="d-flex align-items-center mx-md-4">
                                 <i className="fa-solid fa-chevron-left" onClick={() => prevPage()}></i>
                                 <div className="d-flex mx-md-4">

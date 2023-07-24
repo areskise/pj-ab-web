@@ -12,7 +12,6 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
     const [customer, setCustomer] = useState(null);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
-    const data = new FormData();
     const userCompanies = useSelector(selectorUserCompanies)
 
     useEffect(() => {
@@ -31,7 +30,6 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
         fetchCompany()
     },[showUpdate]);
 
-
     const handleKeyDown = (e) => {
         if(e.key === "Enter") {
             e.preventDefault();
@@ -41,13 +39,16 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        data.append('organizationId', selectedCompany?._id);
-        data.append('code', e.target.code.value);
-        data.append('fullName', e.target.fullName.value);
-        data.append('phoneNumber', e.target.phoneNumber.value);
-        data.append('cccd', e.target.cccd.value);
-        data.append('idChanel', e.target.idChanel.value);
-        data.append('address', e.target.address.value);
+        const data = {
+            _id: customer?._id,
+            organizationId: selectedCompany?._id,
+            code: e.target.code.value,
+            fullName: e.target.fullName.value,
+            phoneNumber: e.target.phoneNumber.value,
+            cccd: e.target.cccd.value,
+            idChanel: e.target.idChanel.value,
+            address: e.target.address.value,
+        }
         if( 
             !selectedCompany?._id || 
             !e.target.code.value || 
@@ -64,6 +65,7 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
             setMessErr('Số điện thoại phải gồm 10 chữ số')
         } else {
             try {
+                console.log(data.code);
                 const res = await CustomerAPI.update(data);
                 if(res.ResponseResult.ErrorCode === 0){
                     setShowUpdate(false)
@@ -119,27 +121,6 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
-                            {selectCompany==='all'?
-                                <div className="d-flex dropdown select-dropdown text-end">
-                                    <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span className='selected-company p-2'>{selectedCompany?selectedCompany?.name:'Loading...'}</span>
-                                    </a>
-                                    <ul className="p-0 my-1 dropdown-menu selected-dropdown text-small">
-                                        {userCompanies?.map((company, i) => (
-                                            <li key={i}>
-                                                <button 
-                                                    className='p-2 px-3 btn dropdown-item'
-                                                    type='button'
-                                                    style={selectedCompany?._id===company._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                                    onClick={() => setSelectedCompany(company)}
-                                                >
-                                                    {company.name}
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                :
                                 <select 
                                     name="company" 
                                     className='form-select select-company'
@@ -147,7 +128,6 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                                 >
                                     <option value={selectedCompany?._id} >{selectedCompany?.name}</option>
                                 </select>
-                            }
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                             <div className='label'>
@@ -160,7 +140,7 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                                 type="text" 
                                 name="code"
                                 className='form-control'
-                                defaultValue={customer?.code}
+                                value={customer?.code}
                                 disabled
                             />
                             </div>
@@ -173,7 +153,7 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                                 </div>
                                 <input 
                                     type="text" 
-                                    name="name"
+                                    name="fullName"
                                     className='form-control'
                                     placeholder='Nhập tên KH'
                                     defaultValue={customer?.fullName}
@@ -212,7 +192,7 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                                 </div>
                                 <input 
                                     type="text" 
-                                    name="telegram"
+                                    name="idChanel"
                                     className='form-control' 
                                     placeholder='Nhập ID Telegram' 
                                     defaultValue={customer?.idChanel}

@@ -289,7 +289,15 @@
 
     .customer-container .func-icon {
         justify-content: end;
-      }
+    }
+
+    .customer .form-control {
+      width: 100%;
+  }
+
+    .customer .select-company-container .label {
+      width: 100%;
+    }
   }
   
 @media screen and (max-width: 576px) {

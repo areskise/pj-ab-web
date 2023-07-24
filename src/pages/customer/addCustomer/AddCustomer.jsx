@@ -22,8 +22,8 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
             const fetchCode = async () => {
                 const resCom = await CompanyAPI.getById(selectCompany?._id);
                 const title = resCom.ResponseResult.Result.title
-                const resCount = await CustomerAPI.getCount()
-                const count = resCount.ResponseResult.Result.count
+                const resCount = await CustomerAPI.getCount(selectCompany?._id)
+                const count = resCount.ResponseResult.Result.count+1
                 setCode('KH'+count+title)
             }
             fetchCode();

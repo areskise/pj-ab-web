@@ -103,10 +103,6 @@ const Hui = () => {
         <div className="employee body-container bg-light">
             <Header/>
             <SideBar/>
-            <AddHui selectCompany={selectCompany} showAdd={showAdd} setShowAdd={setShowAdd} setLoading={setLoading}/>
-            <UpdateHui selectCompany={selectCompany} showUpdate={showUpdate} setShowUpdate={setShowUpdate} setLoading={setLoading}/>
-            <UpdatePass updatePass={updatePass} setUpdatePass={setUpdatePass} setLoading={setLoading}/>
-            <DetailHui showDetail={showDetail} setShowDetail={setShowDetail}/>
             <div className="main-container bg-light">
                 <h5 className="m-4">
                     Quản lý hụi 
@@ -177,26 +173,6 @@ const Hui = () => {
                             <label htmlFor="">Sắp xếp:</label>
                         </div>
                         <div className='btn-sort-container'>
-                            {/* <select className='form-select btn-sort' onChange={(e)=>changeSortItem(e.target.value)}>
-                                <option value='status'>Trạng thái</option>
-                            </select>
-                            <select className='form-select btn-sort' onChange={(e)=>changeSortBy(e.target.value)}>
-                                {sortBy==='' && (<>
-                                    <option value={''}>Mặc định</option>
-                                    <option value={-1}>Hoạt động</option>
-                                    <option value={1}>Không hoạt động</option>
-                                </>)}
-                                {sortBy==='-1' && (<>
-                                    <option value={-1}>Hoạt động</option>
-                                    <option value={''}>Mặc định</option>
-                                    <option value={1}>Không hoạt động</option>
-                                </>)}
-                                {sortBy==='1' && (<>
-                                    <option value={1}>Không hoạt động</option>
-                                    <option value={''}>Mặc định</option>
-                                    <option value={-1}>Hoạt động</option>
-                                </>)}
-                            </select> */}
                             <div className="d-flex m-2 w-100 dropdown text-end" style={{maxWidth: '218px'}}>
                                 <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select btn-sort" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span className='selected-company p-2'>Trạng thái</span>
@@ -296,7 +272,7 @@ const Hui = () => {
                                 <th scope="col">Khui</th>
                                 <th scope="col">Dây hụi</th>
                                 <th scope="col">Số phần</th>
-                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Tình trạng</th>
                                 <th scope="col" className="employee-center">Chức năng</th>
                             </tr>
                             </thead>
@@ -353,6 +329,10 @@ const Hui = () => {
                 </div>
                 }
             </div>
+            <AddHui selectCompany={selectCompany} showAdd={showAdd} setShowAdd={setShowAdd} setLoading={setLoading}/>
+            <UpdateHui selectCompany={selectCompany} showUpdate={showUpdate} setShowUpdate={setShowUpdate} setLoading={setLoading}/>
+            <UpdatePass updatePass={updatePass} setUpdatePass={setUpdatePass} setLoading={setLoading}/>
+            <DetailHui showDetail={showDetail} setShowDetail={setShowDetail}/>
         </div>
     )
 }

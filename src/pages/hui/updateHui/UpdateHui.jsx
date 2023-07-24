@@ -127,37 +127,6 @@ const UpdateHui = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
-                            {selectCompany==='all'?
-                                // <select 
-                                //     name="company" 
-                                //     className='form-select select-company'
-                                //     onChange={handleChange}
-                                // >
-                                //     <option value={defaultCompany?defaultCompany.organizationId?._id:null} hidden>{defaultCompany?defaultCompany.organizationId?.name:null}</option>
-                                //     {company?.map((company, i) => (
-                                //         <option key={i} value={company?company.organizationId._id:null}>{company?company.organizationId.name:null}</option>
-                                //     ))}
-                                // </select>
-                                <div className="d-flex dropdown select-dropdown text-end">
-                                    <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span className='selected-company p-2'>{selectedCompany?selectedCompany?.name:'Loading...'}</span>
-                                    </a>
-                                    <ul className="p-0 my-1 dropdown-menu selected-dropdown text-small">
-                                        {userCompanies?.map((company, i) => (
-                                            <li key={i}>
-                                                <button 
-                                                    className='p-2 px-3 btn dropdown-item'
-                                                    type='button'
-                                                    style={selectedCompany?._id===company._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                                    onClick={() => setSelectedCompany(company)}
-                                                >
-                                                    {company.name}
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                :
                                 <select 
                                     name="company" 
                                     className='form-select select-company'
@@ -165,7 +134,6 @@ const UpdateHui = ({selectCompany, setShowUpdate, showUpdate}) => {
                                 >
                                     <option value={selectedCompany?._id} >{selectedCompany?.name}</option>
                                 </select>
-                            }
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                             <div className='label'>

@@ -2,6 +2,7 @@ import "./addHui.css";
 import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
 import { useEffect, useState } from 'react';
+import { format } from 'date-fns';
 import EmployeeAPI from "../../../API/EmployeeAPI";
 import { useSelector } from "react-redux";
 import { selectorUserCompanies } from "../../../redux/slice/companySlice";
@@ -10,7 +11,7 @@ import CompanyAPI from "../../../API/CompanyAPI";
 const AddHui = ({setShowAdd, showAdd}) => {
     const [selectCompany, setSelectCompany] = useState(null);
     const [selectRole, setSelectRole] = useState(null);
-    const [visiblePass, setVisiblePass] = useState(false);
+    const [typeKhui, setTypeKhui] = useState('1');
     const [visibleRePass, setVisibleRePass] = useState(false);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
@@ -108,31 +109,20 @@ const AddHui = ({setShowAdd, showAdd}) => {
     }
 
     return (
-        <Modal dialogClassName="add-employee" show={showAdd} onHide={onHide}>
+        <Modal dialogClassName="add-hui" show={showAdd} onHide={onHide}>
             <form onSubmit={handleSubmit}>
                 <Modal.Header className='justify-content-center'>
-                    <Modal.Title className='title'>THÊM NHÂN VIÊN</Modal.Title>
+                    <Modal.Title className='title'>THÊM HỤI</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className='w-100 m-auto text-center'>
                     <div className='form-container'>
                         <div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
+                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
                                 <div className='label'>
                                     <label htmlFor="">
                                         Công ty
-                                        <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
-                                {/* <select 
-                                    name="company" 
-                                    className='form-select select-company' 
-                                    onChange={(e) => setSelectCompany(e.target.value)}
-                                >   
-                                    <option value={null} hidden>Chọn công ty</option>
-                                    {userCompanies?.map((company, i) => (
-                                        <option key={i} value={company._id}>{company.name}</option>
-                                    ))}
-                                </select> */}
                                 <div className="d-flex dropdown select-dropdown text-end">
                                     <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span className='selected-company p-2'>{selectCompany?selectCompany?.name:'Chọn công ty'}</span>
@@ -153,114 +143,226 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                     </ul>
                                 </div>
                             </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
+                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
                                 <div className='label'>
                                     <label htmlFor="">
-                                        Tên đăng nhập
-                                        <label style={{color: 'red'}}>*</label>
+                                        Mã hụi
                                     </label>
                                 </div>
                                 <input 
                                     type="text" 
-                                    name="userName"
+                                    name="code"
                                     className='form-control'
-                                    placeholder="Nhập tên đăng nhập"
+                                    placeholder="Nhập mã hụi"
                                     onKeyDown={handleKeyDown}
                                 />
                             </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
+                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
                                 <div className='label'>
                                     <label htmlFor="">
-                                        Mật khẩu
-                                        <label style={{color: 'red'}}>*</label>
-                                    </label>
-                                </div>
-                                <input 
-                                    type={ visiblePass ? "text" : "password"} 
-                                    name="password"
-                                    className="form-control" 
-                                    id="floatingPassword" 
-                                    placeholder="Nhập mật khẩu"
-                                    onKeyDown={handleKeyDown}
-                                />
-                                <span toggle="#floatingPassword" 
-                                className={ visiblePass ? 'toggle-password fa-regular fa-eye-slash' : 'toggle-password fa-regular fa-eye' } 
-                                onClick={() => setVisiblePass(!visiblePass)}></span>
-                            </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
-                                <div className='label'>
-                                    <label htmlFor="">
-                                        Nhập lại mật khẩu
-                                        <label style={{color: 'red'}}>*</label>
-                                    </label>
-                                </div>
-                                <input 
-                                    type={ visibleRePass ? "text" : "password"} 
-                                    name="rePassword"
-                                    className="form-control" 
-                                    id="floatingRePassword" 
-                                    placeholder="Nhập lại mật khẩu"
-                                    onKeyDown={handleKeyDown}
-                                />
-                                <span toggle="#loatingRePassword" 
-                                className={ visibleRePass ? 'toggle-password fa-regular fa-eye-slash' : 'toggle-password fa-regular fa-eye' } 
-                                onClick={() => setVisibleRePass(!visibleRePass)}></span>
-                            </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
-                                <div className='label'>
-                                    <label htmlFor="">
-                                        Họ tên
-                                        <label style={{color: 'red'}}>*</label>
+                                        Tên hụi
                                     </label>
                                 </div>
                                 <input 
                                     type="text" 
-                                    name="fullName"
+                                    name="name"
                                     className='form-control'
-                                    placeholder="Nhập họ tên"
+                                    placeholder="Nhập tên hụi"
                                     onKeyDown={handleKeyDown}
                                 />
                             </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
+                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
                                 <div className='label'>
-                                    <label htmlFor="">Email</label>
+                                    <label htmlFor="">
+                                        Group nhắc hụi
+                                    </label>
                                 </div>
                                 <input 
-                                    type="email" 
-                                    name="email"
-                                    className='form-control' 
-                                    placeholder='Nhập Email' 
+                                    type="text" 
+                                    name="idChanel"
+                                    className='form-control'
+                                    placeholder="Nhập ID group nhắc hụi"
                                     onKeyDown={handleKeyDown}
                                 />
                             </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
+                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
                                 <div className='label'>
-                                    <label htmlFor="">Số điện thoại</label>
+                                    <label htmlFor="">
+                                        Khui
+                                    </label>
+                                </div>
+                                <div className="d-flex w-100">
+                                    <div className="d-flex mr-2 select-dropdown dropdown text-end">
+                                        <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
+                                            {typeKhui==='1' && (<>
+                                                <span className='selected-company p-2'>Tháng</span>
+                                            </>)}
+                                            {typeKhui==='2' && (<>
+                                                <span className='selected-company p-2'>Tuần</span>
+                                            </>)}
+                                            {typeKhui==='3' && (<>
+                                                <span className='selected-company p-2'>Ngày</span>
+                                            </>)}
+
+                                        </a>
+                                        <ul className="p-0 my-1 dropdown-menu text-small">
+                                            <li>
+                                                <button 
+                                                    className='p-2 px-3 btn dropdown-item'
+                                                    type='button'
+                                                    style={typeKhui==='1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                    onClick={() => setTypeKhui('1')}
+                                                >
+                                                    Tháng
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button 
+                                                    className='p-2 px-3 btn dropdown-item'
+                                                    type='button'
+                                                    style={typeKhui==='2'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                    onClick={() => setTypeKhui('2')}
+                                                >
+                                                    Tuần
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button 
+                                                    className='p-2 px-3 btn dropdown-item'
+                                                    type='button'
+                                                    style={typeKhui==='3'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                    onClick={() => setTypeKhui('3')}
+                                                >
+                                                    Ngày
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <input 
+                                        type="number" 
+                                        name="numKhui"
+                                        className='form-control'
+                                        placeholder="Thời gian"
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                </div>
+                            </div>
+                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
+                                <div className='label'>
+                                    <label htmlFor="">Số phần</label>
                                 </div>
                                 <input 
                                     type="number" 
-                                    name="phoneNumber"
+                                    name="partNum"
                                     className='form-control' 
-                                    placeholder='Nhập SĐT' 
+                                    placeholder='Nhập số phần hụi' 
                                     onKeyDown={handleKeyDown}
                                 />
                             </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
+                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
+                                <div className='label'>
+                                    <label htmlFor="">Dây</label>
+                                </div>
+                                <div className="d-flex w-100 align-items-center">
+                                    <input 
+                                        type="number" 
+                                        name="money"
+                                        className='form-control mr-2' 
+                                        placeholder='Nhập số tiền' 
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                    VND
+                                </div>
+                            </div>
+                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
+                                <div className='label'>
+                                    <label htmlFor="">Bảo hiểm (tiền thảo)</label>
+                                </div>
+                                <input 
+                                    type="number" 
+                                    name="insureNum"
+                                    className='form-control mr-2' 
+                                    placeholder='Nhập % bảo hiểm' 
+                                    onKeyDown={handleKeyDown}
+                                />
+                                %
+                            </div>
+                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
+                                <div className='label'>
+                                    <label htmlFor="">Nhân viên</label>
+                                </div>
+                                <div className="d-flex align-items-center">
+                                    {selectCompany?
+                                        <div className="d-flex mr-2 select-dropdown dropdown text-end">
+                                            <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <span className='selected-company p-2'>{selectRole?selectRole?.name:'Chọn nhân viên'}</span>
+                                            </a>
+                                            <ul className="p-0 my-1 dropdown-menu text-small">
+                                                {roles?.map((role, i) => (
+                                                    <li key={i}>
+                                                        <button 
+                                                            className='p-2 px-3 btn dropdown-item'
+                                                            type='button'
+                                                            style={selectRole?._id===role._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                            onClick={() => setSelectRole(role)}
+                                                        >
+                                                            {role.name}
+                                                        </button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    :
+                                        <select 
+                                            className='form-select mr-2 select-company' name="role" 
+                                            disabled
+                                        >
+                                            <option value='' hidden>Chọn công ty trước</option>
+                                        </select>
+                                    }
+                                    <input 
+                                        type="number" 
+                                        name="insureNum"
+                                        className='form-control mr-2' 
+                                        placeholder='Nhập % bảo hiểm' 
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                    %
+                                </div>
+                            </div>
+                            <div className='d-flex m-md-3 my-3 align-items-center text-align-center justify-content-between'>
+                                    <div className='label'>
+                                        <label htmlFor="">Ngày mở</label>
+                                    </div>
+                                    <input 
+                                        type="date" 
+                                        name="startDate"
+                                        className='form-control mr-2' 
+                                        defaultValue={format(new Date(), 'yyyy-MM-dd')} 
+                                        min={format(new Date(), 'yyyy-MM-dd')}
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                </div>
+                                <div className='d-flex m-md-3 my-3 align-items-center text-align-center justify-content-between'>
+                                    <div className='label'>
+                                        <label htmlFor="">Ngày kết thúc</label>
+                                    </div>
+                                    <input 
+                                        type="date" 
+                                        name="endDate"
+                                        className='form-control' 
+                                        defaultValue={format(new Date(), 'yyyy-MM-dd')} 
+                                        min={format(new Date(), 'yyyy-MM-dd')}
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                </div>
+                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
                                 <div className='label'>
                                     <label htmlFor="">
-                                        Nhóm quyền
-                                        <label style={{color: 'red'}}>*</label>
+                                        Hụi viên
                                     </label>
                                 </div>
                                 {selectCompany?
-                                    // <select 
-                                    //     className='form-select select-company' name="role"
-                                    // >
-                                    //     <option value='' hidden>Chọn nhóm quyền</option>
-                                    //     {roles && roles.map((role, i) => (
-                                    //         <option key={i} value={role._id}>{role.name}</option>
-                                    //     ))}
-                                    // </select>
                                     <div className="d-flex select-dropdown dropdown text-end">
                                         <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                             <span className='selected-company p-2'>{selectRole?selectRole?.name:'Chọn nhóm quyền'}</span>
@@ -288,6 +390,25 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                         <option value='' hidden>Chọn công ty trước</option>
                                     </select>
                                 }
+                            </div>
+                        </div>
+                        <div>
+                            <h6 className="d-flex m-md-3">Danh sách hụi viên</h6>
+                            <div className='form-check'>
+                                <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
+                                    <div className='label'>
+                                        <label htmlFor="">Bảo hiểm</label>
+                                    </div>
+                                    <input 
+                                        type="number" 
+                                        name="insureNum"
+                                        className='form-control mr-2' 
+                                        style={{width: '116px'}}
+                                        placeholder='Số chân hụi' 
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                    %
+                                </div>
                             </div>
                         </div>
                     </div>

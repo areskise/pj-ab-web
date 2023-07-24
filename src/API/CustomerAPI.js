@@ -7,11 +7,15 @@ const CustomerAPI = {
 
     getList: async (body) => {
         const {limit, page, status, organizationId} = body
-        return await axiosClient.get(`/cus/list?organizationId=${organizationId}`);
+        console.log(organizationId);
+        if(organizationId) {
+            return await axiosClient.get(`/cus/list?query={"organizationId":"${organizationId}"}&page=${page}&limit=${limit}`);
+        }
+        return await axiosClient.get(`/cus/list?page=${page}&limit=${limit}`)
     },
 
-    getCount: async () => {
-        return await axiosClient.get(`/cus/count`);
+    getCount: async (organizationId) => {
+        return await axiosClient.get(`/cus/count?organizationId=${organizationId}`);
     },
 
     create: async (body) => {
