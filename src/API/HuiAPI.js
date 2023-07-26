@@ -8,12 +8,15 @@ const HuiAPI = {
 
     getList: async (body) =>  {
         const {limit, page, status, organizationId} = body
-        console.log(organizationId);
         return await axiosClient.get(`/hui/list?organizationId=${organizationId}`);
     },
 
     getConst: async () => {
         return await axiosClient.get(`/const/list`);
+    },
+
+    getCount: async () => {
+        return await axiosClient.get(`/hui/count`);
     },
 
     create: async (body) => {

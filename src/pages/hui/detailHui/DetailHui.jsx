@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 
 const DetailHui = ({employeeId, setShowDetail, showDetail}) => {
-    console.log(showDetail);
 
     return (
         <Modal dialogClassName="modal-detail" show={showDetail} onHide={() => setShowDetail(false)}>

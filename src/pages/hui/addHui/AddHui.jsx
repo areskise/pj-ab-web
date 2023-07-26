@@ -7,29 +7,74 @@ import EmployeeAPI from "../../../API/EmployeeAPI";
 import { useSelector } from "react-redux";
 import { selectorUserCompanies } from "../../../redux/slice/companySlice";
 import CompanyAPI from "../../../API/CompanyAPI";
+import CustomerAPI from "../../../API/CustomerAPI";
+import HuiAPI from "../../../API/HuiAPI";
 
 const AddHui = ({setShowAdd, showAdd}) => {
     const [selectCompany, setSelectCompany] = useState(null);
-    const [selectRole, setSelectRole] = useState(null);
+    const [selectCustomer, setSelectCustomer] = useState([]);
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
     const [typeKhui, setTypeKhui] = useState('1');
-    const [visibleRePass, setVisibleRePass] = useState(false);
+    const [numPart, setNumPart] = useState('');
+    const [inputStaffs, setInputStaffs] = useState([
+        {
+            userId: '',
+            name: '',
+            insureNum: '',
+        },
+    ]);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
-    const [roles, setRoles] = useState([]);
-    const data = new FormData();
+    const [staffs, setStaffs] = useState([]);
+    const [customers, setCustomers] = useState([]);
+    const [code, setCode] = useState(null);
     const userCompanies = useSelector(selectorUserCompanies)
     
     useEffect(() => {
         if(selectCompany) {
-            const fetchRoles = async () => {
-                const res = await CompanyAPI.getRoles(selectCompany?._id);
-                const result = res.ResponseResult.Result
-                setRoles(result)
-                setSelectRole(null)
+            const fetchData = async () => {
+                const dataStaff = {
+                    limit: 9999,
+                    page: 1,
+                    id: selectCompany?._id,
+                    status: '',
+                }
+                const dataCus = {
+                    limit: 9999,
+                    page: 1,
+                    organizationId: selectCompany?._id,
+                }
+                const resStaff = await CompanyAPI.getUsers(dataStaff);
+                const resultStaff = resStaff.ResponseResult.Result
+                setStaffs(resultStaff)
+                const resCus = await CustomerAPI.getList(dataCus);
+                const resultCus = resCus.ResponseResult.Result
+                setCustomers(resultCus)
+                const resCount = await HuiAPI.getCount()
+                const count = resCount.ResponseResult.Result.count+1
+                setCode('H'+count)
             }
-            fetchRoles();
+            fetchData();
         }
     },[selectCompany]);
+
+    useEffect(() => {
+        const date = new Date(startDate)
+        let endDate
+        switch(typeKhui) {
+            case '1':
+                endDate = date.setMonth(date.getMonth() + numPart)
+                break
+            case '2':
+                endDate = date.setDate(date.getDate() + 7*numPart)
+                break
+            case '3':
+                endDate = date.setDate(date.getDate() + numPart)
+                break
+        }
+        setEndDate(endDate);
+    },[numPart, typeKhui, startDate]);
 
     const handleKeyDown = (e) => {
         if(e.key === "Enter") {
@@ -40,32 +85,61 @@ const AddHui = ({setShowAdd, showAdd}) => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        data.append('organizationId', selectCompany?._id);
-        data.append('userName', e.target.userName.value);
-        data.append('password', e.target.password.value);
-        data.append('fullName', e.target.fullName.value);
-        data.append('email', e.target.email.value);
-        data.append('phoneNumber', e.target.phoneNumber.value);
-        data.append('roleId', selectRole?._id);
+        let typeName
+        switch(typeKhui) {
+            case '1':
+                typeName = 'Tháng'
+                break
+            case '2':
+                typeName = 'Tuần'
+                break
+            case '3':
+                typeName = 'Ngày'
+                break
+        }
+        const data = {
+            organizationId: selectCompany?._id,
+            code: e.target.code.value,
+            name: e.target.name.value,
+            idChanel: e.target.idChanel.value,
+            type: {
+                type: +typeKhui,
+                name: typeName,
+                num: +e.target.numKhui.value
+            },
+            partNum: +e.target.partNum.value,
+            money: +e.target.money.value,
+            insureNum: +e.target.insureNum.value,
+            staffInsures: inputStaffs,
+            customers: selectCustomer,
+        }
+        let countPart = 0
+        for (let i = 0; i < selectCustomer.length; i++) {
+            countPart = countPart + selectCustomer[i].num
+        }
+        console.log(countPart);
         if(
             !selectCompany?._id || 
-            !e.target.userName.value || 
-            !e.target.password.value || 
-            !e.target.rePassword.value || 
-            !e.target.fullName.value || 
-            !selectRole?._id
+            !data.code || 
+            !data.name || 
+            !data.idChanel || 
+            !data.partNum || 
+            !data.money || 
+            !data.insureNum || 
+            !selectCustomer
         ) {
             setError(true)
             setMessErr(null)
-        } else if(e.target.password.value !== e.target.rePassword.value) {
-            setMessErr('Nhập lại mật khẩu không chính xác!')
+        } else if(!inputStaffs[0].userId || !inputStaffs[0].insureNum) {
+            setMessErr('Vui lòng hoàn tất nhập liệu thông tin nhân viên tham gia.')
             setError(false)
-        } else if(e.target.phoneNumber.value && e.target.phoneNumber.value.length !== 10) {
-            setError(null)
-            setMessErr('Số điện thoại phải gồm 10 chữ số')
+        } else if(data.partNum !== countPart) {
+            setMessErr('Tổng số chân hụi viên tham gia không hợp lệ. Vui lòng kiểm tra lại.')
+            setError(false)
         } else {
             try {
-                const res = await EmployeeAPI.create(data);
+                const res = await HuiAPI.create(data);
+                console.log(res);
                 if(res.ResponseResult.ErrorCode === 0){
                     setShowAdd(false)
                     setError(false)
@@ -84,12 +158,56 @@ const AddHui = ({setShowAdd, showAdd}) => {
                 }
             }
             catch(err) {
-                console.error(err.me);
+                console.error(err);
                 setError(false)
                 setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
             }
         }
     };
+
+    const addInput = () => {
+        setInputStaffs([...inputStaffs, {
+            userId: '',
+            name: '',
+            insureNum: '',
+        }])
+    }
+
+    const removeInput = (iInput) => {
+        inputStaffs.splice(iInput, 1);
+        setInputStaffs([...inputStaffs])
+    }
+
+    const selectedStaff = (iInput, staff) => {
+        inputStaffs[iInput].userId = staff?.userId._id
+        inputStaffs[iInput].name = staff?.userId.userName
+        setInputStaffs([...inputStaffs])
+    }
+
+    const inputedStaff = (iInput, e) => {
+        inputStaffs[iInput].insureNum = +e.target.value
+        setInputStaffs([...inputStaffs])
+    }
+
+    const selectedCustomer = (e, customer) => {
+        const checked = e.target.checked
+        if(checked) {
+            selectCustomer.push({
+                customerId: customer._id,
+                name: customer.fullName,
+                num: 1
+            })
+            setSelectCustomer([...selectCustomer])            
+        } else {
+            const filterCus = selectCustomer.filter(cus => cus.customerId !== customer._id)
+            setSelectCustomer([...filterCus])            
+        }
+    }
+
+    const changeNumHui = (e, i) => {
+        selectCustomer[i].num = +e.target.value
+        setSelectCustomer([...selectCustomer])
+    }
 
     const handleClose = (e) => {
         e.preventDefault();
@@ -97,7 +215,8 @@ const AddHui = ({setShowAdd, showAdd}) => {
         setShowAdd(false)
         setMessErr(null)
         setSelectCompany(null)
-        setSelectRole(null)
+        setCode(null)
+        setSelectCustomer([])
     }
 
     const onHide = () => {
@@ -105,7 +224,8 @@ const AddHui = ({setShowAdd, showAdd}) => {
         setShowAdd(false)
         setMessErr(null)
         setSelectCompany(null)
-        setSelectRole(null)
+        setCode(null)
+        setSelectCustomer([])
     }
 
     return (
@@ -153,8 +273,10 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                     type="text" 
                                     name="code"
                                     className='form-control'
-                                    placeholder="Nhập mã hụi"
+                                    placeholder="Chọn công ty"
                                     onKeyDown={handleKeyDown}
+                                    value={code}
+                                    disabled
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
@@ -256,6 +378,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                     name="partNum"
                                     className='form-control' 
                                     placeholder='Nhập số phần hụi' 
+                                    onChange={e=>setNumPart(+e.target.value)}
                                     onKeyDown={handleKeyDown}
                                 />
                             </div>
@@ -287,48 +410,57 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                 />
                                 %
                             </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
-                                <div className='label'>
+                            <div className='m-md-3 my-3 align-items-center justify-content-between'>
+                                <div className='label d-block'>
                                     <label htmlFor="">Nhân viên</label>
                                 </div>
-                                <div className="d-flex align-items-center">
-                                    {selectCompany?
-                                        <div className="d-flex mr-2 select-dropdown dropdown text-end">
-                                            <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <span className='selected-company p-2'>{selectRole?selectRole?.name:'Chọn nhân viên'}</span>
-                                            </a>
-                                            <ul className="p-0 my-1 dropdown-menu text-small">
-                                                {roles?.map((role, i) => (
-                                                    <li key={i}>
-                                                        <button 
-                                                            className='p-2 px-3 btn dropdown-item'
-                                                            type='button'
-                                                            style={selectRole?._id===role._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                                            onClick={() => setSelectRole(role)}
-                                                        >
-                                                            {role.name}
-                                                        </button>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    :
-                                        <select 
-                                            className='form-select mr-2 select-company' name="role" 
-                                            disabled
-                                        >
-                                            <option value='' hidden>Chọn công ty trước</option>
-                                        </select>
-                                    }
-                                    <input 
-                                        type="number" 
-                                        name="insureNum"
-                                        className='form-control mr-2' 
-                                        placeholder='Nhập % bảo hiểm' 
-                                        onKeyDown={handleKeyDown}
-                                    />
-                                    %
-                                </div>
+                                {inputStaffs?.map((inputStaff, iInput) => (
+                                    <div className="d-flex align-items-center my-2">
+                                        {selectCompany?
+                                            <div className="d-flex mr-2 select-dropdown dropdown text-end">
+                                                <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span className='selected-company p-2'>{inputStaff.name?inputStaff?.name:'Chọn nhân viên'}</span>
+                                                </a>
+                                                <ul className="p-0 my-1 dropdown-menu text-small">
+                                                    {staffs.docs?.map((staff, iStaff) => (
+                                                        <li key={iStaff}>
+                                                            <button 
+                                                                className='p-2 px-3 btn dropdown-item'
+                                                                type='button'
+                                                                style={inputStaff?.userId===staff.userId._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                                onClick={() => selectedStaff(iInput, staff)}
+                                                            >
+                                                                {staff.userId.userName}
+                                                            </button>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        :
+                                            <select 
+                                                className='form-select mr-2 select-company' name="role" 
+                                                disabled
+                                            >
+                                                <option value='' hidden>Chọn công ty trước</option>
+                                            </select>
+                                        }
+                                        <input 
+                                            type="number" 
+                                            name="insureNumStaff"
+                                            className='form-control mr-2' 
+                                            placeholder='Nhập % bảo hiểm' 
+                                            onChange={(e) => inputedStaff(iInput, e)}
+                                            onKeyDown={handleKeyDown}
+                                        />
+                                        %
+                                        <i 
+                                            className="fa-regular fa-rectangle-xmark p-1 m-1" 
+                                            style={{color: '#FF5F5F'}}
+                                            onClick={() =>removeInput(iInput)}
+                                        ></i>
+                                    </div>
+                                ))}
+                                <div><a href="#" onClick={addInput}>Thêm nhân viên</a></div>
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center text-align-center justify-content-between'>
                                     <div className='label'>
@@ -340,6 +472,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                         className='form-control mr-2' 
                                         defaultValue={format(new Date(), 'yyyy-MM-dd')} 
                                         min={format(new Date(), 'yyyy-MM-dd')}
+                                        onChange={(e)=>setStartDate(e.target.value)}
                                         onKeyDown={handleKeyDown}
                                     />
                                 </div>
@@ -351,9 +484,10 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                         type="date" 
                                         name="endDate"
                                         className='form-control' 
-                                        defaultValue={format(new Date(), 'yyyy-MM-dd')} 
+                                        value={format(new Date(endDate), 'yyyy-MM-dd')} 
                                         min={format(new Date(), 'yyyy-MM-dd')}
                                         onKeyDown={handleKeyDown}
+                                        disabled
                                     />
                                 </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
@@ -365,19 +499,27 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                 {selectCompany?
                                     <div className="d-flex select-dropdown dropdown text-end">
                                         <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <span className='selected-company p-2'>{selectRole?selectRole?.name:'Chọn nhóm quyền'}</span>
+                                            <span className='selected-company p-2'>{selectCustomer[0]?selectCustomer.map(cus=>`${cus.name}, `):'Chọn hụi viên'}</span>
                                         </a>
                                         <ul className="p-0 my-1 dropdown-menu text-small">
-                                            {roles?.map((role, i) => (
-                                                <li key={i}>
-                                                    <button 
-                                                        className='p-2 px-3 btn dropdown-item'
-                                                        type='button'
-                                                        style={selectRole?._id===role._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                                        onClick={() => setSelectRole(role)}
-                                                    >
-                                                        {role.name}
-                                                    </button>
+                                            {customers.docs?.map((customer, i) => (
+                                                <li 
+                                                    key={i} 
+                                                    className='d-flex align-items-center justify-content-start dropdown-item p-2 px-3 btn'
+                                                >
+                                                    <input 
+                                                        type="checkbox" 
+                                                        className='form-checkbox' 
+                                                        id={`hui${i}`} 
+                                                        name={`hui${i}`}
+                                                        onChange={(e)=> {
+                                                            selectedCustomer(e, customer)
+                                                        }}
+                                                        onKeyDown={handleKeyDown}
+                                                    />
+                                                    <div className="w-100">
+                                                        <label htmlFor={`hui${i}`} className="w-100">{customer.fullName}</label>
+                                                    </div>
                                                 </li>
                                             ))}
                                         </ul>
@@ -395,20 +537,33 @@ const AddHui = ({setShowAdd, showAdd}) => {
                         <div>
                             <h6 className="d-flex m-md-3">Danh sách hụi viên</h6>
                             <div className='form-check'>
-                                <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
-                                    <div className='label'>
-                                        <label htmlFor="">Bảo hiểm</label>
+                                {selectCustomer[0]? 
+                                    <div className='py-2'>
+                                    {selectCustomer?.map((cus, i)=>(
+                                        <div className="d-flex my-2 align-items-center justify-content-between">
+                                            <div className='labelHui'>
+                                                <label htmlFor="">{cus.name}</label>
+                                            </div>
+                                            <input 
+                                                type="number" 
+                                                name="cusNum"
+                                                className='form-control mr-2' 
+                                                style={{width: '116px'}}
+                                                placeholder='Số chân hụi' 
+                                                onChange={(e)=>changeNumHui(e, i)}
+                                                onKeyDown={handleKeyDown}
+                                                defaultValue={cus.num}
+                                            />
+                                            <i 
+                                                className="fa-regular fa-rectangle-xmark p-1 m-1" 
+                                                style={{color: '#FF5F5F'}}
+                                            ></i>
+                                        </div>
+                                    ))}
                                     </div>
-                                    <input 
-                                        type="number" 
-                                        name="insureNum"
-                                        className='form-control mr-2' 
-                                        style={{width: '116px'}}
-                                        placeholder='Số chân hụi' 
-                                        onKeyDown={handleKeyDown}
-                                    />
-                                    %
-                                </div>
+                                :
+                                <div className="d-flex h-100 justify-content-center align-items-center">Vui lòng chọn hụi viên</div>
+                                }
                             </div>
                         </div>
                     </div>

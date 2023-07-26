@@ -193,8 +193,8 @@ const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
                                         name="hui"
                                         onKeyDown={handleKeyDown}
                                     />
-                                    <div>
-                                        <label htmlFor="hui">Quản lý hụi</label>
+                                    <div className="w-100">
+                                        <label htmlFor="hui" className="w-100">Quản lý hụi</label>
                                     </div>
                                 </div>
                             </div>

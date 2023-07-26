@@ -155,12 +155,6 @@ const Employee = () => {
                         <div className='label'>
                             <label htmlFor="">Công ty:</label>
                         </div>
-                        {/* <select className='form-select select-company' onChange={changeCompany}>
-                            <option value='all'>Tất cả</option>
-                            {userCompanies?.map((company, i) => (
-                                <option key={i} value={company._id}>{company.name}</option>
-                            ))}
-                        </select> */}
                         <div className="d-flex w-100 dropdown text-end" style={{maxWidth: '218px'}}>
                             <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span className='selected-company p-2'>{selectCompany?.name?selectCompany?.name:'Tất cả'}</span>
@@ -196,26 +190,6 @@ const Employee = () => {
                             <label htmlFor="">Sắp xếp:</label>
                         </div>
                         <div className='btn-sort-container'>
-                            {/* <select className='form-select btn-sort' onChange={(e)=>changeSortItem(e.target.value)}>
-                                <option value='status'>Trạng thái</option>
-                            </select>
-                            <select className='form-select btn-sort' onChange={(e)=>changeSortBy(e.target.value)}>
-                                {sortBy==='' && (<>
-                                    <option value={''}>Mặc định</option>
-                                    <option value={-1}>Hoạt động</option>
-                                    <option value={1}>Không hoạt động</option>
-                                </>)}
-                                {sortBy==='-1' && (<>
-                                    <option value={-1}>Hoạt động</option>
-                                    <option value={''}>Mặc định</option>
-                                    <option value={1}>Không hoạt động</option>
-                                </>)}
-                                {sortBy==='1' && (<>
-                                    <option value={1}>Không hoạt động</option>
-                                    <option value={''}>Mặc định</option>
-                                    <option value={-1}>Hoạt động</option>
-                                </>)}
-                            </select> */}
                             <div className="d-flex m-2 w-100 dropdown text-end" style={{maxWidth: '218px'}}>
                                 <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select btn-sort" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span className='selected-company p-2'>Trạng thái</span>

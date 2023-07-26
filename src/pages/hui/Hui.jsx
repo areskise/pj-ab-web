@@ -5,7 +5,7 @@ import SideBar from "../../components/sidebar/SideBar";
 import { useEffect, useState } from 'react';
 import AddHui from "./addHui/AddHui";
 import UpdateHui from "./updateHui/UpdateHui";
-import UpdatePass from './updatePass/UpdatePass';
+import DeleteHui from './deleteHui/DeleteHui';
 import DetailHui from './detailHui/DetailHui';
 import { huiActions, selectorHuis } from '../../redux/slice/huiSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,7 +17,7 @@ const Hui = () => {
     const [loading, setLoading] = useState(false);
     const [showAdd, setShowAdd] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
-    const [updatePass, setUpdatePass] = useState(false);
+    const [deleteHui, setDeleteHui] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
     const [selectCompany, setSelectCompany] = useState('all');
     const [page, setPage] = useState(1);
@@ -41,7 +41,6 @@ const Hui = () => {
                 setLoading(true);
                 const res = await HuiAPI.getList(data);
                 const result = res.ResponseResult.Result;
-                console.log(result);
                 dispatch(huiActions.setHuis(result));
                 setLoading(false);
             } catch (error) {
@@ -50,7 +49,7 @@ const Hui = () => {
             }
         }
         fetchHui();
-    }, [page, limit, selectCompany, showAdd, showUpdate, updatePass, showDetail, sortStatus, sortBy]);
+    }, [page, limit, selectCompany, showAdd, showUpdate, deleteHui, showDetail, sortStatus, sortBy]);
 
     const sortByStatus = () => {
         if(sortStatus === '') {
@@ -132,12 +131,6 @@ const Hui = () => {
                         <div className='label'>
                             <label htmlFor="">Công ty:</label>
                         </div>
-                        {/* <select className='form-select select-company' onChange={changeCompany}>
-                            <option value='all'>Tất cả</option>
-                            {userCompanies?.map((company, i) => (
-                                <option key={i} value={company._id}>{company.name}</option>
-                            ))}
-                        </select> */}
                         <div className="d-flex w-100 dropdown text-end" style={{maxWidth: '218px'}}>
                             <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span className='selected-company p-2'>{selectCompany?.name?selectCompany?.name:'Tất cả'}</span>
@@ -301,7 +294,7 @@ const Hui = () => {
                                                 <i 
                                                     className="fa-regular fa-rectangle-xmark p-1 m-1" 
                                                     style={{color: '#FF5F5F'}}
-                                                    onClick={() => setUpdatePass(hui)}
+                                                    onClick={() => setDeleteHui(hui)}
                                                 ></i>
                                                 <i 
                                                     className="fa-regular fa-file-zipper p-1 m-1"  
@@ -331,7 +324,7 @@ const Hui = () => {
             </div>
             <AddHui selectCompany={selectCompany} showAdd={showAdd} setShowAdd={setShowAdd} setLoading={setLoading}/>
             <UpdateHui selectCompany={selectCompany} showUpdate={showUpdate} setShowUpdate={setShowUpdate} setLoading={setLoading}/>
-            <UpdatePass updatePass={updatePass} setUpdatePass={setUpdatePass} setLoading={setLoading}/>
+            <DeleteHui deleteHui={deleteHui} setDeleteHui={setDeleteHui} setLoading={setLoading}/>
             <DetailHui showDetail={showDetail} setShowDetail={setShowDetail}/>
         </div>
     )

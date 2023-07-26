@@ -25,7 +25,8 @@ const Customer = () => {
     const dispatch = useDispatch();
     const customers = useSelector(selectorCustomers)
     const userCompanies = useSelector(selectorUserCompanies)
-    let list = keyword?customers.docs.filter(doc => {
+    console.log(userCompanies);
+    const list = keyword?customers.docs.filter(doc => {
         let hasDoc
         if(search==='sdt') {
             hasDoc = doc.phoneNumber.includes(keyword)

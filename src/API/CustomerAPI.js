@@ -7,7 +7,6 @@ const CustomerAPI = {
 
     getList: async (body) => {
         const {limit, page, status, organizationId} = body
-        console.log(organizationId);
         if(organizationId) {
             return await axiosClient.get(`/cus/list?query={"organizationId":"${organizationId}"}&page=${page}&limit=${limit}`);
         }

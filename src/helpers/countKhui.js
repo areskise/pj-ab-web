@@ -8,11 +8,47 @@ export default function countKhui(num, type, startDate, endDate) {
     }
     if(now<end) {
         for (let date = start; date <= now; date++) {
-            // Check if the current date is a Tuesday.
-            if (date.getDay() === 2) {
-              // Increment the count of third days.
-              count++;
+            switch(type) {
+                case 1:
+                    if (date.getDate() === num) {
+                      count++;
+                    }
+                    break
+                case 2:
+                    if (date.getDay() === num-1) {
+                        count++;
+                    }
+                    break
+                case 3:
+                    if (date.getHours() === num) {
+                        count++;
+                    }
+                    break
             }
-          }
+        }
+        return count;
+    }
+
+    if(now>end) {
+        for (let date = start; date <= end; date++) {
+            switch(type) {
+                case 1:
+                    if (date.getDate() === num) {
+                      count++;
+                    }
+                    break
+                case 2:
+                    if (date.getDay() === num-1) {
+                        count++;
+                    }
+                    break
+                case 3:
+                    if (date.getHours() === num) {
+                        count++;
+                    }
+                    break
+            }
+        }
+        return count;
     }
 }

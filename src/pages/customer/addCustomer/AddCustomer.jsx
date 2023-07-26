@@ -13,18 +13,16 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
     const [visibleRePass, setVisibleRePass] = useState(false);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
-    const [code, setCode] = useState([]);
+    const [code, setCode] = useState(null);
     const data = new FormData();
     const userCompanies = useSelector(selectorUserCompanies)
     
     useEffect(() => {
         if(selectCompany) {
             const fetchCode = async () => {
-                const resCom = await CompanyAPI.getById(selectCompany?._id);
-                const title = resCom.ResponseResult.Result.title
                 const resCount = await CustomerAPI.getCount(selectCompany?._id)
                 const count = resCount.ResponseResult.Result.count+1
-                setCode('KH'+count+title)
+                setCode('KH'+count+(selectCompany.title))
             }
             fetchCode();
         }
@@ -121,16 +119,6 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
                                         <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
-                                {/* <select 
-                                    name="company" 
-                                    className='form-select select-company' 
-                                    onChange={(e) => setSelectCompany(e.target.value)}
-                                >   
-                                    <option value={null} hidden>Chọn công ty</option>
-                                    {userCompanies?.map((company, i) => (
-                                        <option key={i} value={company._id}>{company.name}</option>
-                                    ))}
-                                </select> */}
                                 <div className="d-flex dropdown select-dropdown text-end">
                                     <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span className='selected-company p-2'>{selectCompany?selectCompany?.name:'Chọn công ty'}</span>
