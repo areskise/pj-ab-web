@@ -221,7 +221,7 @@ const Company = () => {
             <Header reload={reload}/>
             <SideBar/>
             <AddCompany showAdd={showAdd} setShowAdd={setShowAdd} reload={reload} setReload={setReload} />
-            <UpdateCompany showUpdate={showUpdate} setShowUpdate={setShowUpdate} setReload={setReload} />
+            <UpdateCompany showUpdate={showUpdate} setShowUpdate={setShowUpdate} reload={reload} setReload={setReload} />
             <div className="main-container bg-light">
                 <h5 className="m-4">Quản lý công ty</h5>
                 {loading && !companies?.docs ?

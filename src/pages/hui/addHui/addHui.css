@@ -67,7 +67,7 @@
     overflow: hidden;
     width: 88%;
     text-align: right;
-    min-width: 100px;
+    /* min-width: 100px; */
   }
 
 .add-hui .form-control {

@@ -1,14 +1,13 @@
 import axiosClient from "./axiosClient";
 
 const HuiAPI = {
-    get: async (body) =>  {
-        const {limit, page, status, id} = body
+    get: async (id) =>  {
         return await axiosClient.get(`/hui?id=${id}`);
     },
 
     getList: async (body) =>  {
         const {limit, page, status, organizationId} = body
-        return await axiosClient.get(`/hui/list?organizationId=${organizationId}`);
+        return await axiosClient.get(`/hui/list?organizationId=${organizationId}&page=${page}&limit=${limit}`);
     },
 
     getConst: async () => {

@@ -128,16 +128,6 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     </label>
                                 </div>
                             {selectCompany==='all'?
-                                // <select 
-                                //     name="company" 
-                                //     className='form-select select-company'
-                                //     onChange={handleChange}
-                                // >
-                                //     <option value={defaultCompany?defaultCompany.organizationId?._id:null} hidden>{defaultCompany?defaultCompany.organizationId?.name:null}</option>
-                                //     {company?.map((company, i) => (
-                                //         <option key={i} value={company?company.organizationId._id:null}>{company?company.organizationId.name:null}</option>
-                                //     ))}
-                                // </select>
                                 <div className="d-flex dropdown select-dropdown text-end">
                                     <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span className='selected-company p-2'>{selectedCompany?selectedCompany?.name:'Loading...'}</span>
@@ -232,19 +222,6 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                                         <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
-                                {/* <select 
-                                    name="role" 
-                                    className='form-select select-company'
-                                >
-                                    {role ? 
-                                    <option value={role.roleId} hidden>{role.name}</option> 
-                                    : 
-                                    <option value={showUpdate.roleId?._id} hidden>{showUpdate.roleId?.name}</option>
-                                    }
-                                    {roles && roles?.map((role, i) => (
-                                        <option key={i} value={role._id}>{role.name}</option>
-                                    ))}
-                                </select> */}
                                 <div className="d-flex dropdown select-dropdown text-end">
                                     <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span className='selected-company p-2'>{selectRole?selectRole?.name:'Chọn nhóm quyền'}</span>
@@ -265,6 +242,7 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     </ul>
                                 </div>
                             </div>
+                            {showUpdate.status?
                             <div className='d-flex m-3 align-items-center justify-content-between'>
                                 <div className='d-flex mx-3 align-items-center justify-content-center'>
                                     <input 
@@ -294,6 +272,37 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     </div>
                                 </div>
                             </div>
+                            :
+                            <div className='d-flex m-3 align-items-center justify-content-between'>
+                                <div className='d-flex mx-3 align-items-center justify-content-center'>
+                                    <input 
+                                        type="radio" 
+                                        id="Active" 
+                                        className='form-checkbox' 
+                                        name='status' 
+                                        value={true} 
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                    <div>
+                                        <label htmlFor="Active" className='employee-active'>Hoạt động</label>
+                                    </div>
+                                </div>
+                                <div className='d-flex mx-3 align-items-center justify-content-center'>
+                                    <input 
+                                        type="radio" 
+                                        id='Disable' 
+                                        className='form-checkbox' 
+                                        name='status'
+                                        value={false}
+                                        onKeyDown={handleKeyDown}
+                                        defaultChecked
+                                    />
+                                    <div>
+                                        <label htmlFor="Disable" className='employee-disable'>Không hoạt động</label>
+                                    </div>
+                                </div>
+                            </div>
+                            }
                         </div>
                     </div>
                     <div className='m-auto mt-3 text-center'>

@@ -3,7 +3,6 @@ import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
-import EmployeeAPI from "../../../API/EmployeeAPI";
 import { useSelector } from "react-redux";
 import { selectorUserCompanies } from "../../../redux/slice/companySlice";
 import CompanyAPI from "../../../API/CompanyAPI";
@@ -11,12 +10,14 @@ import CustomerAPI from "../../../API/CustomerAPI";
 import HuiAPI from "../../../API/HuiAPI";
 
 const AddHui = ({setShowAdd, showAdd}) => {
+    const [loading, setLoading] = useState(false);
     const [selectCompany, setSelectCompany] = useState(null);
     const [selectCustomer, setSelectCustomer] = useState([]);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [typeKhui, setTypeKhui] = useState('1');
-    const [numPart, setNumPart] = useState('');
+    const [maxKhui, setMaxKhui] = useState(31);
+    const [numPart, setNumPart] = useState(null);
     const [inputStaffs, setInputStaffs] = useState([
         {
             userId: '',
@@ -34,6 +35,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
     useEffect(() => {
         if(selectCompany) {
             const fetchData = async () => {
+                setLoading(true)
                 const dataStaff = {
                     limit: 9999,
                     page: 1,
@@ -54,6 +56,13 @@ const AddHui = ({setShowAdd, showAdd}) => {
                 const resCount = await HuiAPI.getCount()
                 const count = resCount.ResponseResult.Result.count+1
                 setCode('H'+count)
+                setInputStaffs([{
+                    userId: '',
+                    name: '',
+                    insureNum: '',
+                },])
+                setSelectCustomer([])
+                setLoading(false)
             }
             fetchData();
         }
@@ -65,12 +74,15 @@ const AddHui = ({setShowAdd, showAdd}) => {
         switch(typeKhui) {
             case '1':
                 endDate = date.setMonth(date.getMonth() + numPart)
+                setMaxKhui(31)
                 break
             case '2':
                 endDate = date.setDate(date.getDate() + 7*numPart)
+                setMaxKhui(7)
                 break
             case '3':
-                endDate = date.setDate(date.getDate() + numPart)
+                endDate = numPart?date.setDate(date.getDate() + numPart-1):(new Date(startDate))
+                setMaxKhui(24)
                 break
         }
         setEndDate(endDate);
@@ -112,6 +124,8 @@ const AddHui = ({setShowAdd, showAdd}) => {
             insureNum: +e.target.insureNum.value,
             staffInsures: inputStaffs,
             customers: selectCustomer,
+            startDate: e.target.startDate.value,
+            endDate: e.target.endDate.value,
         }
         let countPart = 0
         for (let i = 0; i < selectCustomer.length; i++) {
@@ -141,9 +155,18 @@ const AddHui = ({setShowAdd, showAdd}) => {
                 const res = await HuiAPI.create(data);
                 console.log(res);
                 if(res.ResponseResult.ErrorCode === 0){
-                    setShowAdd(false)
                     setError(false)
+                    setShowAdd(false)
                     setMessErr(null)
+                    setSelectCompany(null)
+                    setCode(null)
+                    setSelectCustomer([])
+                    setInputStaffs([{
+                        userId: '',
+                        name: '',
+                        insureNum: '',
+                    },])
+                    setEndDate(new Date());
                     alertify.set('notifier', 'position', 'top-right');
                     alertify.success('Thêm mới thành công!');
                 } else {
@@ -209,6 +232,11 @@ const AddHui = ({setShowAdd, showAdd}) => {
         setSelectCustomer([...selectCustomer])
     }
 
+    const removeCustomer = (i) => {
+        selectCustomer?.splice(i, 1);
+        setSelectCustomer([...selectCustomer])
+    }
+
     const handleClose = (e) => {
         e.preventDefault();
         setError(false)
@@ -217,6 +245,12 @@ const AddHui = ({setShowAdd, showAdd}) => {
         setSelectCompany(null)
         setCode(null)
         setSelectCustomer([])
+        setInputStaffs([{
+            userId: '',
+            name: '',
+            insureNum: '',
+        },])
+        setEndDate(new Date());
     }
 
     const onHide = () => {
@@ -226,6 +260,12 @@ const AddHui = ({setShowAdd, showAdd}) => {
         setSelectCompany(null)
         setCode(null)
         setSelectCustomer([])
+        setInputStaffs([{
+            userId: '',
+            name: '',
+            insureNum: '',
+        },])
+        setEndDate(new Date());
     }
 
     return (
@@ -365,6 +405,8 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                         name="numKhui"
                                         className='form-control'
                                         placeholder="Thời gian"
+                                        min={1}
+                                        max={maxKhui}
                                         onKeyDown={handleKeyDown}
                                     />
                                 </div>
@@ -378,7 +420,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                     name="partNum"
                                     className='form-control' 
                                     placeholder='Nhập số phần hụi' 
-                                    onChange={e=>setNumPart(+e.target.value)}
+                                    onChange={(e)=>setNumPart(+e.target.value)}
                                     onKeyDown={handleKeyDown}
                                 />
                             </div>
@@ -416,7 +458,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                 </div>
                                 {inputStaffs?.map((inputStaff, iInput) => (
                                     <div className="d-flex align-items-center my-2">
-                                        {selectCompany?
+                                        {selectCompany && !loading?
                                             <div className="d-flex mr-2 select-dropdown dropdown text-end">
                                                 <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <span className='selected-company p-2'>{inputStaff.name?inputStaff?.name:'Chọn nhân viên'}</span>
@@ -441,7 +483,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                                 className='form-select mr-2 select-company' name="role" 
                                                 disabled
                                             >
-                                                <option value='' hidden>Chọn công ty trước</option>
+                                                <option value='' hidden>{loading?'Loading...':'Chọn công ty'}</option>
                                             </select>
                                         }
                                         <input 
@@ -451,6 +493,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                             placeholder='Nhập % bảo hiểm' 
                                             onChange={(e) => inputedStaff(iInput, e)}
                                             onKeyDown={handleKeyDown}
+                                            value={inputStaffs[iInput].insureNum}
                                         />
                                         %
                                         <i 
@@ -470,8 +513,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                         type="date" 
                                         name="startDate"
                                         className='form-control mr-2' 
-                                        defaultValue={format(new Date(), 'yyyy-MM-dd')} 
-                                        min={format(new Date(), 'yyyy-MM-dd')}
+                                        defaultValue={format(new Date(startDate), 'yyyy-MM-dd')} 
                                         onChange={(e)=>setStartDate(e.target.value)}
                                         onKeyDown={handleKeyDown}
                                     />
@@ -485,7 +527,6 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                         name="endDate"
                                         className='form-control' 
                                         value={format(new Date(endDate), 'yyyy-MM-dd')} 
-                                        min={format(new Date(), 'yyyy-MM-dd')}
                                         onKeyDown={handleKeyDown}
                                         disabled
                                     />
@@ -496,7 +537,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                         Hụi viên
                                     </label>
                                 </div>
-                                {selectCompany?
+                                {selectCompany && !loading?
                                     <div className="d-flex select-dropdown dropdown text-end">
                                         <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                             <span className='selected-company p-2'>{selectCustomer[0]?selectCustomer.map(cus=>`${cus.name}, `):'Chọn hụi viên'}</span>
@@ -516,6 +557,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                                             selectedCustomer(e, customer)
                                                         }}
                                                         onKeyDown={handleKeyDown}
+                                                        checked={selectCustomer.map(cus=>cus.customerId).includes(customer._id)}
                                                     />
                                                     <div className="w-100">
                                                         <label htmlFor={`hui${i}`} className="w-100">{customer.fullName}</label>
@@ -529,7 +571,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                         className='form-select select-company' name="role" 
                                         disabled
                                     >
-                                        <option value='' hidden>Chọn công ty trước</option>
+                                        <option value='' hidden>{loading?'Loading...':'Chọn công ty'}</option>
                                     </select>
                                 }
                             </div>
@@ -557,6 +599,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                             <i 
                                                 className="fa-regular fa-rectangle-xmark p-1 m-1" 
                                                 style={{color: '#FF5F5F'}}
+                                                onClick={() =>removeCustomer(i)}
                                             ></i>
                                         </div>
                                     ))}

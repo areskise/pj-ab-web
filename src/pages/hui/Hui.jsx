@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectorUserCompanies } from '../../redux/slice/companySlice';
 import { format } from 'date-fns';
 import HuiAPI from '../../API/HuiAPI';
+import countKhui from '../../helpers/countKhui';
 
 const Hui = () => {
     const [loading, setLoading] = useState(false);
@@ -283,7 +284,7 @@ const Hui = () => {
                                         <td data-label="Khui:">{hui.type.num} {hui.type.name}</td>
                                         <td data-label="Dây hụi:">{hui.money}</td>
                                         <td data-label="Số phần:">{hui.partNum}</td>
-                                        <td data-label="Trạng thái:">{hui.type.num}{hui.type.type}</td>
+                                        <td data-label="Tình trạng:">{countKhui(hui.type.num, hui.type.type, hui.startDate, hui.endDate, loading)}/{hui.partNum}</td>
                                         <td data-label="Chức năng:" className="employee-center">
                                             <div className='func-icon'>
                                                 <i 
