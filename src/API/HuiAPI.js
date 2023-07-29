@@ -7,7 +7,10 @@ const HuiAPI = {
 
     getList: async (body) =>  {
         const {limit, page, status, organizationId} = body
-        return await axiosClient.get(`/hui/list?organizationId=${organizationId}&page=${page}&limit=${limit}`);
+        if(organizationId) {
+            return await axiosClient.get(`/hui/list?query={"organizationId":"${organizationId}"}&page=${page}&limit=${limit}`);
+        }
+        return await axiosClient.get(`/hui/list?page=${page}&limit=${limit}`); 
     },
 
     getConst: async () => {

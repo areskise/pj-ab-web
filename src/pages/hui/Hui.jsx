@@ -10,6 +10,7 @@ import DetailHui from './detailHui/DetailHui';
 import { huiActions, selectorHuis } from '../../redux/slice/huiSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectorUserCompanies } from '../../redux/slice/companySlice';
+import currencyFormatter from 'currency-formatter';
 import { format } from 'date-fns';
 import HuiAPI from '../../API/HuiAPI';
 import countKhui from '../../helpers/countKhui';
@@ -356,10 +357,18 @@ const Hui = () => {
                                         </td>
                                         <td data-label="Ngày mở:">{format(new Date(hui.startDate), 'dd/MM/yyyy')}</td>
                                         <td data-label="Ngày kết thúc:">{format(new Date(hui.endDate), 'dd/MM/yyyy')}</td>
-                                        <td data-label="Khui:">{hui.type.num} {hui.type.name}</td>
-                                        <td data-label="Dây hụi:">{hui.money}</td>
+                                        {hui.type.type===1 && <td data-label="Khui:">{hui.type.num} hàng {hui.type.name}</td>}
+                                        {hui.type.type===2 && <td data-label="Khui:">{hui.type.num===1?"Chủ nhật":`Thứ ${hui.type.num}`} hàng {hui.type.name}</td>}
+                                        {hui.type.type===3 && <td data-label="Khui:">{hui.type.num} giờ hàng {hui.type.name}</td>}
+                                        <td data-label="Dây hụi:">{currencyFormatter.format(hui.money, {
+                                                symbol: 'VND',
+                                                decimal: '*',
+                                                thousand: '.',
+                                                precision: 0,
+                                                format: '%v %s' // %s is the symbol and %v is the value
+                                                })}</td>
                                         <td data-label="Số phần:">{hui.partNum}</td>
-                                        <td data-label="Tình trạng:">{countKhui(hui.type.num, hui.type.type, hui.startDate, hui.endDate, loading)}/{hui.partNum}</td>
+                                        <td data-label="Tình trạng:"  className="employee-center">{countKhui(hui.type.num, hui.type.type, hui.startDate, hui.endDate, loading)}/{hui.partNum}</td>
                                         <td data-label="Chức năng:" className="employee-center">
                                             <div className='func-icon'>
                                                 <i 
