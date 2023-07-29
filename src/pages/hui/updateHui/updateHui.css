@@ -110,7 +110,6 @@
   border-radius: 20px;
   margin: 16px 16px 0 16px;
   padding-right: 1.5em;
-  padding-bottom: 1rem;
   height: 658px;
   min-width: 383px;
   /* overflow-y: scroll; */
@@ -172,6 +171,12 @@ opacity: 1;
   .update-hui .form-container {
       display: block;
   }
+  
+  .update-hui .form-check {
+    min-height: 82px;
+    height: auto;
+    min-width: 0;
+}
 }
 
 @media screen and (max-width: 576px) {

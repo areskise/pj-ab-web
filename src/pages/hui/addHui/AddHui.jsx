@@ -512,7 +512,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                     <input 
                                         type="date" 
                                         name="startDate"
-                                        className='form-control mr-2' 
+                                        className='form-control' 
                                         defaultValue={format(new Date(startDate), 'yyyy-MM-dd')} 
                                         onChange={(e)=>setStartDate(e.target.value)}
                                         onKeyDown={handleKeyDown}
@@ -605,7 +605,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                     ))}
                                     </div>
                                 :
-                                <div className="d-flex h-100 justify-content-center align-items-center">Vui lòng chọn hụi viên</div>
+                                <div className="d-flex h-100 justify-content-center align-items-center" style={{minHeight: '82px'}}>Vui lòng chọn hụi viên</div>
                                 }
                             </div>
                         </div>

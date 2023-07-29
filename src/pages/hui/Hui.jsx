@@ -22,9 +22,12 @@ const Hui = () => {
     const [showDetail, setShowDetail] = useState(false);
     const [selectCompany, setSelectCompany] = useState('all');
     const [page, setPage] = useState(1);
-    const [sortStatus, setSortStatus] = useState('');
+    const [sortItem, setSortItem] = useState('startDate');
     const [sortBy, setSortBy] = useState('');
-    const [iconStatus, setIcontStatus] = useState("p-1 fa-solid fa-arrow-right-arrow-left");
+    const [sortEnd, setSortEnd] = useState('');
+    const [sortStart, setSortStart] = useState('');
+    const [iconStart, setIconStart] = useState("p-1 fa-solid fa-arrow-right-arrow-left");
+    const [iconEnd, setIconEnd] = useState("p-1 fa-solid fa-arrow-right-arrow-left");
     const limit = 5;
     const dispatch = useDispatch();
     const huis = useSelector(selectorHuis)
@@ -35,7 +38,8 @@ const Hui = () => {
             limit: limit,
             page: page,
             organizationId: selectCompany?._id,
-            status: sortStatus,
+            sortEnd: sortEnd,
+            sortStart: sortStart,
         }
         const fetchHui = async () => {
             try {
@@ -50,37 +54,92 @@ const Hui = () => {
             }
         }
         fetchHui();
-    }, [page, limit, selectCompany, showAdd, showUpdate, deleteHui, showDetail, sortStatus, sortBy]);
+    }, [page, limit, selectCompany, showAdd, showUpdate, deleteHui, showDetail, sortStart, sortEnd, sortBy]);
 
-    const sortByStatus = () => {
-        if(sortStatus === '') {
-            setSortStatus(1)
-            setIcontStatus('p-1 status-icon employee-disable fa-solid fa-circle')
-        } else if(sortStatus === 1) {
-            setSortStatus(-1)
-            setIcontStatus('p-1 status-icon employee-active fa-solid fa-circle')
+    const sortByStart = () => {
+        setSortItem('startDate')
+        setSortEnd('')
+        setIconEnd('p-1 fa-solid fa-arrow-right-arrow-left')
+        if(sortStart === '') {
+            setSortBy('1')
+            setSortStart('1')
+            setIconStart('p-1 fa-solid fa-arrow-up-short-wide')
+        } else if(sortStart === '1') {
+            setSortBy('-1')
+            setSortStart('-1')
+            setIconStart('p-1 fa-solid fa-arrow-down-wide-short')
         } else {
-            setSortStatus('')
-            setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
+            setSortBy('')
+            setSortStart('')
+            setIconStart('p-1 fa-solid fa-arrow-right-arrow-left')
         }
     }
 
-    const selectByStatus = (value) => {
-        if(value === '') {
-            setSortStatus('')
-            setIcontStatus('p-1 fa-solid fa-arrow-right-arrow-left')
-        } else if(value === '1') {
-            setSortStatus('1')
-            setIcontStatus('p-1 status-icon company-disable fa-solid fa-circle')
+    const sortByEnd = () => {
+        setSortItem('enđate')
+        setSortStart('')
+        setIconStart('p-1 fa-solid fa-arrow-right-arrow-left')
+        if(sortEnd === '') {
+            setSortBy('1')
+            setSortEnd('1')
+            setIconEnd('p-1 fa-solid fa-arrow-up-short-wide')
+        } else if(sortEnd === '1') {
+            setSortBy('-1')
+            setSortEnd('-1')
+            setIconEnd('p-1 fa-solid fa-arrow-down-wide-short')
         } else {
-            setSortStatus('-1')
-            setIcontStatus('p-1 status-icon company-active fa-solid fa-circle')
+            setSortBy('')
+            setSortEnd('')
+            setIconEnd('p-1 fa-solid fa-arrow-right-arrow-left')
+        }
+    }
+
+    const selectByStart = (value) => {
+        setSortEnd('')
+        setIconEnd('p-1 fa-solid fa-arrow-right-arrow-left')
+        if(value === '') {
+            setSortStart('')
+            setIconStart('p-1 fa-solid fa-arrow-right-arrow-left')
+        } else if(value === '1') {
+            setSortStart('1')
+            setIconStart('p-1 fa-solid fa-arrow-up-short-wide')
+        } else {
+            setSortStart('-1')
+            setIconStart('p-1 fa-solid fa-arrow-down-wide-short')
+        }
+    }
+
+    const selectByEnd = (value) => {
+        setSortStart('')
+        setIconStart('p-1 fa-solid fa-arrow-right-arrow-left')
+        if(value === '') {
+            setSortEnd('')
+            setIconEnd('p-1 fa-solid fa-arrow-right-arrow-left')
+        } else if(value === '1') {
+            setSortEnd('1')
+            setIconEnd('p-1 fa-solid fa-arrow-up-short-wide')
+        } else {
+            setSortEnd('-1')
+            setIconEnd('p-1 fa-solid fa-arrow-down-wide-short')
+        }
+    }
+
+    const changeSortItem = (value) => {
+        setSortItem(value)
+        if (value === 'startDate') {
+            selectByStart(sortBy)
+        } else {
+            selectByEnd(sortBy)
         }
     }
 
     const changeSortBy = (value) => {
         setSortBy(value)
-        selectByStatus(value)
+        if (sortItem === 'endDate') {
+            selectByEnd(value)
+        } else {
+            selectByStart(value)
+        }
     }
 
     const nextPage = () => {
@@ -169,18 +228,34 @@ const Hui = () => {
                         <div className='btn-sort-container'>
                             <div className="d-flex m-2 w-100 dropdown text-end" style={{maxWidth: '218px'}}>
                                 <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select btn-sort" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span className='selected-company p-2'>Trạng thái</span>
+                                    {sortItem==='startDate' &&
+                                        <span className='selected-company p-2'>Ngày bắt đầu</span>
+                                    }
+                                    {sortItem==='endDate' &&
+                                        <span className='selected-company p-2'>Ngày kết thúc</span>
+                                    }
                                 </a>
                                 <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
                                     <li>
                                         <button 
                                             className='p-2 px-3 btn dropdown-item'
                                             type='button'
-                                            style={{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}}
+                                            style={sortItem==='startDate'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                            onClick={() => changeSortItem('startDate')}
                                         >
-                                            Trạng thái
+                                            Ngày bắt đầu
                                         </button>
-                                    </li>                        
+                                    </li>
+                                    <li>
+                                        <button 
+                                            className='p-2 px-3 btn dropdown-item'
+                                            type='button'
+                                            style={sortItem==='endDate'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                            onClick={() => changeSortItem('endDate')}
+                                        >
+                                            Ngày kết thúc
+                                        </button>
+                                    </li>
                                 </ul>
                             </div>
                             <div className="d-flex m-2 w-100 dropdown text-end" style={{maxWidth: '218px'}}>
@@ -188,11 +263,11 @@ const Hui = () => {
                                     {sortBy==='' && (<>
                                         <span className='selected-company p-2'>Mặc định</span>
                                     </>)}
-                                    {sortBy==='-1' && (<>
-                                        <span className='selected-company p-2'>Hoạt động -{">"} Không hoạt động</span>
-                                    </>)}
                                     {sortBy==='1' && (<>
-                                        <span className='selected-company p-2'>Không hoạt động -{">"} Hoạt động</span>
+                                        <span className='selected-company p-2'>Mới nhất 🡪 Cũ nhất</span>
+                                    </>)}
+                                    {sortBy==='-1' && (<>
+                                        <span className='selected-company p-2'>Cũ nhất 🡪 Mới nhất</span>
                                     </>)}
                                 </a>
                                 <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
@@ -213,7 +288,7 @@ const Hui = () => {
                                             style={sortBy==='-1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
                                             onClick={() => changeSortBy('-1')}
                                         >
-                                            Hoạt động -{">"} Không hoạt động
+                                            Mới -{">"} Cũ
                                         </button>
                                     </li>
                                     <li>
@@ -223,9 +298,9 @@ const Hui = () => {
                                             style={sortBy==='1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
                                             onClick={() => changeSortBy('1')}
                                         >
-                                            Không hoạt động -{">"} Hoạt động
+                                            Cũ -{">"} Mới
                                         </button>
-                                    </li>              
+                                    </li>    
                                 </ul>
                             </div>
                         </div>
@@ -249,8 +324,8 @@ const Hui = () => {
                                     <div className='d-flex align-items-end'>
                                         Ngày mở
                                         <i 
-                                            className={iconStatus}
-                                            onClick={sortByStatus}
+                                            className={iconStart}
+                                            onClick={sortByStart}
                                         ></i>
                                     </div>
                                 </th>
@@ -258,8 +333,8 @@ const Hui = () => {
                                 <div className='d-flex align-items-end'>
                                         Ngày kết thúc
                                         <i 
-                                            className={iconStatus}
-                                            onClick={sortByStatus}
+                                            className={iconEnd}
+                                            onClick={sortByEnd}
                                         ></i>
                                     </div>
                                 </th>

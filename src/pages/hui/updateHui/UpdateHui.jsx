@@ -498,7 +498,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                     <input 
                                         type="date" 
                                         name="startDate"
-                                        className='form-control mr-2' 
+                                        className='form-control' 
                                         value={format(new Date(startDate), 'yyyy-MM-dd')}
                                         onChange={(e)=>setStartDate(e.target.value)}
                                         onKeyDown={handleKeyDown}
@@ -591,7 +591,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                     ))}
                                     </div>
                                 :
-                                <div className="d-flex h-100 justify-content-center align-items-center">Vui lòng chọn hụi viên</div>
+                                <div className="d-flex h-100 justify-content-center align-items-center" style={{minHeight: '82px'}}>Vui lòng chọn hụi viên</div>
                                 }
                             </div>
                         </div>

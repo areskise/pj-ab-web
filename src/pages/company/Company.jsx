@@ -292,59 +292,6 @@ const Company = () => {
                                     </li>                                    
                                 </ul>
                             </div>
-                            {/* <select className='form-select btn-sort' onChange={(e)=>changeSortBy(e.target.value)}>
-                                {sortItem==='date' && (<>
-                                    {sortBy==='' && (<>
-                                        <option value={''}>Mặc định</option>
-                                        <option value={-1}>Mới -{">"} Cũ</option>
-                                        <option value={1}>Cũ -{">"} Mới</option>
-                                    </>)}
-                                    {sortBy==='-1' && (<>
-                                        <option value={-1}>Mới -{">"} Cũ</option>
-                                        <option value={''}>Mặc định</option>
-                                        <option value={1}>Cũ -{">"} Mới</option>
-                                    </>)}
-                                    {sortBy==='1' && (<>
-                                        <option value={1}>Cũ -{">"} Mới</option>
-                                        <option value={''}>Mặc định</option>
-                                        <option value={-1}>Mới -{">"} Cũ</option>
-                                    </>)}
-                                </>)}
-                                {sortItem==='status' && (<>
-                                    {sortBy==='' && (<>
-                                        <option value={''}>Mặc định</option>
-                                        <option value={-1}>Hoạt động</option>
-                                        <option value={1}>Không hoạt động</option>
-                                    </>)}
-                                    {sortBy==='-1' && (<>
-                                        <option value={-1}>Hoạt động</option>
-                                        <option value={''}>Mặc định</option>
-                                        <option value={1}>Không hoạt động</option>
-                                    </>)}
-                                    {sortBy==='1' && (<>
-                                        <option value={1}>Không hoạt động</option>
-                                        <option value={''}>Mặc định</option>
-                                        <option value={-1}>Hoạt động</option>
-                                    </>)}
-                                </>)}
-                                {sortItem==='money' && (<>
-                                    {sortBy==='' && (<>
-                                        <option value={''}>Mặc định</option>
-                                        <option value={1}>Thấp -{">"} Cao</option>
-                                        <option value={-1}>Cao -{">"} Thấp</option>
-                                    </>)}
-                                    {sortBy==='1' && (<>
-                                        <option value={1}>Thấp -{">"} Cao</option>
-                                        <option value={''}>Mặc định</option>
-                                        <option value={-1}>Cao -{">"} Thấp</option>
-                                    </>)}
-                                    {sortBy==='-1' && (<>
-                                        <option value={-1}>Cao -{">"} Thấp</option>
-                                        <option value={''}>Mặc định</option>
-                                        <option value={1}>Thấp -{">"} Cao</option>
-                                    </>)}
-                                </>)}
-                            </select> */}
                             <div className="d-flex m-2 w-100 dropdown text-end" style={{maxWidth: '218px'}}>
                                 <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select btn-sort" data-bs-toggle="dropdown" aria-expanded="false">
                                     {sortBy==='' && (<>
