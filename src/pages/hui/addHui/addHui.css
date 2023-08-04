@@ -58,7 +58,7 @@
   }
 
   .add-hui .form-container .select-dropdown {
-    width: 100%;
+    width: 242px;
   }
   
   .add-hui .form-container .selected-company {
@@ -71,6 +71,7 @@
   }
 
 .add-hui .form-control {
+    width: 242px;
     height: 38px;
     padding: 10px 15px;
     border: 2px solid #D8E2E9;
@@ -78,18 +79,15 @@
 }
 
 .add-hui .select-company {
+    width: 242px;
     padding: 0 12px;
-    height: 38px;    
+    height: 38px;   
     border: 2px solid #D8E2E9;
     border-radius: 20px;
 }
 
 .add-hui .select-company:focus-visible {
     outline: none;
-}
-
-.add-hui .form-money {
-    padding-right: 38px !important;
 }
 
 .add-hui .money {
@@ -167,6 +165,22 @@
     max-width: 100%;
 }
 
+.add-hui .form-khui {
+  width: 117px !important;
+}
+
+.add-hui .form-money {
+  width: 201px !important;
+}
+
+.add-hui .form-sure {
+  width: 221px !important;
+}
+
+.add-hui .form-staff {
+  width: 172px !important;
+}
+
 @media screen and (max-width: 992px) {
     .add-hui .form-container {
         display: block;
@@ -176,6 +190,10 @@
       min-height: 82px;
       height: auto;
       min-width: 0;
+  }
+  
+  .add-hui>.modal-content {
+    margin: 16px 0;
   }
 }
 
@@ -190,5 +208,34 @@
         width: 100%;
         max-width: 240px;
         justify-content: end;
+    }
+  
+    .add-hui .label {
+      min-width: 0;
+      width: 132px;
+    }
+
+    .add-hui .labelHui {
+      min-width: 100px;
+    }
+
+    .add-hui .form-khui {
+      width: 100% !important;
+      max-width: 116px !important;
+    }
+    
+    .add-hui .form-money {
+      width: 100% !important;
+      max-width: 199px !important;
+    }
+    
+    .add-hui .form-sure {
+      width: 100% !important;
+      max-width: 216px !important;
+    }
+    
+    .add-hui .form-staff {
+      width: 100% !important;
+      max-width: 156px !important;
     }
 }

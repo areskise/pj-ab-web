@@ -58,19 +58,21 @@
 }
 
 .update-hui .form-container .select-dropdown {
-  width: 100%;
+  width: 242px;
 }
 
 .update-hui .form-container .selected-company {
-  display: flex;
+  /* display: flex; */
   white-space: nowrap;
   overflow: hidden;
-  width: 88%;
+  text-overflow: ellipsis;
+  max-width: 90%;
   text-align: right;
-  min-width: 100px;
+  /* min-width: 100px; */
 }
 
 .update-hui .form-control {
+  width: 242px;
   height: 38px;
   padding: 10px 15px;
   border: 2px solid #D8E2E9;
@@ -79,6 +81,7 @@
 
 .update-hui .select-company {
   padding: 0 12px;
+  width: 242px;
   height: 38px;    
   border: 2px solid #D8E2E9;
   border-radius: 20px;
@@ -86,10 +89,6 @@
 
 .update-hui .select-company:focus-visible {
   outline: none;
-}
-
-.update-hui .form-money {
-  padding-right: 38px !important;
 }
 
 .update-hui .money {
@@ -167,6 +166,22 @@ opacity: 1;
   max-width: 100%;
 }
 
+.update-hui .form-khui {
+  width: 117px !important;
+}
+
+.update-hui .form-money {
+  width: 201px !important;
+}
+
+.update-hui .form-sure {
+  width: 221px !important;
+}
+
+.update-hui .form-staff {
+  width: 172px !important;
+}
+
 @media screen and (max-width: 992px) {
   .update-hui .form-container {
       display: block;
@@ -176,7 +191,11 @@ opacity: 1;
     min-height: 82px;
     height: auto;
     min-width: 0;
-}
+  }
+    
+  .update-hui>.modal-content {
+    margin: 16px 0;
+  }
 }
 
 @media screen and (max-width: 576px) {
@@ -190,5 +209,34 @@ opacity: 1;
       width: 100%;
       max-width: 240px;
       justify-content: end;
+  }
+
+  .update-hui .label {
+    min-width: 0;
+    width: 132px;
+  }
+
+  .update-hui .labelHui {
+    min-width: 100px;
+  }
+
+  .update-hui .form-khui {
+    width: 100% !important;
+    max-width: 116px !important;
+  }
+  
+  .update-hui .form-money {
+    width: 100% !important;
+    max-width: 199px !important;
+  }
+  
+  .update-hui .form-sure {
+    width: 100% !important;
+    max-width: 216px !important;
+  }
+  
+  .update-hui .form-staff {
+    width: 100% !important;
+    max-width: 156px !important;
   }
 }

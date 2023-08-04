@@ -9,12 +9,9 @@ import CompanyAPI from "../../../API/CompanyAPI";
 
 const AddCustomer = ({setShowAdd, showAdd}) => {
     const [selectCompany, setSelectCompany] = useState(null);
-    const [visiblePass, setVisiblePass] = useState(false);
-    const [visibleRePass, setVisibleRePass] = useState(false);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
     const [code, setCode] = useState(null);
-    const data = new FormData();
     const userCompanies = useSelector(selectorUserCompanies)
     
     useEffect(() => {
@@ -37,13 +34,15 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        data.append('organizationId', selectCompany?._id);
-        data.append('code', e.target.code.value);
-        data.append('fullName', e.target.fullName.value);
-        data.append('phoneNumber', e.target.phoneNumber.value);
-        data.append('cccd', e.target.cccd.value);
-        data.append('idChanel', e.target.idChanel.value);
-        data.append('address', e.target.address.value);
+        const data = {
+            organizationId: selectCompany?._id,
+            code: e.target.code.value,
+            fullName: e.target.fullName.value,
+            phoneNumber: e.target.phoneNumber.value,
+            cccd: e.target.cccd.value,
+            idChanel: e.target.idChanel.value,
+            address: e.target.address.value,
+        }
         if(
             !selectCompany?._id || 
             !e.target.code.value || 
@@ -116,7 +115,6 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
                                 <div className='label'>
                                     <label htmlFor="">
                                         Công ty
-                                        <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
                                 <div className="d-flex dropdown select-dropdown text-end">
@@ -143,7 +141,6 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
                                 <div className='label'>
                                     <label htmlFor="">
                                         Mã KH
-                                        <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
                                 <input 
@@ -159,7 +156,6 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
                                 <div className='label'>
                                     <label htmlFor="">
                                         Tên KH
-                                        <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
                                 <input 
@@ -208,7 +204,7 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                 <div className='label'>
-                                    <label htmlFor="">Đại chỉ</label>
+                                    <label htmlFor="">Địa chỉ</label>
                                 </div>
                                 <textarea 
                                     rows="4"

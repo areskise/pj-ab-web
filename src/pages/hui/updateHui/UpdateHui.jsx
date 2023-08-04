@@ -8,11 +8,14 @@ import { selectorUserCompanies } from "../../../redux/slice/companySlice";
 import CompanyAPI from "../../../API/CompanyAPI";
 import CustomerAPI from "../../../API/CustomerAPI";
 import HuiAPI from "../../../API/HuiAPI";
+import { dayKhui } from "../../../helpers/dayKhui";
+
 
 const UpdateHui = ({setShowUpdate, showUpdate}) => {
     const [selectCompany, setSelectCompany] = useState(null);
     const [selectCustomer, setSelectCustomer] = useState([]);
     const [selectedHui, setSelectedHui] = useState([]);
+    const [selectDayKhui, setSelectDayKhui] = useState(null);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [typeKhui, setTypeKhui] = useState('1');
@@ -31,7 +34,6 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
     const [code, setCode] = useState(null);
     const userCompanies = useSelector(selectorUserCompanies)
 
-    console.log(format(new Date(endDate), 'yyyy-MM-dd'));
     useEffect(() => {
         const fetchHui = async () => {
             if(showUpdate) {
@@ -156,7 +158,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                     setError(false)
                     setMessErr(null)
                     alertify.set('notifier', 'position', 'top-right');
-                    alertify.success('Thêm mới thành công!');
+                    alertify.success('Cập nhật thành công!');
                 } else {
                     if(res.ResponseResult.Result.code === 11000) {
                         setError(false)
@@ -295,7 +297,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                     type="text" 
                                     name="code"
                                     className='form-control'
-                                    placeholder="Chọn công ty"
+                                    placeholder="Loading..."
                                     onKeyDown={handleKeyDown}
                                     value={selectedHui.code}
                                     disabled
@@ -337,9 +339,9 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                         Khui
                                     </label>
                                 </div>
-                                <div className="d-flex w-100">
-                                    <div className="d-flex mr-2 select-dropdown dropdown text-end">
-                                        <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div className="d-flex select-dropdown">
+                                    <div className="d-flex mr-2 select-dropdown dropdown text-end form-khui">
+                                        <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company form-khui" data-bs-toggle="dropdown" aria-expanded="false">
                                             {typeKhui==='1' && (<>
                                                 <span className='selected-company p-2'>Tháng</span>
                                             </>)}
@@ -384,14 +386,51 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                             </li>
                                         </ul>
                                     </div>
-                                    <input 
-                                        type="number" 
-                                        name="numKhui"
-                                        className='form-control'
-                                        placeholder="Thời gian"
-                                        defaultValue={selectedHui.type?.num}
-                                        onKeyDown={handleKeyDown}
-                                    />
+                                     {typeKhui==='1' && (
+                                        <input 
+                                            type="number" 
+                                            name="numKhui"
+                                            className='form-control form-khui'
+                                            placeholder="Thời gian"
+                                            defaultValue={selectedHui.type?.num}
+                                            min={1}
+                                            max={31}
+                                            onKeyDown={handleKeyDown}
+                                        />
+                                    )}
+                                    {typeKhui==='2' && (
+                                        <div className="d-flex dropdown select-dropdown text-end form-khui">
+                                            <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company form-khui" data-bs-toggle="dropdown" aria-expanded="false">
+                                            {dayKhui.filter(day=>selectedHui.type?.num===day.num).map(day=>(
+                                                <span className='selected-company p-2'>{!day?'Chọn thứ':day?.name}</span>
+                                            ))}
+                                            </a>
+                                            <ul className="p-0 my-1 dropdown-menu text-small form-khui">
+                                                {dayKhui?.map((day, i) => (
+                                                    <li key={i}>
+                                                        <button 
+                                                            className='p-2 px-3 btn dropdown-item'
+                                                            type='button'
+                                                            style={selectDayKhui?.num===day.num?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                            onClick={() => setSelectDayKhui(day)}
+                                                        >
+                                                            {day.name}
+                                                        </button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                    {typeKhui==='3' && (
+                                        <input 
+                                            type="number" 
+                                            name="numKhui"
+                                            className='form-control form-khui'
+                                            value={8}
+                                            onKeyDown={handleKeyDown}
+                                            disabled
+                                        />
+                                    )}
                                 </div>
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
@@ -412,11 +451,11 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                 <div className='label'>
                                     <label htmlFor="">Dây</label>
                                 </div>
-                                <div className="d-flex w-100 align-items-center">
+                                <div className="d-flex align-items-center select-dropdown">
                                     <input 
                                         type="number" 
                                         name="money"
-                                        className='form-control mr-2' 
+                                        className='form-control mr-2 form-money' 
                                         placeholder='Nhập số tiền' 
                                         defaultValue={selectedHui.money}
                                         onKeyDown={handleKeyDown}
@@ -428,15 +467,17 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                 <div className='label'>
                                     <label htmlFor="">Bảo hiểm (tiền thảo)</label>
                                 </div>
-                                <input 
-                                    type="number" 
-                                    name="insureNum"
-                                    className='form-control mr-2' 
-                                    placeholder='Nhập % bảo hiểm' 
-                                    defaultValue={selectedHui.insureNum}
-                                    onKeyDown={handleKeyDown}
-                                />
-                                %
+                                <div className="d-flex align-items-center select-dropdown">
+                                    <input 
+                                        type="number" 
+                                        name="insureNum"
+                                        className='form-control mr-2 form-sure' 
+                                        placeholder='Nhập % bảo hiểm' 
+                                        defaultValue={selectedHui.insureNum}
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                    %
+                                </div>
                             </div>
                             <div className='m-md-3 my-3 align-items-center justify-content-between'>
                                 <div className='label d-block'>
@@ -445,11 +486,11 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                 {inputStaffs?.map((inputStaff, iInput) => (
                                     <div className="d-flex align-items-center my-2">
                                         {selectCompany?
-                                            <div className="d-flex mr-2 select-dropdown dropdown text-end">
-                                                <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <div className="d-flex mr-2 select-dropdown dropdown text-end form-staff">
+                                                <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company form-staff" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <span className='selected-company p-2'>{inputStaff.name?inputStaff?.name:'Chọn nhân viên'}</span>
                                                 </a>
-                                                <ul className="p-0 my-1 dropdown-menu text-small">
+                                                <ul className="p-0 my-1 dropdown-menu text-small form-staff">
                                                     {staffs.docs?.map((staff, iStaff) => (
                                                         <li key={iStaff}>
                                                             <button 
@@ -466,16 +507,16 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                             </div>
                                         :
                                             <select 
-                                                className='form-select mr-2 select-company' name="role" 
+                                                className='form-select mr-2 select-company form-staff' name="role" 
                                                 disabled
                                             >
-                                                <option value='' hidden>Chọn công ty trước</option>
+                                                <option value='' hidden>Chọn nhân viên</option>
                                             </select>
                                         }
                                         <input 
                                             type="number" 
                                             name="insureNumStaff"
-                                            className='form-control mr-2' 
+                                            className='form-control mr-2 form-staff' 
                                             placeholder='Nhập % bảo hiểm' 
                                             onChange={(e) => inputedStaff(iInput, e)}
                                             defaultValue={inputStaffs[iInput].insureNum}
@@ -557,7 +598,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                         className='form-select select-company' name="role" 
                                         disabled
                                     >
-                                        <option value='' hidden>Chọn công ty trước</option>
+                                        <option value='' hidden>Chọn hụi viên</option>
                                     </select>
                                 }
                             </div>
@@ -576,7 +617,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                                 type="number" 
                                                 name="cusNum"
                                                 className='form-control mr-2' 
-                                                style={{width: '116px'}}
+                                                style={{maxWidth: '116px'}}
                                                 placeholder='Số chân hụi' 
                                                 onChange={(e)=>changeNumHui(e, i)}
                                                 onKeyDown={handleKeyDown}

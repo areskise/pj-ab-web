@@ -19,7 +19,6 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
             if(showUpdate) {
                 const res = await CustomerAPI.get(showUpdate);
                 const result = res.ResponseResult.Result
-                console.log(result);
                 setSelectedCompany(result.organizationId)
                 setCustomer(result)
             } else {
@@ -65,7 +64,6 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
             setMessErr('Số điện thoại phải gồm 10 chữ số')
         } else {
             try {
-                console.log(data.code);
                 const res = await CustomerAPI.update(data);
                 if(res.ResponseResult.ErrorCode === 0){
                     setShowUpdate(false)
@@ -118,7 +116,6 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                                 <div className='label'>
                                     <label htmlFor="">
                                         Công ty
-                                    <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
                                 <select 
@@ -133,7 +130,6 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                             <div className='label'>
                                 <label htmlFor="">
                                     Mã KH
-                                    <label style={{color: 'red'}}>*</label>
                                 </label>
                             </div>
                             <input 
@@ -148,7 +144,6 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                                 <div className='label'>
                                     <label htmlFor="">
                                         Tên KH
-                                        <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
                                 <input 

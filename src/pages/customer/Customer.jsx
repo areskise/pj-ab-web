@@ -18,9 +18,6 @@ const Customer = () => {
     const [search, setSearch] = useState('sdt');
     const [keyword, setKeyword] = useState(null);
     const [page, setPage] = useState(1);
-    const [sortStatus, setSortStatus] = useState('');
-    const [sortBy, setSortBy] = useState('');
-    const [iconStatus, setIcontStatus] = useState("p-1 fa-solid fa-arrow-right-arrow-left");
     const limit = 5;
     const dispatch = useDispatch();
     const customers = useSelector(selectorCustomers)
@@ -43,7 +40,6 @@ const Customer = () => {
         const data = {
             limit: limit,
             page: page,
-            status: sortStatus,
             organizationId: selectCompany?._id
         }
 

@@ -8,15 +8,16 @@ import { selectorUserCompanies } from "../../../redux/slice/companySlice";
 import CompanyAPI from "../../../API/CompanyAPI";
 import CustomerAPI from "../../../API/CustomerAPI";
 import HuiAPI from "../../../API/HuiAPI";
+import { dayKhui } from "../../../helpers/dayKhui";
 
 const AddHui = ({setShowAdd, showAdd}) => {
     const [loading, setLoading] = useState(false);
     const [selectCompany, setSelectCompany] = useState(null);
+    const [selectDayKhui, setSelectDayKhui] = useState(null);
     const [selectCustomer, setSelectCustomer] = useState([]);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [typeKhui, setTypeKhui] = useState('1');
-    const [maxKhui, setMaxKhui] = useState(31);
     const [numPart, setNumPart] = useState(null);
     const [inputStaffs, setInputStaffs] = useState([
         {
@@ -74,15 +75,12 @@ const AddHui = ({setShowAdd, showAdd}) => {
         switch(typeKhui) {
             case '1':
                 endDate = date.setMonth(date.getMonth() + numPart)
-                setMaxKhui(31)
                 break
             case '2':
                 endDate = date.setDate(date.getDate() + 7*numPart)
-                setMaxKhui(7)
                 break
             case '3':
                 endDate = numPart?date.setDate(date.getDate() + numPart-1):(new Date(startDate))
-                setMaxKhui(24)
                 break
         }
         setEndDate(endDate);
@@ -117,7 +115,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
             type: {
                 type: +typeKhui,
                 name: typeName,
-                num: +e.target.numKhui.value
+                num: typeKhui==='2'?+e.target.numKhui.value:selectDayKhui
             },
             partNum: +e.target.partNum.value,
             money: +e.target.money.value,
@@ -313,7 +311,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                     type="text" 
                                     name="code"
                                     className='form-control'
-                                    placeholder="Chọn công ty"
+                                    placeholder="Mã hụi"
                                     onKeyDown={handleKeyDown}
                                     value={code}
                                     disabled
@@ -353,9 +351,9 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                         Khui
                                     </label>
                                 </div>
-                                <div className="d-flex w-100">
-                                    <div className="d-flex mr-2 select-dropdown dropdown text-end">
-                                        <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div className="d-flex select-dropdown">
+                                    <div className="d-flex mr-2 select-dropdown dropdown text-end form-khui">
+                                        <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company form-khui" data-bs-toggle="dropdown" aria-expanded="false">
                                             {typeKhui==='1' && (<>
                                                 <span className='selected-company p-2'>Tháng</span>
                                             </>)}
@@ -365,7 +363,6 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                             {typeKhui==='3' && (<>
                                                 <span className='selected-company p-2'>Ngày</span>
                                             </>)}
-
                                         </a>
                                         <ul className="p-0 my-1 dropdown-menu text-small">
                                             <li>
@@ -400,15 +397,48 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                             </li>
                                         </ul>
                                     </div>
-                                    <input 
-                                        type="number" 
-                                        name="numKhui"
-                                        className='form-control'
-                                        placeholder="Thời gian"
-                                        min={1}
-                                        max={maxKhui}
-                                        onKeyDown={handleKeyDown}
-                                    />
+                                    {typeKhui==='1' && (
+                                        <input 
+                                            type="number" 
+                                            name="numKhui"
+                                            className='form-control form-khui'
+                                            placeholder="Thời gian"
+                                            min={1}
+                                            max={31}
+                                            onKeyDown={handleKeyDown}
+                                        />
+                                    )}
+                                    {typeKhui==='2' && (
+                                        <div className="d-flex dropdown select-dropdown text-end form-khui">
+                                            <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company form-khui" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <span className='selected-company p-2'>{selectDayKhui?selectDayKhui?.name:'Thời gian'}</span>
+                                            </a>
+                                            <ul className="p-0 my-1 dropdown-menu text-small form-khui">
+                                                {dayKhui?.map((day, i) => (
+                                                    <li key={i}>
+                                                        <button 
+                                                            className='p-2 px-3 btn dropdown-item'
+                                                            type='button'
+                                                            style={selectDayKhui?.num===day.num?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                                            onClick={() => setSelectDayKhui(day)}
+                                                        >
+                                                            {day.name}
+                                                        </button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                    {typeKhui==='3' && (
+                                        <input 
+                                            type="number" 
+                                            name="numKhui"
+                                            className='form-control form-khui'
+                                            value={8}
+                                            onKeyDown={handleKeyDown}
+                                            disabled
+                                        />
+                                    )}
                                 </div>
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
@@ -428,11 +458,11 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                 <div className='label'>
                                     <label htmlFor="">Dây</label>
                                 </div>
-                                <div className="d-flex w-100 align-items-center">
+                                <div className="d-flex align-items-center select-dropdown">
                                     <input 
                                         type="number" 
                                         name="money"
-                                        className='form-control mr-2' 
+                                        className='form-control mr-2 form-money' 
                                         placeholder='Nhập số tiền' 
                                         onKeyDown={handleKeyDown}
                                     />
@@ -443,14 +473,16 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                 <div className='label'>
                                     <label htmlFor="">Bảo hiểm (tiền thảo)</label>
                                 </div>
-                                <input 
-                                    type="number" 
-                                    name="insureNum"
-                                    className='form-control mr-2' 
-                                    placeholder='Nhập % bảo hiểm' 
-                                    onKeyDown={handleKeyDown}
-                                />
-                                %
+                                <div className="d-flex align-items-center select-dropdown">
+                                    <input 
+                                        type="number" 
+                                        name="insureNum"
+                                        className='form-control mr-2 form-sure' 
+                                        placeholder='Nhập % bảo hiểm' 
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                    %
+                                </div>
                             </div>
                             <div className='m-md-3 my-3 align-items-center justify-content-between'>
                                 <div className='label d-block'>
@@ -459,11 +491,11 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                 {inputStaffs?.map((inputStaff, iInput) => (
                                     <div className="d-flex align-items-center my-2">
                                         {selectCompany && !loading?
-                                            <div className="d-flex mr-2 select-dropdown dropdown text-end">
-                                                <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <div className="d-flex mr-2 select-dropdown dropdown text-end form-staff">
+                                                <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company form-staff" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <span className='selected-company p-2'>{inputStaff.name?inputStaff?.name:'Chọn nhân viên'}</span>
                                                 </a>
-                                                <ul className="p-0 my-1 dropdown-menu text-small">
+                                                <ul className="p-0 my-1 dropdown-menu text-small form-staff">
                                                     {staffs.docs?.map((staff, iStaff) => (
                                                         <li key={iStaff}>
                                                             <button 
@@ -480,16 +512,16 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                             </div>
                                         :
                                             <select 
-                                                className='form-select mr-2 select-company' name="role" 
+                                                className='form-select mr-2 select-company form-staff' name="role" 
                                                 disabled
                                             >
-                                                <option value='' hidden>{loading?'Loading...':'Chọn công ty'}</option>
+                                                <option value='' hidden>{loading?'Loading...':'Chọn nhân viên'}</option>
                                             </select>
                                         }
                                         <input 
                                             type="number" 
                                             name="insureNumStaff"
-                                            className='form-control mr-2' 
+                                            className='form-control mr-2 form-staff' 
                                             placeholder='Nhập % bảo hiểm' 
                                             onChange={(e) => inputedStaff(iInput, e)}
                                             onKeyDown={handleKeyDown}
@@ -571,7 +603,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                         className='form-select select-company' name="role" 
                                         disabled
                                     >
-                                        <option value='' hidden>{loading?'Loading...':'Chọn công ty'}</option>
+                                        <option value='' hidden>{loading?'Loading...':'Chọn hụi viên'}</option>
                                     </select>
                                 }
                             </div>
@@ -590,7 +622,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                                 type="number" 
                                                 name="cusNum"
                                                 className='form-control mr-2' 
-                                                style={{width: '116px'}}
+                                                style={{maxWidth: '116px'}}
                                                 placeholder='Số chân hụi' 
                                                 onChange={(e)=>changeNumHui(e, i)}
                                                 onKeyDown={handleKeyDown}
