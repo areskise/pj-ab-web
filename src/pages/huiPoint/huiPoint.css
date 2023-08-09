@@ -1,20 +1,20 @@
-.hui .plus {
+.hui-point .plus {
     position: absolute;
     font-size: 32px;
     right: 50px;
 }
 
-.hui .select-company-container {
+.hui-point .select-company-container {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.hui .select-company-container .label {
+.hui-point .select-company-container .label {
   margin-right: 16px;
 }
 
-.hui .select-company-container .select-company {
+.hui-point .select-company-container .select-company {
   padding: 0 12px;
   height: 38px;
   width: 100%;
@@ -23,51 +23,51 @@
   border-radius: 20px;
 }
 
-.hui .select-company-container .select-company:hover {
+.hui-point .select-company-container .select-company:hover {
   cursor: pointer;
 }
 
-.hui .select-company-container .select-company:focus-visible {
+.hui-point .select-company-container .select-company:focus-visible {
   outline-offset: 0;
   outline: none;
 }
 
-.hui .select-company-container .select-company:hover {
+.hui-point .select-company-container .select-company:hover {
   cursor: pointer;
 }
 
-.hui .select-company-container .select-company:focus-visible {
+.hui-point .select-company-container .select-company:focus-visible {
   outline-offset: 0;
   outline: none;
 }
 
-.hui .select-company-container .form-control-dark {
+.hui-point .select-company-container .form-control-dark {
   border-color: var(--bs-gray);
 }
-.hui .select-company-container .form-control-dark:focus {
+.hui-point .select-company-container .form-control-dark:focus {
   border-color: #fff;
   box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
 }
 
-.hui .dropdown-toggle {
+.hui-point .dropdown-toggle {
   outline: 0;
 }
 
-.hui .dropdown-menu {
+.hui-point .dropdown-menu {
   --bs-dropdown-min-width: none;
   width: 100%;
 }
 
-.hui .dropdown-item {
+.hui-point .dropdown-item {
   white-space: normal;
 }
 
-.hui .dropdown-item:hover {
+.hui-point .dropdown-item:hover {
   border-radius: 0.375rem;
   background-color: #D8E2E9;
 }
 
-.hui .selected-company {
+.hui-point .selected-company {
   display: flex;
   white-space: nowrap;
   overflow: hidden;
@@ -75,23 +75,22 @@
   text-align: right;
 }
 
-.hui .select-dropdown {
+.hui-point .select-dropdown {
   width: 100%;
 }
 
-.hui .sort-container {
-  display: none;
+.hui-point .sort-container {
   align-items: center;
   justify-content: center;
   margin: 0 8px;
 }
 
-.hui .btn-sort-container {
+.hui-point .btn-sort-container {
   display: flex;
   justify-content: space-around;
 }
 
-.hui .btn-sort {
+.hui-point .btn-sort {
   width: 100%;
   height: 38px;
   border: 2px solid #D8E2E9;
@@ -104,70 +103,70 @@
   min-width: 108px;
 }
 
-.hui .btn-sort:hover {
+.hui-point .btn-sort:hover {
   cursor: pointer;
 }
 
-.hui .btn-sort:focus-visible {
+.hui-point .btn-sort:focus-visible {
   cursor: pointer;
 }
 
-.hui-container {
+.hui-point-container {
   padding: 2rem;
 }
 
-.hui-container .table {
+.hui-point-container .table {
     margin-bottom: 0;
 }
   
-.hui-container td {
+.hui-point-container td {
     border: 0;
     background-color: #F7F7F7 !important;
     /* max-width: 132px; */
     padding: 12px !important;
 }
   
-.hui-word {
+.hui-point-word {
     word-break: break-word;
 }
   
-.hui-center {
+.hui-point-center {
     text-align: center;
 }
 
-.hui-center span i{
+.hui-point-center span i{
   color: #6280EB;
 }
   
-.hui-container th {
+.hui-point-container th {
     position: relative;
     padding: 12px !important;
   
 }
   
-.hui-container tbody, thead, tfoot, tr {
+.hui-point-container tbody, thead, tfoot, tr {
     border: 16px solid white;
 }
   
-.hui .status-icon {
+.hui-point .status-icon {
     text-align: center;
     align-items: center;
     font-size: 12px;
     padding: 6px;
 }
 
-.hui .func-icon {
+.hui-point .func-icon {
     display: flex;
     text-align: center;
     justify-content: center;
 }
   
-.hui-active {
+.hui-point-active {
     font-weight: 700;
     color: #339822;
 }
   
-.hui-disable {
+.hui-point-disable {
     font-weight: 600;
     color: #454545;
 }
@@ -175,60 +174,68 @@
 .detail:hover {
   cursor: pointer;
 }
+
+.hui-point .form-confirm {
+  height: 38px;
+  max-width: 140px;
+  padding: 10px 15px;
+  border: 2px solid #D8E2E9;
+  border-radius: 20px;
+}
   
 @media screen and (max-width: 1200px) {
-    .hui-container {
+    .hui-point-container {
       padding: 1rem;
     }
 
-    .hui-container .table-container {
+    .hui-point-container .table-container {
       padding: 0;
     }
 
-    .hui .func-icon {
+    .hui-point .func-icon {
       display: block;
     }
 }
   
 @media screen and (max-width: 768px) {
-  .hui-container {
+  .hui-point-container {
     padding: .5rem;
   }
 
-  .hui-container table tr {
+  .hui-point-container table tr {
     padding: 4px 8px !important;
   }
 
-  .hui .func-icon {
+  .hui-point .func-icon {
     display: flex;
   }
 
-  .hui .select-company-container {
+  .hui-point .select-company-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin: 16px;
   }
 
-  .hui .select-company { 
+  .hui-point .select-company { 
     max-width: 836px;
   }
 
 
-  .hui .sort-container {
+  /* .hui-point .sort-container {
     display: block;
-  }
+  } */
 
-  .hui-container table {
+  .hui-point-container table {
       border: 0;
       border-collapse: separate;
 }
   
-.hui-container table caption {
+.hui-point-container table caption {
       font-size: 1.3em;
     }
     
-    .hui-container table thead {
+    .hui-point-container table thead {
       border: none;
       clip: rect(0 0 0 0);
       height: 1px;
@@ -239,13 +246,13 @@
       width: 1px;
     }
     
-    .hui-container table tr {
+    .hui-point-container table tr {
       display: block;
       margin-bottom: .625em;
       padding: 1em;
     }
     
-    .hui-container table td {
+    .hui-point-container table td {
       display: block;
       text-align: right;
       max-width: 100%;
@@ -253,7 +260,7 @@
       min-height: 36px;
     }
     
-    .hui-container table td::before {
+    .hui-point-container table td::before {
       /*
       * aria-label has no advantage, it won't be read inside a table
       content: attr(aria-label);
@@ -263,38 +270,38 @@
       font-weight: bold;
     }
     
-    .hui-container table td:last-child {
+    .hui-point-container table td:last-child {
       border-bottom: 0;
     }
   
-    .hui-container tbody, thead, tfoot, tr {
+    .hui-point-container tbody, thead, tfoot, tr {
         border: none;
     }
   
-    .hui-container .table-container {
+    .hui-point-container .table-container {
       padding: 1rem;
     }
   
-    .hui-center {
+    .hui-point-center {
         text-align: right;
     }
 
-    .hui-container .func-icon {
+    .hui-point-container .func-icon {
         justify-content: end;
       }
   }
   
 @media screen and (max-width: 576px) {
-    .hui-container table td {
+    .hui-point-container table td {
       padding: .5em;
     }
   
-    .hui .plus {
+    .hui-point .plus {
       font-size: 24px;
       right: 36px;
     }
 
-    .hui .title {
+    .hui-point .title {
       font-size: 18px;
     }
 

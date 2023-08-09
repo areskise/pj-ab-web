@@ -21,6 +21,10 @@ const HuiAPI = {
         return await axiosClient.get(`/hui/count`);
     },
 
+    getReport: async (id) => {
+        return await axiosClient.get(`/hui/report?id=${id}`);
+    },
+
     create: async (body) => {
         return await axiosClient.post(`/hui`, body);
     },

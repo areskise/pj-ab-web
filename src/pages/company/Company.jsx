@@ -299,26 +299,26 @@ const Company = () => {
                                     </>)}
                                     {sortItem==='date' && (<>
                                         {sortBy==='-1' && (<>
-                                            <span className='selected-company p-2'>Mới -{">"} Cũ</span>
+                                            <span className='selected-company p-2'>Mới 🡪 Cũ</span>
                                         </>)}
                                         {sortBy==='1' && (<>
-                                            <span className='selected-company p-2'>Cũ -{">"} Mới</span>
+                                            <span className='selected-company p-2'>Cũ 🡪 Mới</span>
                                         </>)}
                                     </>)}
                                     {sortItem==='status' && (<>
                                         {sortBy==='-1' && (<>
-                                            <span className='selected-company p-2'>Hoạt động -{">"} Không hoạt động</span>
+                                            <span className='selected-company p-2'>Hoạt động 🡪 Không hoạt động</span>
                                         </>)}
                                         {sortBy==='1' && (<>
-                                            <span className='selected-company p-2'>Không hoạt động -{">"} Hoạt động</span>
+                                            <span className='selected-company p-2'>Không hoạt động 🡪 Hoạt động</span>
                                         </>)}
                                     </>)}
                                     {sortItem==='money' && (<>
                                         {sortBy==='-1' && (<>
-                                            <span className='selected-company p-2'>Cao -{">"} Thấp</span>
+                                            <span className='selected-company p-2'>Cao 🡪 Thấp</span>
                                         </>)}
                                         {sortBy==='1' && (<>
-                                            <span className='selected-company p-2'>Thấp -{">"} Cao</span>
+                                            <span className='selected-company p-2'>Thấp 🡪 Cao</span>
                                         </>)}
                                     </>)}
                                 </a>
@@ -341,7 +341,7 @@ const Company = () => {
                                                 style={sortBy==='-1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
                                                 onClick={() => changeSortBy('-1')}
                                             >
-                                                Mới -{">"} Cũ
+                                                Mới 🡪 Cũ
                                             </button>
                                         </li>
                                         <li>
@@ -351,7 +351,7 @@ const Company = () => {
                                                 style={sortBy==='1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
                                                 onClick={() => changeSortBy('1')}
                                             >
-                                                Cũ -{">"} Mới
+                                                Cũ 🡪 Mới
                                             </button>
                                         </li>
                                     </>)}
@@ -363,7 +363,7 @@ const Company = () => {
                                                 style={sortBy==='-1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
                                                 onClick={() => changeSortBy('-1')}
                                             >
-                                                Hoạt động -{">"} Không hoạt động
+                                                Hoạt động 🡪 Không hoạt động
                                             </button>
                                         </li>
                                         <li>
@@ -373,7 +373,7 @@ const Company = () => {
                                                 style={sortBy==='1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
                                                 onClick={() => changeSortBy('1')}
                                             >
-                                                Không hoạt động -{">"} Hoạt động
+                                                Không hoạt động 🡪 Hoạt động
                                             </button>
                                         </li>
                                     </>)}
@@ -385,7 +385,7 @@ const Company = () => {
                                                 style={sortBy==='-1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
                                                 onClick={() => changeSortBy('-1')}
                                             >
-                                                Cao -{">"} Thấp
+                                                Cao 🡪 Thấp
                                             </button>
                                         </li>
                                         <li>
@@ -395,7 +395,7 @@ const Company = () => {
                                                 style={sortBy==='1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
                                                 onClick={() => changeSortBy('1')}
                                             >
-                                                Thấp -{">"} Cao
+                                                Thấp 🡪 Cao
                                             </button>
                                         </li>
                                     </>)}              

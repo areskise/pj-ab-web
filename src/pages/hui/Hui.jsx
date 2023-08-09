@@ -14,6 +14,7 @@ import currencyFormatter from 'currency-formatter';
 import { format } from 'date-fns';
 import HuiAPI from '../../API/HuiAPI';
 import countKhui from '../../helpers/countKhui';
+import { useNavigate } from 'react-router-dom';
 
 const Hui = () => {
     const [loading, setLoading] = useState(false);
@@ -33,6 +34,7 @@ const Hui = () => {
     const dispatch = useDispatch();
     const huis = useSelector(selectorHuis)
     const userCompanies = useSelector(selectorUserCompanies)
+    const navigate = useNavigate();
 
     useEffect(() => {
         const data = {
@@ -160,7 +162,7 @@ const Hui = () => {
     }
 
     return(
-        <div className="employee body-container bg-light">
+        <div className="hui body-container bg-light">
             <Header/>
             <SideBar/>
             <div className="main-container bg-light">
@@ -289,7 +291,7 @@ const Hui = () => {
                                             style={sortBy==='-1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
                                             onClick={() => changeSortBy('-1')}
                                         >
-                                            Mới -{">"} Cũ
+                                            Mới 🡪 Cũ
                                         </button>
                                     </li>
                                     <li>
@@ -299,7 +301,7 @@ const Hui = () => {
                                             style={sortBy==='1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
                                             onClick={() => changeSortBy('1')}
                                         >
-                                            Cũ -{">"} Mới
+                                            Cũ 🡪 Mới
                                         </button>
                                     </li>    
                                 </ul>
@@ -349,7 +351,12 @@ const Hui = () => {
                             <tbody>
                                 {huis.docs?.map((hui, i) => (
                                     <tr key={i}>
-                                        <td scope="row" data-label="Mã hụi:">
+                                        <td 
+                                            scope="row" 
+                                            data-label="Mã hụi:" 
+                                            className='detail'
+                                            onClick={()=>navigate(`/quan-ly-hui/chi-tiet-hui/${hui._id}`)}
+                                        >
                                             {hui.code}
                                         </td>
                                         <td scope="row" data-label="Tên hụi:">

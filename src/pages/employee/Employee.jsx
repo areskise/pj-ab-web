@@ -135,7 +135,7 @@ const Employee = () => {
                 {loading && !employees.docs ?
                 <div className="bg-white content">
                     <div className="d-flex p-4 align-items-center justify-content-center"> 
-                        <h3 className="title">DANH SÁCH CÔNG TY</h3>
+                        <h3 className="title">DANH SÁCH NHÂN VIÊN</h3>
                         <i className="fa-solid fa-circle-plus plus" onClick={() => setShowAdd(true)}></i>
                     </div>
                     <div className="loading-container">
@@ -212,10 +212,10 @@ const Employee = () => {
                                         <span className='selected-company p-2'>Mặc định</span>
                                     </>)}
                                     {sortBy==='-1' && (<>
-                                        <span className='selected-company p-2'>Hoạt động -{">"} Không hoạt động</span>
+                                        <span className='selected-company p-2'>Hoạt động 🡪 Không hoạt động</span>
                                     </>)}
                                     {sortBy==='1' && (<>
-                                        <span className='selected-company p-2'>Không hoạt động -{">"} Hoạt động</span>
+                                        <span className='selected-company p-2'>Không hoạt động 🡪 Hoạt động</span>
                                     </>)}
                                 </a>
                                 <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
@@ -236,7 +236,7 @@ const Employee = () => {
                                             style={sortBy==='-1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
                                             onClick={() => changeSortBy('-1')}
                                         >
-                                            Hoạt động -{">"} Không hoạt động
+                                            Hoạt động 🡪 Không hoạt động
                                         </button>
                                     </li>
                                     <li>
@@ -246,7 +246,7 @@ const Employee = () => {
                                             style={sortBy==='1'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
                                             onClick={() => changeSortBy('1')}
                                         >
-                                            Không hoạt động -{">"} Hoạt động
+                                            Không hoạt động 🡪 Hoạt động
                                         </button>
                                     </li>              
                                 </ul>
