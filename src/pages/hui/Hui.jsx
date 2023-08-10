@@ -355,7 +355,7 @@ const Hui = () => {
                                             scope="row" 
                                             data-label="Mã hụi:" 
                                             className='detail'
-                                            onClick={()=>navigate(`/quan-ly-hui/chi-tiet-hui/${hui._id}`)}
+                                            onClick={() => setShowDetail(hui)}
                                         >
                                             {hui.code}
                                         </td>
@@ -390,7 +390,7 @@ const Hui = () => {
                                                 ></i>
                                                 <i 
                                                     className="fa-regular fa-file-zipper p-1 m-1"  
-                                                    onClick={() => setShowDetail(hui)}
+                                                    onClick={()=>navigate(`/quan-ly-hui/chi-tiet-hui/${hui._id}`)}
                                                 ></i>
                                             </div>
                                         </td>
