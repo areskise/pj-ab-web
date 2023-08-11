@@ -6,7 +6,7 @@ const HuiAPI = {
     },
 
     getList: async (body) =>  {
-        const {limit, page, status, organizationId} = body
+        const {limit, page, organizationId} = body
         if(organizationId) {
             return await axiosClient.get(`/hui/list?query={"organizationId":"${organizationId}"}&page=${page}&limit=${limit}`);
         }

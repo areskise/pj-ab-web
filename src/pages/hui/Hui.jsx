@@ -375,7 +375,7 @@ const Hui = () => {
                                                 format: '%v %s' // %s is the symbol and %v is the value
                                                 })}</td>
                                         <td data-label="Số phần:">{hui.partNum}</td>
-                                        <td data-label="Tình trạng:"  className="employee-center">{countKhui(hui.type.num, hui.type.type, hui.startDate, hui.endDate, loading)}/{hui.partNum}</td>
+                                        <td data-label="Tình trạng:"  className="employee-center">{countKhui(hui.type.num, hui.type.type, hui.startDate, hui.endDate)}/{hui.partNum}</td>
                                         <td data-label="Chức năng:" className="employee-center">
                                             <div className='func-icon'>
                                                 <i 

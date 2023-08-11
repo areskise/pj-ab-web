@@ -5,8 +5,9 @@ import SideBar from "../../components/sidebar/SideBar";
 import { useEffect, useState } from 'react';
 import { employeeActions, selectorEmployees } from '../../redux/slice/employeeSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectorUserCompanies } from '../../redux/slice/companySlice';
+import { selectorUserCompanies, selectorSelectedCompany } from '../../redux/slice/companySlice';
 import CompanyAPI from '../../API/CompanyAPI';
+import HuiAPI from '../../API/HuiAPI';
 
 const Report = () => {
     const [loading, setLoading] = useState(false);
@@ -14,58 +15,56 @@ const Report = () => {
     const [showUpdate, setShowUpdate] = useState(false);
     const [updatePass, setUpdatePass] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
-    const [selectCompany, setSelectCompany] = useState('all');
+    const [selectHui, setSelectHui] = useState(null);
+    const [huis, setHuis] = useState([]);
+    const [reports, setReports] = useState([]);
     const [page, setPage] = useState(1);
     const [sortStatus, setSortStatus] = useState('');
     const [sortBy, setSortBy] = useState('');
     const [iconStatus, setIcontStatus] = useState("p-1 fa-solid fa-arrow-right-arrow-left");
-    const limit = 5;
     const dispatch = useDispatch();
     const employees = useSelector(selectorEmployees)
     const userCompanies = useSelector(selectorUserCompanies)
+    const selectedCompany = useSelector(selectorSelectedCompany)
 
     useEffect(() => {
-        if(selectCompany === 'all') {
-            const data = {
-                limit: limit,
-                page: page,
-                status: sortStatus,
-            }
-            const fetchEmployee = async () => {
-                try {
-                    setLoading(true);
-                    const res = await CompanyAPI.getAllUsers(data);
-                    const result = res.ResponseResult.Result;
-                    dispatch(employeeActions.setEmployees(result));
-                    setLoading(false);
-                } catch (error) {
-                    setLoading(false);
-                    console.error(error);
-                }
-            }
-            fetchEmployee();
-        } else {
-            const data = {
-                limit: limit,
-                page: page,
-                id: selectCompany?._id,
-                status: sortStatus,
-            }
-            const fetchEmployee = async () => {
-                try {
-                    setLoading(true);
-                    const res = await CompanyAPI.getUsers(data);
-                    const result = res.ResponseResult.Result;
-                    dispatch(employeeActions.setEmployees(result));
-                    setLoading(false);
-                } catch (error) {
-                    setLoading(false);
-                    console.error(error);
-                }
-            }
-            fetchEmployee();
+        const data = {
+            limit: 9999,
+            page: 1,
+            organizationId: selectedCompany?._id,
         }
-    }, [page, limit, selectCompany, showAdd, showUpdate, updatePass, showDetail, sortStatus, sortBy]);
+        const fetchHui = async () => {
+            try {
+                setLoading(true);
+                const res = await HuiAPI.getList(data);
+                const result = res.ResponseResult.Result;
+                setHuis(result)
+                setLoading(false);
+            } catch (error) {
+                setLoading(false);
+                console.error(error);
+            }
+        }
+        fetchHui();
+    }, [selectedCompany]);
+
+    useEffect(() => {
+        const fetchReport = async () => {
+            try {
+                setLoading(true);
+                const res = await HuiAPI.getReport(selectHui?._id);
+                const result = res.ResponseResult.Result;
+                console.log(res);
+
+                setReports(result)
+                setLoading(false);
+            } catch (error) {
+                setLoading(false);
+                console.error(error);
+            }
+        }
+        fetchReport();
+    }, [selectHui]);
 
     const sortByStatus = () => {
         if(sortStatus === '') {
@@ -124,12 +123,8 @@ const Report = () => {
                     <i className="mx-2 fa-solid fa-angles-right" style={{fontSize: '18px'}}></i> 
                     Báo cáo
                 </h5>
-                {loading && !employees.docs ?
+                {loading && !huis.docs ?
                 <div className="bg-white content">
-                    <div className="d-flex p-4 align-items-center justify-content-center"> 
-                        <h3 className="title">DANH SÁCH HỤI</h3>
-                        <i className="fa-solid fa-circle-plus plus" onClick={() => setShowAdd(true)}></i>
-                    </div>
                     <div className="loading-container">
                         <div>
                             <i className="fa-solid fa-spinner fa-spin-pulse fa-2xl"></i>
@@ -142,36 +137,20 @@ const Report = () => {
                         <div className='label'>
                             <label htmlFor="">Báo cáo:</label>
                         </div>
-                        {/* <select className='form-select select-company' onChange={changeCompany}>
-                            <option value='all'>Tất cả</option>
-                            {userCompanies?.map((company, i) => (
-                                <option key={i} value={company._id}>{company.name}</option>
-                            ))}
-                        </select> */}
                         <div className="d-flex w-100 dropdown text-end" style={{maxWidth: '218px'}}>
                             <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span className='selected-company p-2'>{selectCompany?.name?selectCompany?.name:'Tất cả'}</span>
+                                <span className='selected-company p-2'>{selectHui?.name}</span>
                             </a>
                             <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
-                                <li key={'all'}>
-                                    <button 
-                                        className='p-2 px-3 btn dropdown-item'
-                                        type='button'
-                                        style={selectCompany==='all'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                        onClick={() => setSelectCompany('all')}
-                                    >
-                                        Tất cả
-                                    </button>
-                                </li>
-                                {userCompanies?.map((company, i) => (
+                                {huis.docs?.map((hui, i) => (
                                     <li key={i}>
                                         <button 
                                             className='p-2 px-3 btn dropdown-item'
                                             type='button'
-                                            style={selectCompany?._id===company._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                            onClick={() => setSelectCompany(company)}
+                                            style={selectHui?._id===hui._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                            onClick={() => setSelectHui(hui)}
                                         >
-                                            {company.name}
+                                            {hui.name}
                                         </button>
                                     </li>
                                 ))}
@@ -182,43 +161,27 @@ const Report = () => {
                         <div className='label'>
                             <label htmlFor="">Dây hụi:</label>
                         </div>
-                        {/* <select className='form-select select-company' onChange={changeCompany}>
-                            <option value='all'>Tất cả</option>
-                            {userCompanies?.map((company, i) => (
-                                <option key={i} value={company._id}>{company.name}</option>
-                            ))}
-                        </select> */}
                         <div className="d-flex w-100 dropdown text-end" style={{maxWidth: '218px'}}>
                             <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span className='selected-company p-2'>{selectCompany?.name?selectCompany?.name:'Tất cả'}</span>
+                                <span className='selected-company p-2'>{selectHui?.name?selectHui?.name:'Vui lòng chọn dây hụi'}</span>
                             </a>
                             <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
-                                <li key={'all'}>
-                                    <button 
-                                        className='p-2 px-3 btn dropdown-item'
-                                        type='button'
-                                        style={selectCompany==='all'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                        onClick={() => setSelectCompany('all')}
-                                    >
-                                        Tất cả
-                                    </button>
-                                </li>
-                                {userCompanies?.map((company, i) => (
+                                {huis.docs?.map((huiSlice, i) => (
                                     <li key={i}>
                                         <button 
                                             className='p-2 px-3 btn dropdown-item'
                                             type='button'
-                                            style={selectCompany?._id===company._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                            onClick={() => setSelectCompany(company)}
+                                            style={selectHui?._id===huiSlice._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                            onClick={() => setSelectHui(huiSlice)}
                                         >
-                                            {company.name}
+                                            {huiSlice.name}
                                         </button>
                                     </li>
                                 ))}
                             </ul>
                         </div>
                     </div>
-                    {!employees.docs ? 
+                    {!reports.docs ? 
                         <div className="loading-container">
                             <div>
                                 <img src={img.empty} alt='logo' width="200" height="170" className='empty-img'/>
@@ -238,7 +201,7 @@ const Report = () => {
                             </tr>
                             </thead>
                             <tbody>
-                                {employees.docs?.map((employee, i) => (
+                                {reports.docs?.map((employee, i) => (
                                     <tr key={i}>
                                         <td scope="row" data-label="Tên nhân viên:">
                                             {employee.userId?.fullName}
@@ -251,12 +214,12 @@ const Report = () => {
                             </tbody>
                         </table>
                         <div className="p-2 mb-4 d-flex justify-content-between">
-                            <h6 className="mx-md-2 my-0">Tìm thấy: {employees?.totalDocs?employees?.totalDocs:0} kết quả</h6>
+                            <h6 className="mx-md-2 my-0">Tìm thấy: {reports?.totalDocs?reports?.totalDocs:0} kết quả</h6>
                             <div className="d-flex align-items-center mx-md-4">
                                 <i className="fa-solid fa-chevron-left" onClick={() => prevPage()}></i>
                                 <div className="d-flex mx-md-4">
-                                    <input className="input-page" value={employees?.page} onChange={(e)=>setPage(e.target.value)}></input>
-                                    <div>/ {employees?.totalPages?employees?.totalPages:1}</div>
+                                    <input className="input-page" value={reports?.page} onChange={(e)=>setPage(e.target.value)}></input>
+                                    <div>/ {reports?.totalPages?reports?.totalPages:1}</div>
                                 </div>
                                 <i className="fa-solid fa-chevron-right" onClick={() => nextPage()}></i>
                             </div>

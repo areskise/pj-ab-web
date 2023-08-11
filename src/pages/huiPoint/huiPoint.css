@@ -210,13 +210,6 @@
     display: flex;
   }
 
-  .hui-point .select-company-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 16px;
-  }
-
   .hui-point .select-company { 
     max-width: 836px;
   }
@@ -303,11 +296,6 @@
 
     .hui-point .title {
       font-size: 18px;
-    }
-
-    .select-company-container {
-      justify-content: space-between;
-      margin: 0 16px;
     }
 
     .select-company-container .select-company {

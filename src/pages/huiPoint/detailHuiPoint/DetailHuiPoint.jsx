@@ -1,15 +1,9 @@
 import "./detailHuiPoint.css";
-import Modal from 'react-bootstrap/Modal';
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import CompanyAPI from "../../../API/CompanyAPI";
-import CustomerAPI from "../../../API/CustomerAPI";
-import HuiAPI from "../../../API/HuiAPI";
 
-const DetailHui = ({setShowDetail, showDetail}) => {
-    const [selectCompany, setSelectCompany] = useState(null);
-    const [selectCustomer, setSelectCustomer] = useState([]);
-    const [selectedHui, setSelectedHui] = useState([]);
+const DetailHuiPoint = ({selectedHui, selectCompany}) => {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [typeKhui, setTypeKhui] = useState('1');
@@ -22,58 +16,21 @@ const DetailHui = ({setShowDetail, showDetail}) => {
     ]);
 
     useEffect(() => {
-        const fetchHui = async () => {
-            if(showDetail) {
-                const resHui = await HuiAPI.get(showDetail._id);
-                const resultHui = resHui.ResponseResult.Result;
-                setSelectedHui(resultHui)
-                setTypeKhui(resultHui.type.type.toString())
-                setStartDate(new Date(resultHui.startDate))
-                setEndDate(new Date(resultHui.endDate))
-                setInputStaffs(resultHui.staffInsures)
-                setSelectCustomer(resultHui.customers)
-                const resCompany = await CompanyAPI.getById(showDetail.organizationId);
-                const resultCompany = resCompany.ResponseResult.Result;
-                setSelectCompany(resultCompany);
+        if(selectedHui) {
+            const fetchHui = async () => {
+                setTypeKhui(selectedHui.type.type.toString())
+                setStartDate(new Date(selectedHui.startDate))
+                setEndDate(new Date(selectedHui.endDate))
+                setInputStaffs(selectedHui.staffInsures)
             }
+            fetchHui()
         }
-        fetchHui()
-    },[showDetail]);
-
-    const handleClose = (e) => {
-        e.preventDefault();
-        setShowDetail(false)
-        setSelectCompany(null)
-        setSelectCustomer([])
-        setSelectedHui([])
-        setStartDate(new Date());
-        setEndDate(new Date());
-        setInputStaffs([{
-            userId: '',
-            name: '',
-            insureNum: '',
-        },])
-    }
-
-    const onHide = () => {
-        setShowDetail(false)
-        setSelectCompany(null)
-        setSelectCustomer([])
-        setSelectedHui([])
-        setStartDate(new Date());
-        setEndDate(new Date());
-        setInputStaffs([{
-            userId: '',
-            name: '',
-            insureNum: '',
-        },])
-    }
+    },[selectedHui]);
 
     return (
     <div className='detail-hui-point form-container'>
-        <div>
-            <div className="row">
-                <div className='d-flex col-md-4 px-md-4 my-3 align-items-center justify-content-between'>
+        <div className="row">
+                <div className='d-flex col-lg-4 col-md-6 px-md-4 my-3 align-items-center justify-content-between'>
                     <div className='label'>
                         <label htmlFor="">
                             Công ty
@@ -87,7 +44,7 @@ const DetailHui = ({setShowDetail, showDetail}) => {
                     />
                     </div>
                 </div>
-                <div className='d-flex col-md-4 px-md-4 my-3 align-items-center justify-content-between'>
+                <div className='d-flex col-lg-4 col-md-6 px-md-4 my-3 align-items-center justify-content-between'>
                     <div className='label'>
                         <label htmlFor="">Dây</label>
                     </div>
@@ -100,7 +57,7 @@ const DetailHui = ({setShowDetail, showDetail}) => {
                         VND
                     </div>
                 </div>
-                <div className='d-flex col-md-4 px-md-4 my-3 align-items-center justify-content-between'>
+                <div className='d-flex col-lg-4 col-md-6 px-md-4 my-3 align-items-center justify-content-between'>
                     <div className='label'>
                         <label htmlFor="">Số phần</label>
                     </div>
@@ -110,9 +67,7 @@ const DetailHui = ({setShowDetail, showDetail}) => {
                         disabled
                     />
                 </div>
-            </div>
-            <div className="row">
-                <div className='d-flex col-md-4 px-md-4 my-3 align-items-center text-align-center justify-content-between'>
+                <div className='d-flex col-lg-4 col-md-6 px-md-4 my-3 align-items-center text-align-center justify-content-between'>
                     <div className='label'>
                         <label htmlFor="">Ngày mở</label>
                     </div>
@@ -123,7 +78,7 @@ const DetailHui = ({setShowDetail, showDetail}) => {
                         disabled
                     />
                 </div>
-                <div className='d-flex col-md-4 px-md-4 my-3 align-items-center text-align-center justify-content-between'>
+                <div className='d-flex col-lg-4 col-md-6 px-md-4 my-3 align-items-center text-align-center justify-content-between'>
                     <div className='label'>
                         <label htmlFor="">Ngày kết thúc</label>
                     </div>
@@ -134,7 +89,7 @@ const DetailHui = ({setShowDetail, showDetail}) => {
                         disabled
                     />
                 </div>
-                <div className='d-flex col-md-4 px-md-4 my-3 align-items-center justify-content-between'>
+                <div className='d-flex col-lg-4 col-md-6 px-md-4 my-3 align-items-center justify-content-between'>
                 <div className='label'>
                     <label htmlFor="">
                         Khui
@@ -171,9 +126,7 @@ const DetailHui = ({setShowDetail, showDetail}) => {
                     />
                 </div>
             </div>
-            </div>
-            <div className="row">
-                <div className='d-flex col-md-4 px-md-4 my-3 align-items-center text-align-center justify-content-between' style={{height: '38px'}}>
+                <div className='d-flex col-lg-4 col-md-6 px-md-4 my-3 align-items-center text-align-center justify-content-between' style={{height: '38px'}}>
                     <div className='label'>
                         <label htmlFor="">Bảo hiểm</label>
                     </div>
@@ -208,10 +161,9 @@ const DetailHui = ({setShowDetail, showDetail}) => {
                         ))}
                     </div>
                 </div>
-            </div>
         </div>
     </div>
     )
 }
 
-export default DetailHui;
+export default DetailHuiPoint;
