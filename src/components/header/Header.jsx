@@ -1,7 +1,7 @@
 import './header.css';
 import img from '../../images/Image';
 import { useEffect, useState } from 'react';
-import { useNavigate, NavLink, Link, useRe } from "react-router-dom";
+import { useNavigate, NavLink, Link } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
 import { companyActions, selectorUserCompanies } from "../../redux/slice/companySlice";
 import Cookies from 'universal-cookie';
@@ -34,6 +34,15 @@ const Header = ({reload}) => {
             navigate('/')
         }
     }, [reload]);
+
+    useEffect(() => {
+        if (selectCompany) {
+            const fetchSelectedCompany = async () => {
+                dispatch(companyActions.setSelectedCompany(selectCompany))
+            }
+            fetchSelectedCompany()
+        }
+    }, [selectCompany]);
 
     const handleLogout = () => {
         cookies.remove('access_token');

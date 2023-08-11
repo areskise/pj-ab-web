@@ -151,7 +151,6 @@ const AddHui = ({setShowAdd, showAdd}) => {
         } else {
             try {
                 const res = await HuiAPI.create(data);
-                console.log(res);
                 if(res.ResponseResult.ErrorCode === 0){
                     setError(false)
                     setShowAdd(false)

@@ -12,31 +12,26 @@ import { format } from 'date-fns';
 import HuiAPI from '../../API/HuiAPI';
 import HuiPointAPI from '../../API/HuiPointAPI';
 import countKhui from '../../helpers/countKhui';
-import DetailHui from './detailHui/DetailHuiPoint';
+import DetailHuiPoint from './detailHuiPoint/DetailHuiPoint';
+import CompanyAPI from '../../API/CompanyAPI';
+import partKhui from '../../helpers/partKhui';
 
 const HuiPoint = () => {
     const [loading, setLoading] = useState(false);
     const [showAdd, setShowAdd] = useState(false);
-    const [showUpdate, setShowUpdate] = useState(false);
-    const [deleteHui, setDeleteHui] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
     const [selectedHui, setSelectedHui] = useState({});
     const [huiPoints, setHuiPoints] = useState([]);
-    const [periodicHui, setPeriodicHui] = useState(2);
-    const [selectCompany, setSelectCompany] = useState('all');
+    const [periodicHuis, setPeriodicHuis] = useState([]);
+    const [periodicHui, setPeriodicHui] = useState(0);
+    const [date, setDate] = useState(null);
+    const [selectCompany, setSelectCompany] = useState({});
     const [page, setPage] = useState(1);
-    const [sortItem, setSortItem] = useState('startDate');
-    const [sortBy, setSortBy] = useState('');
-    const [sortEnd, setSortEnd] = useState('');
-    const [sortStart, setSortStart] = useState('');
-    const [iconStart, setIconStart] = useState("p-1 fa-solid fa-arrow-right-arrow-left");
-    const [iconEnd, setIconEnd] = useState("p-1 fa-solid fa-arrow-right-arrow-left");
     const limit = 5;
     const dispatch = useDispatch();
     const huis = useSelector(selectorHuis)
     const userCompanies = useSelector(selectorUserCompanies)
     const { id } = useParams();
-    console.log(huiPoints);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -50,6 +45,13 @@ const HuiPoint = () => {
                 const resultHui = resHui.ResponseResult.Result;
                 const resHuiPoint = await HuiPointAPI.getChains(data);
                 const resultHuiPoint = resHuiPoint.ResponseResult.Result;
+                const resCompany = await CompanyAPI.getById(resultHui.organizationId);
+                const resultCompany = resCompany.ResponseResult.Result;
+                const periodic = countKhui(resultHui.type.num, resultHui.type.type, resultHui.startDate, resultHui.endDate)
+                const date = partKhui(resultHui.type.num, resultHui.type.type, resultHui.startDate, resultHui.endDate)
+                setPeriodicHui(periodic)
+                setDate(new Date(date[periodic-1]));
+                setSelectCompany(resultCompany);
                 setHuiPoints(resultHuiPoint);
                 setSelectedHui(resultHui)
                 setLoading(false);
@@ -59,93 +61,7 @@ const HuiPoint = () => {
             }
         }
         fetchData();
-    }, [id, page, limit, selectCompany, sortStart, sortEnd, sortBy]);
-
-    const sortByStart = () => {
-        setSortItem('startDate')
-        setSortEnd('')
-        setIconEnd('p-1 fa-solid fa-arrow-right-arrow-left')
-        if(sortStart === '') {
-            setSortBy('1')
-            setSortStart('1')
-            setIconStart('p-1 fa-solid fa-arrow-up-short-wide')
-        } else if(sortStart === '1') {
-            setSortBy('-1')
-            setSortStart('-1')
-            setIconStart('p-1 fa-solid fa-arrow-down-wide-short')
-        } else {
-            setSortBy('')
-            setSortStart('')
-            setIconStart('p-1 fa-solid fa-arrow-right-arrow-left')
-        }
-    }
-
-    const sortByEnd = () => {
-        setSortItem('enđate')
-        setSortStart('')
-        setIconStart('p-1 fa-solid fa-arrow-right-arrow-left')
-        if(sortEnd === '') {
-            setSortBy('1')
-            setSortEnd('1')
-            setIconEnd('p-1 fa-solid fa-arrow-up-short-wide')
-        } else if(sortEnd === '1') {
-            setSortBy('-1')
-            setSortEnd('-1')
-            setIconEnd('p-1 fa-solid fa-arrow-down-wide-short')
-        } else {
-            setSortBy('')
-            setSortEnd('')
-            setIconEnd('p-1 fa-solid fa-arrow-right-arrow-left')
-        }
-    }
-
-    const selectByStart = (value) => {
-        setSortEnd('')
-        setIconEnd('p-1 fa-solid fa-arrow-right-arrow-left')
-        if(value === '') {
-            setSortStart('')
-            setIconStart('p-1 fa-solid fa-arrow-right-arrow-left')
-        } else if(value === '1') {
-            setSortStart('1')
-            setIconStart('p-1 fa-solid fa-arrow-up-short-wide')
-        } else {
-            setSortStart('-1')
-            setIconStart('p-1 fa-solid fa-arrow-down-wide-short')
-        }
-    }
-
-    const selectByEnd = (value) => {
-        setSortStart('')
-        setIconStart('p-1 fa-solid fa-arrow-right-arrow-left')
-        if(value === '') {
-            setSortEnd('')
-            setIconEnd('p-1 fa-solid fa-arrow-right-arrow-left')
-        } else if(value === '1') {
-            setSortEnd('1')
-            setIconEnd('p-1 fa-solid fa-arrow-up-short-wide')
-        } else {
-            setSortEnd('-1')
-            setIconEnd('p-1 fa-solid fa-arrow-down-wide-short')
-        }
-    }
-
-    const changeSortItem = (value) => {
-        setSortItem(value)
-        if (value === 'startDate') {
-            selectByStart(sortBy)
-        } else {
-            selectByEnd(sortBy)
-        }
-    }
-
-    const changeSortBy = (value) => {
-        setSortBy(value)
-        if (sortItem === 'endDate') {
-            selectByEnd(value)
-        } else {
-            selectByStart(value)
-        }
-    }
+    }, [id, page, limit]);
 
     const nextPage = () => {
         if(huis.hasNextPage) {
@@ -191,7 +107,7 @@ const HuiPoint = () => {
                     </div>
                     {showDetail &&
                     <div className="hui-point-container py-0">
-                        <DetailHui selectedHui={selectedHui}/> 
+                        <DetailHuiPoint selectedHui={selectedHui} selectCompany={selectCompany}/> 
                     </div>                 
                     }
                     <div className="select-company-container mb-4">
@@ -201,23 +117,13 @@ const HuiPoint = () => {
                         </a>
                         
                     </div>
-                    <div className="select-company-container">
+                    <div className="select-company-container mb-4">
                         <div className="d-flex w-100 dropdown text-end" style={{maxWidth: '218px'}}>
                             <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span className='selected-company p-2'>{selectCompany?.name?selectCompany?.name:'Tất cả'}</span>
+                                <span className='selected-company p-2'>Ký {periodicHui} - {format(new Date(date), 'dd/MM/yyyy')}</span>
                             </a>
                             <ul className="p-0 my-1 dropdown-menu text-small selected-dropdown">
-                                <li key={'all'}>
-                                    <button 
-                                        className='p-2 px-3 btn dropdown-item'
-                                        type='button'
-                                        style={selectCompany==='all'?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                        onClick={() => setSelectCompany('all')}
-                                    >
-                                        Tất cả
-                                    </button>
-                                </li>
-                                {userCompanies?.map((company, i) => (
+                                {periodicHuis?.map((company, i) => (
                                     <li key={i}>
                                         <button 
                                             className='p-2 px-3 btn dropdown-item'
@@ -230,6 +136,12 @@ const HuiPoint = () => {
                                     </li>
                                 ))}
                             </ul>
+                        </div>
+                    </div>
+                    <div className="select-company-container">
+                        <div className='func-icon'>
+                            <button className='btn btn-continue mx-3'>Đóng tất cả</button>
+                            <button className='btn btn-continue mx-3'>Gửi group nhắc hụi</button>
                         </div>
                     </div>
                     
@@ -251,10 +163,6 @@ const HuiPoint = () => {
                                 <th scope="col">
                                     <div className='d-flex align-items-end'>
                                         Ngày đóng
-                                        <i 
-                                            className={iconStart}
-                                            onClick={sortByStart}
-                                        ></i>
                                     </div>
                                 </th>
                                 <th scope="col">Số chân</th>
