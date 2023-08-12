@@ -15,16 +15,23 @@ import countKhui from '../../helpers/countKhui';
 import DetailHuiPoint from './detailHuiPoint/DetailHuiPoint';
 import CompanyAPI from '../../API/CompanyAPI';
 import partKhui from '../../helpers/partKhui';
+import periodics from '../../helpers/periodics';
 
 const HuiPoint = () => {
     const [loading, setLoading] = useState(false);
+    const [reload, setReload] = useState(false);
     const [showAdd, setShowAdd] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
     const [selectedHui, setSelectedHui] = useState({});
     const [huiPoints, setHuiPoints] = useState([]);
+    const [huiPush, setHuiPush] = useState(null);
+    const [pushed, setPushed] = useState(true);
+    const [sumLive, setSumLive] = useState(0);
+    const [sumDie, setSumDie] = useState(0);
+    const [sumGet, setSumGet] = useState(0);
+    const [sumInsure, setSumInsure] = useState(0);
     const [periodicHuis, setPeriodicHuis] = useState([]);
-    const [periodicHui, setPeriodicHui] = useState(0);
-    const [date, setDate] = useState(null);
+    const [periodicHui, setPeriodicHui] = useState({});
     const [selectCompany, setSelectCompany] = useState({});
     const [page, setPage] = useState(1);
     const limit = 5;
@@ -37,23 +44,57 @@ const HuiPoint = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const data = {
-                    huiId: id,
-                    periodicHui: periodicHui,
+                const resHui = await HuiAPI.get(id);
+                const resultHui = resHui.ResponseResult.Result;
+                const periodicNow = countKhui(resultHui.type.num, resultHui.type.type, resultHui.startDate, resultHui.endDate)
+                const date = partKhui(resultHui.type.num, resultHui.type.type, resultHui.startDate, resultHui.endDate)
+                const resCompany = await CompanyAPI.getById(resultHui.organizationId);
+                const resultCompany = resCompany.ResponseResult.Result;
+                setPeriodicHuis(periodics(date))
+                setPeriodicHui({
+                    periodic: periodicNow,
+                    date: date[periodicNow-1]?new Date(date[periodicNow-1]):new Date()
+                })
+                setSelectCompany(resultCompany);
+                setSelectedHui(resultHui)
+                setHuiPush(null)
+            } catch (error) {
+                setLoading(false);
+                console.error(error);
+            }
+        }
+        fetchData();
+    }, [id]);
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (loading!==true) {
+                    setLoading(true);
                 }
                 const resHui = await HuiAPI.get(id);
                 const resultHui = resHui.ResponseResult.Result;
+                const periodicNow = countKhui(resultHui.type.num, resultHui.type.type, resultHui.startDate, resultHui.endDate)
+                const data = {
+                    huiId: id,
+                    periodicHui: periodicHui?.periodic?periodicHui?.periodic:periodicNow,
+                }
                 const resHuiPoint = await HuiPointAPI.getChains(data);
                 const resultHuiPoint = resHuiPoint.ResponseResult.Result;
-                const resCompany = await CompanyAPI.getById(resultHui.organizationId);
-                const resultCompany = resCompany.ResponseResult.Result;
-                const periodic = countKhui(resultHui.type.num, resultHui.type.type, resultHui.startDate, resultHui.endDate)
-                const date = partKhui(resultHui.type.num, resultHui.type.type, resultHui.startDate, resultHui.endDate)
-                setPeriodicHui(periodic)
-                setDate(new Date(date[periodic-1]));
-                setSelectCompany(resultCompany);
+                console.log(resHuiPoint);
+                const liveHuis = resultHuiPoint?.map(huiPoint => huiPoint.liveHui)
+                const dieHuis = resultHuiPoint?.map(huiPoint => huiPoint.dieHui)
+                const getHuis = resultHuiPoint?.map(huiPoint => huiPoint.getHui)
+                const liveSum = liveHuis[0]?liveHuis?.reduce((a, b) => a + b):0
+                const dieSum = dieHuis[0]?dieHuis?.reduce((a, b) => a + b):0
+                const getSum = getHuis[0]?getHuis?.reduce((a, b) => a + b):0
+                setSumLive(liveSum);
+                setSumDie(dieSum);
+                setSumGet(getSum)
+                setSumInsure(liveSum+dieSum-getSum)
                 setHuiPoints(resultHuiPoint);
-                setSelectedHui(resultHui)
+                setHuiPush(null)
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
@@ -61,8 +102,60 @@ const HuiPoint = () => {
             }
         }
         fetchData();
-    }, [id, page, limit]);
+    }, [id, periodicHui, reload]);
 
+    const push = async (huiPoint, i) => {
+        try {
+            if(huiPush) {
+                setLoading(true);  
+                const data = {
+                    huiId: huiPoint.huiId,
+                    _id: huiPoint._id,
+                    cusId: huiPoint.cusId,
+                    huiCusId: huiPoint.huiCusId,
+                    periodicHui: huiPoint.periodicHui,
+                    pushHui: huiPush.value
+                }
+                await HuiPointAPI.push(data);
+                setPushed(false)
+                setReload(!reload);
+                
+            }
+        } catch (error) {
+            setLoading(false);
+            console.error(error);
+        }
+    }
+
+    const unPush = async (_id) => {
+        try {
+            setLoading(true);  
+            const data = {_id}
+            await HuiPointAPI.unPush(data);
+            setPushed(false)
+            setReload(!reload);
+        } catch (error) {
+            setLoading(false);
+            console.error(error);
+        }
+    }
+
+    const checkHuiPoint = async (e, huiPoint) => {
+        try {
+            setLoading(true);
+            const checked = e.target.checked
+            if (checked) {
+                await HuiPointAPI.confirm({_id: huiPoint._id});
+            } else {
+                await HuiPointAPI.unConfirm({_id: huiPoint._id});
+            }
+            setReload(!reload);
+        } catch (error) {
+            setLoading(false);
+            console.error(error);
+        }
+    }
+ 
     const nextPage = () => {
         if(huis.hasNextPage) {
             setPage(huis.nextPage)
@@ -91,7 +184,7 @@ const HuiPoint = () => {
                     <i className="mx-2 fa-solid fa-angles-right" style={{fontSize: '18px'}}></i> 
                     Chi tiết hụi
                 </h5>
-                {loading || !selectedHui && !huiPoints ?
+                {loading ?
                 <div className="bg-white content">
                     <div className="loading-container">
                         <div>
@@ -111,27 +204,30 @@ const HuiPoint = () => {
                     </div>                 
                     }
                     <div className="select-company-container mb-4">
-                        <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1" onClick={()=>setShowDetail(!showDetail)}>
+                        <div className="d-flex align-items-center link-dark text-decoration-none p-1" onClick={()=>setShowDetail(!showDetail)}>
                             Thông tin hụi
                             <i className={showDetail?"fa-solid fa-angle-up ml-2 mt-1":"fa-solid fa-angle-down ml-2 mt-1"}></i>
-                        </a>
+                        </div>
                         
                     </div>
                     <div className="select-company-container mb-4">
                         <div className="d-flex w-100 dropdown text-end" style={{maxWidth: '218px'}}>
                             <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span className='selected-company p-2'>Ký {periodicHui} - {format(new Date(date), 'dd/MM/yyyy')}</span>
+                                <span className='selected-company p-2'>Kỳ {periodicHui?.periodic} - {format(periodicHui?.date?new Date(periodicHui?.date):new Date(), 'dd/MM/yyyy')}</span>
                             </a>
                             <ul className="p-0 my-1 dropdown-menu text-small selected-dropdown">
-                                {periodicHuis?.map((company, i) => (
+                                {periodicHuis?.map((peri, i) => (
                                     <li key={i}>
                                         <button 
                                             className='p-2 px-3 btn dropdown-item'
                                             type='button'
-                                            style={selectCompany?._id===company._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                            onClick={() => setSelectCompany(company)}
+                                            style={peri?.periodic===periodicHui.periodic?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
+                                            onClick={() => setPeriodicHui({
+                                                periodic: peri?.periodic,
+                                                date: peri?.date,
+                                            })}
                                         >
-                                            {company.name}
+                                            Kỳ {peri?.periodic} - {format(peri.date?new Date(peri.date):new Date(), 'dd/MM/yyyy')}
                                         </button>
                                     </li>
                                 ))}
@@ -140,8 +236,8 @@ const HuiPoint = () => {
                     </div>
                     <div className="select-company-container">
                         <div className='func-icon'>
-                            <button className='btn btn-continue mx-3'>Đóng tất cả</button>
-                            <button className='btn btn-continue mx-3'>Gửi group nhắc hụi</button>
+                            <button className='btn btn-continue mx-3' disabled={pushed}>Đóng tất cả</button>
+                            <button className='btn btn-continue mx-3' disabled={pushed}>Gửi group nhắc hụi</button>
                         </div>
                     </div>
                     
@@ -158,7 +254,7 @@ const HuiPoint = () => {
                         <table className="table">
                             <thead>
                             <tr>
-                                <th scope="col"><input className='checkbox' type="checkbox" /></th>
+                                <th scope="col"><input className='form-checkbox' type="checkbox" /></th>
                                 <th scope="col">Tên hụi viên</th>
                                 <th scope="col">
                                     <div className='d-flex align-items-end'>
@@ -174,55 +270,117 @@ const HuiPoint = () => {
                             </tr>
                             </thead>
                             <tbody>
-                                {huiPoints?.map((hui, i) => (
+                                {huiPoints?.map((huiPoint, i) => (
                                     <tr key={i}>
                                         <td scope="row" data-label="">
-                                        <input className='checkbox' type="checkbox" />
+                                        <input 
+                                            className='form-checkbox' 
+                                            type="checkbox" 
+                                            onChange={(e)=>checkHuiPoint(e, huiPoint)}
+                                            defaultChecked={huiPoint?.statusConfirm}
+                                        />
                                         </td>
                                         <td scope="row" data-label="Tên hụi viên:">
-                                            {hui.cusName}
+                                            {huiPoint.cusName}
                                         </td>
-                                        <td data-label="Ngày đóng:">{format(new Date(hui.paymentDate), 'dd/MM/yyyy')}</td>
-                                        <td data-label="Số chân:">{hui.cusNum}</td>
+                                        <td data-label="Ngày đóng:">{format(new Date(huiPoint.paymentDate), 'dd/MM/yyyy')}</td>
+                                        <td data-label="Số chân:">{huiPoint.cusNum}</td>
                                         <td data-label="Bỏ hụi:">
-                                            <input type="text" name="" id="" className='form-control form-confirm' defaultValue={hui.pushHui}/>
+                                            <input 
+                                                type="number" 
+                                                name={`pushHui${i}`} 
+                                                id={`pushHui${i}`} 
+                                                className='form-control form-confirm' 
+                                                defaultValue={huiPoint.pushHui?huiPoint.pushHui:null}
+                                                onChange={(e)=>setHuiPush({
+                                                    value: +e.target.value, 
+                                                    huiPoint, 
+                                                    i
+                                                })}
+                                                disabled={(!huiPush?.value ? false : (huiPush?.i===i && huiPush?.value ? false : true)) || huiPoint.statusConfirm}
+                                            />
                                         </td>
-                                        <td data-label="Hụi sống:">{currencyFormatter.format(hui.liveHui, {
-                                                symbol: 'VND',
+                                        <td data-label="Hụi sống:">{huiPoint.liveHui===0?'-':currencyFormatter.format(huiPoint.liveHui, {
                                                 decimal: '*',
                                                 thousand: '.',
                                                 precision: 0,
                                                 format: '%v %s' // %s is the symbol and %v is the value
                                                 })}</td>
-                                        <td data-label="Hụi chết:">{currencyFormatter.format(hui.dieHui, {
-                                                symbol: 'VND',
-                                                decimal: '*',
-                                                thousand: '.',
-                                                precision: 0,
-                                                format: '%v %s' // %s is the symbol and %v is the value
-                                                })}</td>
-                                        <td data-label="Hốt hụi:">{currencyFormatter.format(hui.getHui, {
-                                                symbol: 'VND',
-                                                decimal: '*',
-                                                thousand: '.',
-                                                precision: 0,
-                                                format: '%v %s' // %s is the symbol and %v is the value
-                                                })}</td>
+                                        <td data-label="Hụi chết:">{huiPoint.dieHui===0?'-':currencyFormatter.format(huiPoint.dieHui, {
+                                        decimal: '*',
+                                        thousand: '.',
+                                        precision: 0,
+                                        format: '%v %s' // %s is the symbol and %v is the value
+                                        })}</td>
+                                        <td data-label="Hốt hụi:">{huiPoint.getHui===0?'-':currencyFormatter.format(huiPoint.getHui, {
+                                        decimal: '*',
+                                        thousand: '.',
+                                        precision: 0,
+                                        format: '%v %s' // %s is the symbol and %v is the value
+                                        })}</td>
                                         <td data-label="Chức năng:" className="hui-point-center">
                                             <div className='func-icon'>
-                                                <button className='btn btn-continue'>Chốt hụi</button>
+                                                {huiPoint.status===0 && 
+                                                    <button 
+                                                        className={'btn btn-continue'}
+                                                        onClick={()=>push(huiPoint, i)}
+                                                        disabled={huiPush?.i===i && huiPush?.value ? false : true || huiPoint.statusConfirm}
+                                                    >Chốt hụi</button>
+                                                }
+                                                {huiPoint.status===2 &&
+                                                <button 
+                                                    className={'btn btn-confirm'}
+                                                    onClick={()=>unPush(huiPoint._id)}
+                                                    disabled={huiPoint.statusConfirm}
+                                                >Bỏ chốt</button>}
+                                                {huiPoint.status===1 &&
+                                                <button 
+                                                    className={'btn btn-cancle'}
+                                                    onClick={()=>push(huiPoint, i)}
+                                                    disabled={huiPoint.statusConfirm}
+                                                >Nhắc hụi</button>}
                                             </div>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="5"><h6 className="mx-md-2 my-0">Tổng tiền: {huiPoints?.totalDocs}</h6></td>
+                                    <td data-label="Hụi sống:"><div className='total'>
+                                        {sumLive===0?'-':currencyFormatter.format(sumLive, {
+                                        decimal: '*',
+                                        thousand: '.',
+                                        precision: 0,
+                                        format: '%v %s' // %s is the symbol and %v is the value
+                                    })}</div></td>
+                                    <td data-label="Hụi chết:"><div className='total'>
+                                        {sumDie===0?'-':currencyFormatter.format(sumDie, {
+                                        decimal: '*',
+                                        thousand: '.',
+                                        precision: 0,
+                                        format: '%v %s' // %s is the symbol and %v is the value
+                                    })}</div></td>
+                                    <td data-label="Hốt hụi:"><div className='total'>
+                                        {sumGet===0?'-':currencyFormatter.format(sumGet, {
+                                        decimal: '*',
+                                        thousand: '.',
+                                        precision: 0,
+                                        format: '%v %s' // %s is the symbol and %v is the value
+                                    })}</div></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6"><h6 className="mx-md-2 my-0">Tổng tiền bảo hiểm: {huiPoints?.totalDocs}</h6></td>
+                                    <td data-label="Bảo hiểm:"><div className='total'>
+                                        {sumInsure===0?'-':currencyFormatter.format(sumInsure, {
+                                        decimal: '*',
+                                        thousand: '.',
+                                        precision: 0,
+                                        format: '%v %s' // %s is the symbol and %v is the value
+                                    })}</div></td>
+                                </tr>
+                            </tfoot>
                         </table>
-                        <div className="p-2 d-flex justify-content-between">
-                            <h6 className="mx-md-2 my-0">Tổng tiền: {huiPoints?.totalDocs}</h6>
-                        </div>
-                        <div className="p-2 d-flex justify-content-between">
-                            <h6 className="mx-md-2 my-0">Tổng tiền bảo hiểm: {huiPoints?.totalDocs}</h6>
-                        </div>
                     </div>
                     }
                 </div>

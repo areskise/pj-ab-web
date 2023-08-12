@@ -18,10 +18,10 @@ const DetailHuiPoint = ({selectedHui, selectCompany}) => {
     useEffect(() => {
         if(selectedHui) {
             const fetchHui = async () => {
-                setTypeKhui(selectedHui.type.type.toString())
+                setTypeKhui(selectedHui?.type?.type?.toString())
                 setStartDate(new Date(selectedHui.startDate))
                 setEndDate(new Date(selectedHui.endDate))
-                setInputStaffs(selectedHui.staffInsures)
+                setInputStaffs(selectedHui?.staffInsures)
             }
             fetchHui()
         }

@@ -113,17 +113,21 @@
 
 .hui-point-container {
   padding: 2rem;
+  padding-bottom: 0;
 }
 
 .hui-point-container .table {
     margin-bottom: 0;
 }
   
-.hui-point-container td {
+.hui-point-container tbody td {
     border: 0;
     background-color: #F7F7F7 !important;
-    /* max-width: 132px; */
     padding: 12px !important;
+}
+.hui-point-container tfoot td {
+  border: 0;
+  padding: 12px !important;
 }
   
 .hui-point-word {
@@ -147,7 +151,11 @@
 .hui-point-container tbody, thead, tfoot, tr {
     border: 16px solid white;
 }
-  
+
+.hui-point-container tfoot tr {
+  border: 0px solid white;
+}
+
 .hui-point .status-icon {
     text-align: center;
     align-items: center;
@@ -177,10 +185,27 @@
 
 .hui-point .form-confirm {
   height: 38px;
-  max-width: 140px;
+  width: 120px;
   padding: 10px 15px;
   border: 2px solid #D8E2E9;
   border-radius: 20px;
+}
+
+.btn.disabled, .btn:disabled, fieldset:disabled .btn {
+  background-color: #bebebebe;
+  border: none;
+}
+
+.hui-point .form-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #454545;
+  border-radius: 2px;
+  margin-right: 12px;
+}
+
+.hui-point .total {
+  color: red;
 }
   
 @media screen and (max-width: 1200px) {

@@ -76,6 +76,15 @@ input[type=number] {
   background: #74afcf;
 }
 
+.btn-confirm {
+  background: #526594;
+  color: #fff;
+}
+.btn-confirm:hover {
+  background: #364E8B;
+  color: #fff;
+}
+
 .btn-control:hover {
   border: 1px solid #D8E2E9;
   background: #D8E2E9;
@@ -106,7 +115,7 @@ input[type=number] {
 
 .selected-dropdown {
   max-height: 402px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .modal-logout .modal-content {

@@ -15,6 +15,7 @@ const HuiPointAPI = {
     },
 
     confirm: async (body) => {
+        console.log(body);
         return await axiosClient.post(`/huiPoint/confirm`, body);
     },
 
@@ -22,16 +23,16 @@ const HuiPointAPI = {
         return await axiosClient.post(`/huiPoint/unConfirm`, body);
     },
 
-    push: async (body) => {
-        return await axiosClient.put(`/huiPoint/push`, body);
-    },
-
     create: async (body) => {
         return await axiosClient.post(`/huiPoint`, body);
     },
 
-    update: async (body) => {
+    push: async (body) => {
         return await axiosClient.put(`/huiPoint`, body);
+    },
+
+    unPush: async (body) => {
+        return await axiosClient.post(`/huiPoint/unPush`, body);
     },
 
     delete: async (id) => {
