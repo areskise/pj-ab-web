@@ -346,7 +346,7 @@ const HuiPoint = () => {
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="5"><h6 className="mx-md-2 my-0">Tổng tiền: {huiPoints?.totalDocs}</h6></td>
+                                    <td colSpan="5"><h6 className="mx-md-2 my-0">Tổng tiền: {huiPoints?.totalDocs}</h6></td>
                                     <td data-label="Hụi sống:"><div className='total'>
                                         {sumLive===0?'-':currencyFormatter.format(sumLive, {
                                         decimal: '*',
@@ -370,7 +370,7 @@ const HuiPoint = () => {
                                     })}</div></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="6"><h6 className="mx-md-2 my-0">Tổng tiền bảo hiểm: {huiPoints?.totalDocs}</h6></td>
+                                    <td colSpan="6"><h6 className="mx-md-2 my-0">Tổng tiền bảo hiểm: {huiPoints?.totalDocs}</h6></td>
                                     <td data-label="Bảo hiểm:"><div className='total'>
                                         {sumInsure===0?'-':currencyFormatter.format(sumInsure, {
                                         decimal: '*',

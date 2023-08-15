@@ -239,7 +239,7 @@ const Hui = () => {
                                     }
                                 </a>
                                 <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
-                                    <li>
+                                    <li key={1}>
                                         <button 
                                             className='p-2 px-3 btn dropdown-item'
                                             type='button'
@@ -249,7 +249,7 @@ const Hui = () => {
                                             Ngày bắt đầu
                                         </button>
                                     </li>
-                                    <li>
+                                    <li key={2}>
                                         <button 
                                             className='p-2 px-3 btn dropdown-item'
                                             type='button'
@@ -274,7 +274,7 @@ const Hui = () => {
                                     </>)}
                                 </a>
                                 <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
-                                    <li>
+                                    <li key={1}>
                                         <button 
                                             className='p-2 px-3 btn dropdown-item'
                                             type='button'
@@ -284,7 +284,7 @@ const Hui = () => {
                                             Mặc định
                                         </button>
                                     </li>
-                                    <li>
+                                    <li key={2}>
                                         <button 
                                             className='p-2 px-3 btn dropdown-item'
                                             type='button'
@@ -294,7 +294,7 @@ const Hui = () => {
                                             Mới 🡪 Cũ
                                         </button>
                                     </li>
-                                    <li>
+                                    <li key={3}>
                                         <button 
                                             className='p-2 px-3 btn dropdown-item'
                                             type='button'

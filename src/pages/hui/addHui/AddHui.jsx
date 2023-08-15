@@ -115,7 +115,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
             type: {
                 type: +typeKhui,
                 name: typeName,
-                num: typeKhui==='2'?+e.target.numKhui.value:selectDayKhui
+                num: typeKhui==='2'?selectDayKhui:+e.target.numKhui.value
             },
             partNum: +e.target.partNum.value,
             money: +e.target.money.value,
@@ -364,7 +364,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                             </>)}
                                         </a>
                                         <ul className="p-0 my-1 dropdown-menu text-small">
-                                            <li>
+                                            <li key={1}>
                                                 <button 
                                                     className='p-2 px-3 btn dropdown-item'
                                                     type='button'
@@ -374,7 +374,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                                     Tháng
                                                 </button>
                                             </li>
-                                            <li>
+                                            <li key={2}>
                                                 <button 
                                                     className='p-2 px-3 btn dropdown-item'
                                                     type='button'
@@ -384,7 +384,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                                     Tuần
                                                 </button>
                                             </li>
-                                            <li>
+                                            <li key={3}>
                                                 <button 
                                                     className='p-2 px-3 btn dropdown-item'
                                                     type='button'

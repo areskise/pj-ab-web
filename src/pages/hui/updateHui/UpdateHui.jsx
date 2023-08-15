@@ -354,7 +354,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
 
                                         </a>
                                         <ul className="p-0 my-1 dropdown-menu text-small">
-                                            <li>
+                                            <li key={1}>
                                                 <button 
                                                     className='p-2 px-3 btn dropdown-item'
                                                     type='button'
@@ -364,7 +364,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                                     Tháng
                                                 </button>
                                             </li>
-                                            <li>
+                                            <li key={2}>
                                                 <button 
                                                     className='p-2 px-3 btn dropdown-item'
                                                     type='button'
@@ -374,7 +374,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                                     Tuần
                                                 </button>
                                             </li>
-                                            <li>
+                                            <li key={3}>
                                                 <button 
                                                     className='p-2 px-3 btn dropdown-item'
                                                     type='button'
