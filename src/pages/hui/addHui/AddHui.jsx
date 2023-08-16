@@ -115,7 +115,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
             type: {
                 type: +typeKhui,
                 name: typeName,
-                num: typeKhui==='2'?selectDayKhui:+e.target.numKhui.value
+                num: typeKhui==='2'?selectDayKhui.num:+e.target.numKhui.value
             },
             partNum: +e.target.partNum.value,
             money: +e.target.money.value,
@@ -129,7 +129,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
         for (let i = 0; i < selectCustomer.length; i++) {
             countPart = countPart + selectCustomer[i].num
         }
-        console.log(countPart);
+        console.log(data.type);
         if(
             !selectCompany?._id || 
             !data.code || 
