@@ -82,16 +82,15 @@ const HuiPoint = () => {
                 }
                 const resHuiPoint = await HuiPointAPI.getChains(data);
                 const resultHuiPoint = resHuiPoint.ResponseResult.Result;
-                console.log(resHuiPoint);
                 const liveHuis = resultHuiPoint?.map(huiPoint => huiPoint.liveHui)
                 const dieHuis = resultHuiPoint?.map(huiPoint => huiPoint.dieHui)
                 const getHuis = resultHuiPoint?.map(huiPoint => huiPoint.getHui)
-                const liveSum = liveHuis[0]?liveHuis?.reduce((a, b) => a + b):0
-                const dieSum = dieHuis[0]?dieHuis?.reduce((a, b) => a + b):0
-                const getSum = getHuis[0]?getHuis?.reduce((a, b) => a + b):0
+                const liveSum = liveHuis?liveHuis?.reduce((a, b) => a + b):0
+                const dieSum = dieHuis?dieHuis?.reduce((a, b) => a + b):0
+                const getSum = getHuis?getHuis?.reduce((a, b) => a + b):0
                 setSumLive(liveSum);
                 setSumDie(dieSum);
-                setSumGet(getSum)
+                setSumGet(getSum);
                 setSumInsure(liveSum+dieSum-getSum)
                 setHuiPoints(resultHuiPoint);
                 setHuiPush(null)
@@ -196,7 +195,7 @@ const HuiPoint = () => {
                 <div className="bg-white content">
                     <div className="d-flex p-4 align-items-center justify-content-center"> 
                         <h3 className="title">{selectedHui?.code?.toUpperCase()} - {selectedHui?.name?.toUpperCase()}</h3>
-                        <i className="fa-solid fa-circle-plus plus" onClick={() => setShowAdd(true)}></i>
+                        {/* <i className="fa-solid fa-circle-plus plus" onClick={() => setShowAdd(true)}></i> */}
                     </div>
                     {showDetail &&
                     <div className="hui-point-container py-0">
