@@ -1,6 +1,6 @@
 import './insure.css';
 import img from '../../../images/Image';
-import ReactApexChart from "react-apexcharts";
+import ReactApexChart from 'react-apexcharts';
 import { useEffect, useState } from 'react';
 import { employeeActions, selectorEmployees } from '../../../redux/slice/employeeSlice';
 import { useDispatch, useSelector } from 'react-redux';
