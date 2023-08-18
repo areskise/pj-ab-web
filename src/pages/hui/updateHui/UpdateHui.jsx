@@ -9,6 +9,7 @@ import CompanyAPI from "../../../API/CompanyAPI";
 import CustomerAPI from "../../../API/CustomerAPI";
 import HuiAPI from "../../../API/HuiAPI";
 import { dayKhui } from "../../../helpers/dayKhui";
+import customerList from "../../../helpers/customerList";
 
 
 const UpdateHui = ({setShowUpdate, showUpdate}) => {
@@ -56,7 +57,8 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                 setEndDate(new Date(resultHui.endDate))
                 setNumPart(resultHui.partNum)
                 setInputStaffs(resultHui.staffInsures)
-                setSelectCustomer(resultHui.customers)
+                const cusUpdate = customerList(resultHui.customers, 'Update')
+                setSelectCustomer(cusUpdate)
                 const resCompany = await CompanyAPI.getById(showUpdate.organizationId);
                 const resultCompany = resCompany.ResponseResult.Result;
                 setSelectCompany(resultCompany)
@@ -109,6 +111,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                 typeName = 'Ngày'
                 break
         }
+        const cusAdd = customerList(selectCustomer, 'Add')
         const data = {
             _id: showUpdate._id,
             organizationId: showUpdate.organizationId,
@@ -124,13 +127,9 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
             money: +e.target.money.value,
             insureNum: +e.target.insureNum.value,
             staffInsures: inputStaffs,
-            customers: selectCustomer,
+            customers: cusAdd,
         }
-        let countPart = 0
-        for (let i = 0; i < selectCustomer.length; i++) {
-            countPart = countPart + selectCustomer[i].num
-        }
-        console.log(countPart);
+        
         if(
             !showUpdate.organizationId || 
             !data.code || 
@@ -146,7 +145,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
         } else if(!inputStaffs[0].userId || !inputStaffs[0].insureNum) {
             setMessErr('Vui lòng hoàn tất nhập liệu thông tin nhân viên tham gia.')
             setError(false)
-        } else if(data.partNum !== countPart) {
+        } else if(data.partNum !== cusAdd.length) {
             setMessErr('Tổng số chân hụi viên tham gia không hợp lệ. Vui lòng kiểm tra lại.')
             setError(false)
         } else {

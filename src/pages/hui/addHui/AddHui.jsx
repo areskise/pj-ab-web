@@ -9,6 +9,7 @@ import CompanyAPI from "../../../API/CompanyAPI";
 import CustomerAPI from "../../../API/CustomerAPI";
 import HuiAPI from "../../../API/HuiAPI";
 import { dayKhui } from "../../../helpers/dayKhui";
+import customerList from "../../../helpers/customerList";
 
 const AddHui = ({setShowAdd, showAdd}) => {
     const [loading, setLoading] = useState(false);
@@ -107,6 +108,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                 typeName = 'Ngày'
                 break
         }
+        const cusAdd = customerList(selectCustomer, 'Add')
         const data = {
             organizationId: selectCompany?._id,
             code: e.target.code.value,
@@ -121,15 +123,10 @@ const AddHui = ({setShowAdd, showAdd}) => {
             money: +e.target.money.value,
             insureNum: +e.target.insureNum.value,
             staffInsures: inputStaffs,
-            customers: selectCustomer,
+            customers: cusAdd,
             startDate: e.target.startDate.value,
             endDate: e.target.endDate.value,
         }
-        let countPart = 0
-        for (let i = 0; i < selectCustomer.length; i++) {
-            countPart = countPart + selectCustomer[i].num
-        }
-        console.log(data.type);
         if(
             !selectCompany?._id || 
             !data.code || 
@@ -145,7 +142,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
         } else if(!inputStaffs[0].userId || !inputStaffs[0].insureNum) {
             setMessErr('Vui lòng hoàn tất nhập liệu thông tin nhân viên tham gia.')
             setError(false)
-        } else if(data.partNum !== countPart) {
+        } else if(data.partNum !== cusAdd.length) {
             setMessErr('Tổng số chân hụi viên tham gia không hợp lệ. Vui lòng kiểm tra lại.')
             setError(false)
         } else {
