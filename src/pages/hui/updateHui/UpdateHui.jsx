@@ -121,7 +121,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
             type: {
                 type: +typeKhui,
                 name: typeName,
-                num: +e.target.numKhui.value
+                num: typeKhui==='2'?selectDayKhui.num:+e.target.numKhui.value
             },
             partNum: +e.target.partNum.value,
             money: +e.target.money.value,

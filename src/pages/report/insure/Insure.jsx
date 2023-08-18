@@ -2,21 +2,16 @@ import './insure.css';
 import img from '../../../images/Image';
 import ReactApexChart from 'react-apexcharts';
 import { useEffect, useState } from 'react';
-import { employeeActions, selectorEmployees } from '../../../redux/slice/employeeSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectorUserCompanies, selectorSelectedCompany } from '../../../redux/slice/companySlice';
-import CompanyAPI from '../../../API/CompanyAPI';
+import { selectorEmployees } from '../../../redux/slice/employeeSlice';
+import { useSelector } from 'react-redux';
+import { selectorSelectedCompany } from '../../../redux/slice/companySlice';
 import HuiAPI from '../../../API/HuiAPI';
 import currencyFormatter from 'currency-formatter';
 import { format } from 'date-fns';
+import { options } from '../../../helpers/optionsChart';
 
 const Insure = () => {
     const [loading, setLoading] = useState(false);
-    const [showAdd, setShowAdd] = useState(false);
-    const [showUpdate, setShowUpdate] = useState(false);
-    const [updatePass, setUpdatePass] = useState(false);
-    const [showDetail, setShowDetail] = useState(false);
-    const [selectReport, setSelectReport] = useState(null);
     const [selectHui, setSelectHui] = useState(null);
     const [huis, setHuis] = useState([]);
     const [reports, setReports] = useState([]);
@@ -33,9 +28,7 @@ const Insure = () => {
     const [sortStatus, setSortStatus] = useState('');
     const [sortBy, setSortBy] = useState('');
     const [iconStatus, setIcontStatus] = useState("p-1 fa-solid fa-arrow-right-arrow-left");
-    const dispatch = useDispatch();
     const employees = useSelector(selectorEmployees)
-    const userCompanies = useSelector(selectorUserCompanies)
     const selectedCompany = useSelector(selectorSelectedCompany)
 
     useEffect(() => {
@@ -80,9 +73,9 @@ const Insure = () => {
     useEffect(() => {
         if (reports) {
             setFrappe({
-                series: reports.map(r=>r.money),
+                series: options(reports).map(r=>r.money),
                 options: {
-                    labels: reports.map(r=>`${r.name}: ${currencyFormatter.format(r.money, {
+                    labels: options(reports).map(r=>`${r.name}: ${currencyFormatter.format(r.money, {
                         symbol: 'VND',
                         decimal: '*',
                         thousand: '.',
@@ -93,7 +86,7 @@ const Insure = () => {
                         position: 'bottom',
                         fontSize: 15
                     },
-                    colors: ['#F39F8D', '#B9DBAA', '#7D95E8', ...reports.map(()=>{
+                    colors: ['#F39F8D', '#B9DBAA', '#7D95E8', '#D5DEFF', '#FFE2FC', ...options(reports).map(()=>{
                         const r = Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
                         const g = Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
                         const b = Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
