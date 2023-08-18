@@ -298,12 +298,12 @@
       font-size: 18px;
     }
 
-    .select-company-container {
+    .employee .select-company-container {
       justify-content: space-between;
       margin: 0 16px;
     }
 
-    .select-company-container .select-company {
+    .employee .select-company-container .select-company {
       max-width: 270px;
     }
 }

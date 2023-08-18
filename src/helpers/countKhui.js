@@ -17,7 +17,7 @@ export default function countKhui(num, type, startDate, endDate, loading) {
         }
         if(type===2) {
             for (let date = start; date <= now; date = new Date(date.setDate(date.getDate() + 1))) {
-                if (date.getDay() === num-1) {
+                if (date.getDay() === num) {
                     count++;
                 }
             }
@@ -41,7 +41,7 @@ export default function countKhui(num, type, startDate, endDate, loading) {
         }
         if(type===2) {
             for (let date = start; date <= end; date = new Date(date.setDate(date.getDate() + 1))) {
-                if (date.getDay() === (num-1)) {
+                if (date.getDay() === num) {
                     count++;
                 }
             }

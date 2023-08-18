@@ -80,7 +80,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                 endDate = date.setDate(date.getDate() + 7*numPart)
                 break
             case '3':
-                endDate = numPart?date.setDate(date.getDate() + numPart-1):(new Date(startDate))
+                endDate = numPart?date.setDate(date.getDate() + numPart):(new Date(startDate))
                 break
         }
         setEndDate(endDate);
@@ -546,6 +546,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                         className='form-control' 
                                         defaultValue={format(new Date(startDate), 'yyyy-MM-dd')} 
                                         onChange={(e)=>setStartDate(e.target.value)}
+                                        min={format(new Date(), 'yyyy-MM-dd')}
                                         onKeyDown={handleKeyDown}
                                     />
                                 </div>

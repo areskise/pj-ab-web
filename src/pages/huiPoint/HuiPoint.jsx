@@ -16,6 +16,7 @@ import DetailHuiPoint from './detailHuiPoint/DetailHuiPoint';
 import CompanyAPI from '../../API/CompanyAPI';
 import partKhui from '../../helpers/partKhui';
 import periodics from '../../helpers/periodics';
+import alertify from 'alertifyjs';
 
 const HuiPoint = () => {
     const [loading, setLoading] = useState(false);
@@ -39,6 +40,7 @@ const HuiPoint = () => {
     const huis = useSelector(selectorHuis)
     const userCompanies = useSelector(selectorUserCompanies)
     const { id } = useParams();
+    console.log(huiPoints);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -85,9 +87,9 @@ const HuiPoint = () => {
                 const liveHuis = resultHuiPoint?.map(huiPoint => huiPoint.liveHui)
                 const dieHuis = resultHuiPoint?.map(huiPoint => huiPoint.dieHui)
                 const getHuis = resultHuiPoint?.map(huiPoint => huiPoint.getHui)
-                const liveSum = liveHuis?liveHuis?.reduce((a, b) => a + b):0
-                const dieSum = dieHuis?dieHuis?.reduce((a, b) => a + b):0
-                const getSum = getHuis?getHuis?.reduce((a, b) => a + b):0
+                const liveSum = liveHuis[0]||liveHuis[0]===0?liveHuis?.reduce((a, b) => a + b):0
+                const dieSum = dieHuis[0]||dieHuis[0]===0?dieHuis?.reduce((a, b) => a + b):0
+                const getSum = getHuis[0]||dieHuis[0]===0?getHuis?.reduce((a, b) => a + b):0
                 setSumLive(liveSum);
                 setSumDie(dieSum);
                 setSumGet(getSum);
@@ -136,6 +138,25 @@ const HuiPoint = () => {
         } catch (error) {
             setLoading(false);
             console.error(error);
+        }
+    }
+
+    const notify = async (_id) => {
+        try {
+            const data = {_id}
+            const res = await HuiPointAPI.notify(data);
+            console.log(res);
+            if(res.ResponseResult.Result.error_code === 0){
+                alertify.set('notifier', 'position', 'top-right');
+                alertify.success('Nhắc hụi thành công!');
+            } else {
+                alertify.set('notifier', 'position', 'top-right');
+                alertify.error('Đã gặp sự cố! Nhắc hụi không thành công!');
+            }
+        } catch (error) {
+            console.error(error);
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.error('Đã gặp sự cố! Nhắc hụi không thành công!');
         }
     }
 
@@ -296,7 +317,7 @@ const HuiPoint = () => {
                                                     huiPoint, 
                                                     i
                                                 })}
-                                                disabled={(!huiPush?.value ? false : (huiPush?.i===i && huiPush?.value ? false : true)) || huiPoint.statusConfirm}
+                                                // disabled={(!huiPush?.value ? false : (huiPush?.i===i && huiPush?.value ? false : true)) || huiPoint.statusConfirm}
                                             />
                                         </td>
                                         <td data-label="Hụi sống:">{huiPoint.liveHui===0?'-':currencyFormatter.format(huiPoint.liveHui, {
@@ -335,7 +356,7 @@ const HuiPoint = () => {
                                                 {huiPoint.status===1 &&
                                                 <button 
                                                     className={'btn btn-cancle'}
-                                                    onClick={()=>push(huiPoint, i)}
+                                                    onClick={()=>notify(huiPoint._id)}
                                                     disabled={huiPoint.statusConfirm}
                                                 >Nhắc hụi</button>}
                                             </div>

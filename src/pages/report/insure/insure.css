@@ -1,0 +1,5 @@
+.apexcharts-legend {
+    flex-direction: column !important;
+    align-content: center;
+    max-height: fit-content !important;
+}

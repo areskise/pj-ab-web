@@ -12,7 +12,7 @@ export default function partKhui(num, type, startDate, endDate) {
         if(type===2) {
             for (let date = start; date <= end; date = new Date(date.setDate(date.getDate() + 1))) {
                 
-                if (date.getDay() === num-1) {
+                if (date.getDay() === num) {
                     part=[...part, new Date(date)];
                 }
             }

@@ -14,8 +14,15 @@ const HuiPointAPI = {
         return await axiosClient.get(`/huiPoint/chains?huiId=${huiId}&periodicHui=${periodicHui}`); 
     },
 
+    send: async (body) => {
+        return await axiosClient.get(`/huiPoint/send`, body);
+    },
+
+    notify: async (body) => {
+        return await axiosClient.post(`/huiPoint/notify`, body);
+    },
+
     confirm: async (body) => {
-        console.log(body);
         return await axiosClient.post(`/huiPoint/confirm`, body);
     },
 

@@ -542,6 +542,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                         className='form-control' 
                                         value={format(new Date(startDate), 'yyyy-MM-dd')}
                                         onChange={(e)=>setStartDate(e.target.value)}
+                                        min={format(new Date(startDate), 'yyyy-MM-dd')}
                                         onKeyDown={handleKeyDown}
                                     />
                                 </div>
