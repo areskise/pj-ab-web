@@ -23,7 +23,6 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
             const fetchRoles = async () => {
                 const res = await CompanyAPI.getRoles(selectCompany?._id);
                 const result = res.ResponseResult.Result
-                console.log(result);
                 setRoles(result)
                 setSelectRole(null)
             }

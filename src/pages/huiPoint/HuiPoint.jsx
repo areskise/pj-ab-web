@@ -40,7 +40,6 @@ const HuiPoint = () => {
     const huis = useSelector(selectorHuis)
     const userCompanies = useSelector(selectorUserCompanies)
     const { id } = useParams();
-    console.log(huiPoints);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -145,7 +144,6 @@ const HuiPoint = () => {
         try {
             const data = {_id}
             const res = await HuiPointAPI.notify(data);
-            console.log(res);
             if(res.ResponseResult.Result.error_code === 0){
                 alertify.set('notifier', 'position', 'top-right');
                 alertify.success('Nhắc hụi thành công!');

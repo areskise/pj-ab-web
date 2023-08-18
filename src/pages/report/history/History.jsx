@@ -66,7 +66,6 @@ const History = () => {
                     setLoading(true);
                     const res = await ReportAPI.history(data);
                     const result = res.ResponseResult.Result;
-                    console.log(res);
                     setReports(result)
                     setLoading(false);
                 } catch (error) {

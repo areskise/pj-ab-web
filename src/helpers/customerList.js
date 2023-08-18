@@ -10,7 +10,6 @@ export default function customerList(selectCustomer, action) {
             break
         case 'Update':
             result = selectCustomer.filter((obj) => selectCustomer.indexOf(obj) === selectCustomer.findIndex(o => o.customerId === obj.customerId));
-            console.log(result);
             break
     }
     return result;

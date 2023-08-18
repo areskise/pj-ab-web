@@ -59,7 +59,6 @@ const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
         } else {
             try {
                 const res = await CompanyAPI.create(data);
-                console.log(res);
                 if(res.ResponseResult.ErrorCode === 0){
                     setShowAdd(false)
                     setCode(null)

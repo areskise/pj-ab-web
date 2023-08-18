@@ -132,7 +132,6 @@ const UpdateAuthority = () => {
             try {
                 setLoading(true);
                 const res = await RoleAPI.update(data);
-                console.log(res.ResponseResult.Result);
                 if(res.ResponseResult.ErrorCode === 0){
                     const resSelect = await RoleAPI.getById(selectRole._id)
                     const resultSelect = resSelect.ResponseResult.Result;

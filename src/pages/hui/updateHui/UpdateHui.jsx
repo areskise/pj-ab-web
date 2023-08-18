@@ -151,7 +151,6 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
         } else {
             try {
                 const res = await HuiAPI.update(data);
-                console.log(res);
                 if(res.ResponseResult.ErrorCode === 0){
                     setShowUpdate(false)
                     setError(false)

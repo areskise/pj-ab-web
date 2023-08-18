@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import CompanyAPI from "../../../API/CompanyAPI";
 import CustomerAPI from "../../../API/CustomerAPI";
 import HuiAPI from "../../../API/HuiAPI";
+import customerList from "../../../helpers/customerList";
 
 const DetailHui = ({setShowDetail, showDetail}) => {
     const [selectCompany, setSelectCompany] = useState(null);
@@ -31,7 +32,8 @@ const DetailHui = ({setShowDetail, showDetail}) => {
                 setStartDate(new Date(resultHui.startDate))
                 setEndDate(new Date(resultHui.endDate))
                 setInputStaffs(resultHui.staffInsures)
-                setSelectCustomer(resultHui.customers)
+                const cusUpdate = customerList(resultHui.customers, 'Update')
+                setSelectCustomer(cusUpdate)
                 const resCompany = await CompanyAPI.getById(showDetail.organizationId);
                 const resultCompany = resCompany.ResponseResult.Result;
                 setSelectCompany(resultCompany);

@@ -22,7 +22,7 @@ const Customer = () => {
     const dispatch = useDispatch();
     const customers = useSelector(selectorCustomers)
     const userCompanies = useSelector(selectorUserCompanies)
-    console.log(userCompanies);
+    
     const list = keyword?customers.docs.filter(doc => {
         let hasDoc
         if(search==='sdt') {
@@ -48,7 +48,6 @@ const Customer = () => {
                 setLoading(true);
                 const res = await CustomerAPI.getList(data);
                 const result = res.ResponseResult.Result;
-                console.log(result);
                 dispatch(customerActions.setCustomers(result));
                 setLoading(false);
             } catch (error) {
