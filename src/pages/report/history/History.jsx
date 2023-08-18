@@ -1,8 +1,5 @@
 import './history.css';
 import img from '../../../images/Image';
-// import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-// import { Pie } from 'react-chartjs-2';
-import { Chart } from "react-google-charts";
 import { useEffect, useState } from 'react';
 import { employeeActions, selectorEmployees } from '../../../redux/slice/employeeSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,7 +7,6 @@ import { selectorUserCompanies, selectorSelectedCompany } from '../../../redux/s
 import ReportAPI from '../../../API/ReportAPI';
 import HuiAPI from '../../../API/HuiAPI';
 import { format } from 'date-fns';
-// ChartJS.register(ArcElement, Tooltip, Legend);
 
 const History = () => {
     const [loading, setLoading] = useState(false);
@@ -31,36 +27,6 @@ const History = () => {
     const employees = useSelector(selectorEmployees)
     const userCompanies = useSelector(selectorUserCompanies)
     const selectedCompany = useSelector(selectorSelectedCompany)
-
-    // const data = {
-    //     labels: ['Red p-1 fa-solid fa-arrow-right-arrow-left', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-    //     datasets: [
-    //       {
-    //         label: '# of Votes',
-    //         data: [18300, 18300, 27450, 850950],
-    //         backgroundColor: [
-    //             'rgba(243, 159, 141, 1)',
-    //             'rgba(185, 219, 170, 1)',
-    //             'rgba(125, 149, 232, 1)',
-    //             'rgba(225 225 225, 1)',
-    //         ],
-    //         borderColor: [
-    //             'rgba(243, 159, 141, 1)',
-    //             'rgba(185, 219, 170, 1)',
-    //             'rgba(125, 149, 232, 1)',
-    //             'rgba(225, 225, 225, 1)',
-    //         ],
-    //         borderWidth: 1,
-    //       },
-    //     ],
-    //   };
-    const data = [
-        ["Task", "Money per Staff"],
-        ["Tèo", 18300],
-        ["Dương", 18300],
-        ["Hải Lâm", 27450],
-        ["Công ty", 850950],
-      ];
 
     useEffect(() => {
         const data = {
