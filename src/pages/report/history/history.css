@@ -1,0 +1,70 @@
+.legend-hui {
+    border-radius: 50%;
+    border: 1px solid;
+    width: 16px;
+    height: 16px;
+}
+
+.history-container td {
+    padding: 12px !important;
+}
+
+.hui-die {
+    border-color: #364E8B;
+    background-color: #D8E2E9;
+}
+
+.hui-live {
+    border-color: #339822;
+    background-color: #DAFCD4;
+}
+
+.hui-get {
+    border-color: #DBC898;
+    background-color: #FFF8E4;
+}
+
+.hui-close {
+    border-color: #364E8B !important;
+    background-color: #F3F6FD !important;
+}
+
+tr.tr-1 td {
+    border-bottom: 1px solid; 
+    border-top: 1px solid;
+    border-color: #339822 !important;
+    background-color: #DAFCD4 !important;
+}
+
+.history-container tr>td:first-child {
+    border-left: 1px solid;
+}
+
+.history-container tr>td:last-child {
+    border-right: 1px solid;
+}
+
+tr.tr-2 td {
+    border-bottom: 1px solid; 
+    border-top: 1px solid;
+    border-color: #DBC898 !important;
+    background-color: #FFF8E4 !important;
+}
+
+tr.tr-3 td {
+    border-bottom: 1px solid; 
+    border-top: 1px solid;
+    border-color: #364E8B !important;
+    background-color: #D8E2E9 !important;
+}
+
+tr.tr-4 td {
+    border-bottom: 1px solid; 
+    border-top: 1px solid;
+    border-color: #364E8B !important;
+    background-color: #F3F6FD !important;
+}
+
+.history td {
+    background-color: none !important;
+}

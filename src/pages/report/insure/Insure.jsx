@@ -148,7 +148,7 @@ const Insure = () => {
                     </div>
                 </div>
             :
-            <div className="row report-container">
+            <div className="row report-container insure-container">
                 <div className="col-md-4">
                     <ReactApexChart options={frappe.options} series={frappe.series} type="pie" height={400}/>
                 </div>

@@ -364,7 +364,7 @@ const Hui = () => {
                                         </td>
                                         <td data-label="Ngày mở:">{format(new Date(hui.startDate), 'dd/MM/yyyy')}</td>
                                         <td data-label="Ngày kết thúc:">{format(new Date(hui.endDate), 'dd/MM/yyyy')}</td>
-                                        {hui.type.type===1 && <td data-label="Khui:">{hui.type.num} hàng {hui.type.name}</td>}
+                                        {hui.type.type===1 && <td data-label="Khui:">Ngày {hui.type.num} hàng {hui.type.name}</td>}
                                         {hui.type.type===2 && <td data-label="Khui:">{hui.type.num===0?"Chủ nhật":`Thứ ${hui.type.num+1}`} hàng {hui.type.name}</td>}
                                         {hui.type.type===3 && <td data-label="Khui:">{hui.type.num} giờ hàng {hui.type.name}</td>}
                                         <td data-label="Dây hụi:">{currencyFormatter.format(hui.money, {

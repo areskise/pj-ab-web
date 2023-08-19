@@ -3,3 +3,10 @@
     align-content: center;
     max-height: fit-content !important;
 }
+
+.insure-container td {
+    border: 0;
+    background-color: #F7F7F7 !important;
+    /* max-width: 132px; */
+    padding: 12px !important;
+}

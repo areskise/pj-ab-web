@@ -120,13 +120,6 @@
     margin-bottom: 0;
 }
   
-.report-container td {
-    border: 0;
-    background-color: #F7F7F7 !important;
-    /* max-width: 132px; */
-    padding: 12px !important;
-}
-  
 .report-word {
     word-break: break-word;
 }
@@ -145,7 +138,10 @@
   
 }
   
-.report-container tbody, thead, tfoot, tr {
+.report-container tbody, 
+.report-container thead, 
+.report-container tfoot, 
+.report-container tr {
     border: 16px solid white;
 }
   

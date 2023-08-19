@@ -145,7 +145,10 @@
   
 }
   
-.hui-container tbody, thead, tfoot, tr {
+.hui-container tbody, 
+.hui-container thead,
+.hui-container tfoot, 
+.hui-container tr {
     border: 16px solid white;
 }
   

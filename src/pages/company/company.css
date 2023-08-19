@@ -102,7 +102,10 @@
 
 }
 
-.company-container tbody, thead, tfoot, tr {
+.company-container tbody, 
+.company-container thead, 
+.company-container tfoot, 
+.company-container tr {
   border: 16px solid white;
 }
 

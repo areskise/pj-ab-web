@@ -146,6 +146,11 @@ i:hover {
   cursor: pointer;
 }
 
+.table {
+  border-collapse:separate; 
+  border-spacing: 0 1em;
+}
+
 .table tbody {
   user-select: text;
 }
@@ -179,6 +184,16 @@ i:hover {
   font-size: 16px;
   margin: 0;
   text-align: center;
+}
+
+tr>td:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+tr>td:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 @media screen and (max-width: 1200px) {

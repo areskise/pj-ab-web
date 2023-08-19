@@ -145,7 +145,10 @@
   
 }
   
-.employee-container tbody, thead, tfoot, tr {
+.employee-container tbody, 
+.employee-container thead, 
+.employee-container tfoot,
+.employee-container tr {
     border: 16px solid white;
 }
   

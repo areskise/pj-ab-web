@@ -1,20 +1,16 @@
 import './history.css';
 import img from '../../../images/Image';
 import { useEffect, useState } from 'react';
-import { employeeActions, selectorEmployees } from '../../../redux/slice/employeeSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectorUserCompanies, selectorSelectedCompany } from '../../../redux/slice/companySlice';
+import { selectorEmployees } from '../../../redux/slice/employeeSlice';
+import { useSelector } from 'react-redux';
+import { selectorSelectedCompany } from '../../../redux/slice/companySlice';
 import ReportAPI from '../../../API/ReportAPI';
 import HuiAPI from '../../../API/HuiAPI';
 import { format } from 'date-fns';
+import mapCusOne from '../../../helpers/mapCusOne';
 
 const History = () => {
     const [loading, setLoading] = useState(false);
-    const [showAdd, setShowAdd] = useState(false);
-    const [showUpdate, setShowUpdate] = useState(false);
-    const [updatePass, setUpdatePass] = useState(false);
-    const [showDetail, setShowDetail] = useState(false);
-    const [selectReport, setSelectReport] = useState(null);
     const [selectHui, setSelectHui] = useState(null);
     const [selectCus, setSelectCus] = useState(null);
     const [huis, setHuis] = useState([]);
@@ -23,9 +19,7 @@ const History = () => {
     const [sortStatus, setSortStatus] = useState('');
     const [sortBy, setSortBy] = useState('');
     const [iconStatus, setIcontStatus] = useState("p-1 fa-solid fa-arrow-right-arrow-left");
-    const dispatch = useDispatch();
     const employees = useSelector(selectorEmployees)
-    const userCompanies = useSelector(selectorUserCompanies)
     const selectedCompany = useSelector(selectorSelectedCompany)
 
     useEffect(() => {
@@ -60,6 +54,7 @@ const History = () => {
             huiId: selectHui?._id,
             cusId: selectCus?._id,
         }
+        
         if (selectHui && selectCus) {
             const fetchReport = async () => {
                 try {
@@ -73,7 +68,7 @@ const History = () => {
                     console.error(error);
                 }
             }
-        fetchReport();
+            fetchReport();
         }
     }, [selectHui, selectCus]);
 
@@ -161,7 +156,7 @@ const History = () => {
                             <span className='selected-company p-2'>{selectCus?.name?selectCus?.name:'Chọn hụi viên'}</span>
                         </a>
                         <ul className="p-0 my-1 dropdown-menu text-small select-dropdown">
-                            {selectHui?.customers?.map((huiSlice, i) => (
+                            {mapCusOne(selectHui?.customers)?.map((huiSlice, i) => (
                                 <li key={i}>
                                     <button 
                                         className='p-2 px-3 btn dropdown-item'
@@ -194,7 +189,25 @@ const History = () => {
                     </div>
                 </div>
             :
-            <div className="report-container">
+            <div className="report-container history-container">
+                <div className='d-flex justify-content-center'>
+                    <div className='d-flex p-2 align-items-center'>
+                        <div className='legend-hui m-1 hui-die'></div>
+                        <div>Hụi chết</div>
+                    </div>
+                    <div className='d-flex p-2 align-items-center'>
+                        <div className='legend-hui m-1 hui-live'></div>
+                        <div>Hụi sống</div>
+                    </div>
+                    <div className='d-flex p-2 align-items-center'>
+                        <div className='legend-hui m-1 hui-get'></div>
+                        <div>Hốt hụi</div>
+                    </div>
+                    <div className='d-flex p-2 align-items-center'>
+                        <div className='legend-hui m-1 hui-close'></div>
+                        <div>Bỏ đóng hụi</div>
+                    </div>
+                </div>
                 <table className="table">
                     <thead>
                     <tr>
@@ -207,7 +220,7 @@ const History = () => {
                     </thead>
                     <tbody>
                         {reports.docs?.map((report, i) => (
-                            <tr key={i}>
+                            <tr key={i} className={`tr-${report.type}`}>
                                 <td data-label="Ngày thực hiện:">{format(report.createdAt?new Date(report.createdAt):new Date(), 'dd/MM/yyyy - hh:mm')}</td>
                                 <td scope="row" data-label="Hụi viên:">
                                     {report.cusName}
