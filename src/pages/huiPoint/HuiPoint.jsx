@@ -17,6 +17,7 @@ import CompanyAPI from '../../API/CompanyAPI';
 import partKhui from '../../helpers/partKhui';
 import periodics from '../../helpers/periodics';
 import alertify from 'alertifyjs';
+import { InputNumber } from 'antd';
 
 const HuiPoint = () => {
     const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ const HuiPoint = () => {
     const huis = useSelector(selectorHuis)
     const userCompanies = useSelector(selectorUserCompanies)
     const { id } = useParams();
-
+console.log(huiPoints);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -83,16 +84,23 @@ const HuiPoint = () => {
                 }
                 const resHuiPoint = await HuiPointAPI.getChains(data);
                 const resultHuiPoint = resHuiPoint.ResponseResult.Result;
-                const liveHuis = resultHuiPoint?.map(huiPoint => huiPoint.liveHui)
-                const dieHuis = resultHuiPoint?.map(huiPoint => huiPoint.dieHui)
-                const getHuis = resultHuiPoint?.map(huiPoint => huiPoint.getHui)
-                const liveSum = liveHuis[0]||liveHuis[0]===0?liveHuis?.reduce((a, b) => a + b):0
-                const dieSum = dieHuis[0]||dieHuis[0]===0?dieHuis?.reduce((a, b) => a + b):0
-                const getSum = getHuis[0]||dieHuis[0]===0?getHuis?.reduce((a, b) => a + b):0
-                setSumLive(liveSum);
-                setSumDie(dieSum);
-                setSumGet(getSum);
-                setSumInsure(liveSum+dieSum-getSum)
+                if(resultHuiPoint[0]) {
+                    const liveHuis = resultHuiPoint?.map(huiPoint => huiPoint.liveHui)
+                    const dieHuis = resultHuiPoint?.map(huiPoint => huiPoint.dieHui)
+                    const getHuis = resultHuiPoint?.map(huiPoint => huiPoint.getHui)
+                    const liveSum = liveHuis.reduce((a, b) => a + b)
+                    const dieSum = dieHuis.reduce((a, b) => a + b)
+                    const getSum = getHuis.reduce((a, b) => a + b)
+                    setSumLive(liveSum);
+                    setSumDie(dieSum);
+                    setSumGet(getSum);
+                    setSumInsure(liveSum+dieSum-getSum);
+                } else {
+                    setSumLive(0);
+                    setSumDie(0);
+                    setSumGet(0);
+                    setSumInsure(0);
+                }
                 setHuiPoints(resultHuiPoint);
                 setHuiPush(null)
                 setLoading(false);
@@ -304,7 +312,7 @@ const HuiPoint = () => {
                                         <td data-label="Ngày đóng:">{format(new Date(huiPoint.paymentDate), 'dd/MM/yyyy')}</td>
                                         <td data-label="Số chân:">{huiPoint.cusNum}</td>
                                         <td data-label="Bỏ hụi:">
-                                            <input 
+                                            {/* <input 
                                                 type="number" 
                                                 name={`pushHui${i}`} 
                                                 id={`pushHui${i}`} 
@@ -316,23 +324,36 @@ const HuiPoint = () => {
                                                     i
                                                 })}
                                                 // disabled={(!huiPush?.value ? false : (huiPush?.i===i && huiPush?.value ? false : true)) || huiPoint.statusConfirm}
+                                            /> */}
+                                            <InputNumber
+                                                defaultValue={huiPoint.pushHui?huiPoint.pushHui:null}
+                                                name={`pushHui${i}`} 
+                                                id={`pushHui${i}`} 
+                                                className='form-control form-confirm form-number'
+                                                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                                parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
+                                                onChange={(value)=>setHuiPush({
+                                                    value: value, 
+                                                    huiPoint, 
+                                                    i
+                                                })}
                                             />
                                         </td>
                                         <td data-label="Hụi sống:">{huiPoint.liveHui===0?'-':currencyFormatter.format(huiPoint.liveHui, {
                                                 decimal: '*',
-                                                thousand: '.',
+                                                thousand: ',',
                                                 precision: 0,
                                                 format: '%v %s' // %s is the symbol and %v is the value
                                                 })}</td>
                                         <td data-label="Hụi chết:">{huiPoint.dieHui===0?'-':currencyFormatter.format(huiPoint.dieHui, {
                                         decimal: '*',
-                                        thousand: '.',
+                                        thousand: ',',
                                         precision: 0,
                                         format: '%v %s' // %s is the symbol and %v is the value
                                         })}</td>
                                         <td data-label="Hốt hụi:">{huiPoint.getHui===0?'-':currencyFormatter.format(huiPoint.getHui, {
                                         decimal: '*',
-                                        thousand: '.',
+                                        thousand: ',',
                                         precision: 0,
                                         format: '%v %s' // %s is the symbol and %v is the value
                                         })}</td>
@@ -351,7 +372,7 @@ const HuiPoint = () => {
                                                     onClick={()=>unPush(huiPoint._id)}
                                                     disabled={huiPoint.statusConfirm}
                                                 >Bỏ chốt</button>}
-                                                {huiPoint.status===1 &&
+                                                {(huiPoint.status===1 || huiPoint.status===3) &&
                                                 <button 
                                                     className={'btn btn-cancle'}
                                                     onClick={()=>notify(huiPoint._id)}
@@ -368,21 +389,21 @@ const HuiPoint = () => {
                                     <td data-label="Hụi sống:"><div className='total'>
                                         {sumLive===0?'-':currencyFormatter.format(sumLive, {
                                         decimal: '*',
-                                        thousand: '.',
+                                        thousand: ',',
                                         precision: 0,
                                         format: '%v %s' // %s is the symbol and %v is the value
                                     })}</div></td>
                                     <td data-label="Hụi chết:"><div className='total'>
                                         {sumDie===0?'-':currencyFormatter.format(sumDie, {
                                         decimal: '*',
-                                        thousand: '.',
+                                        thousand: ',',
                                         precision: 0,
                                         format: '%v %s' // %s is the symbol and %v is the value
                                     })}</div></td>
                                     <td data-label="Hốt hụi:"><div className='total'>
                                         {sumGet===0?'-':currencyFormatter.format(sumGet, {
                                         decimal: '*',
-                                        thousand: '.',
+                                        thousand: ',',
                                         precision: 0,
                                         format: '%v %s' // %s is the symbol and %v is the value
                                     })}</div></td>
@@ -392,7 +413,7 @@ const HuiPoint = () => {
                                     <td data-label="Bảo hiểm:"><div className='total'>
                                         {sumInsure===0?'-':currencyFormatter.format(sumInsure, {
                                         decimal: '*',
-                                        thousand: '.',
+                                        thousand: ',',
                                         precision: 0,
                                         format: '%v %s' // %s is the symbol and %v is the value
                                     })}</div></td>

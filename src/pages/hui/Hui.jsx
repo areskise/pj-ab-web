@@ -370,7 +370,7 @@ const Hui = () => {
                                         <td data-label="Dây hụi:">{currencyFormatter.format(hui.money, {
                                                 symbol: 'VND',
                                                 decimal: '*',
-                                                thousand: '.',
+                                                thousand: ',',
                                                 precision: 0,
                                                 format: '%v %s' // %s is the symbol and %v is the value
                                                 })}</td>
@@ -390,7 +390,7 @@ const Hui = () => {
                                                 ></i>
                                                 <i 
                                                     className="fa-regular fa-file-zipper p-1 m-1"  
-                                                    onClick={()=>navigate(`/quan-ly-hui/chi-tiet-hui/${hui._id}`)}
+                                                    onClick={()=>navigate(`/manage-hui/${hui._id}`)}
                                                 ></i>
                                             </div>
                                         </td>

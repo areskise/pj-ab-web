@@ -7,6 +7,7 @@ import CompanyAPI from "../../../API/CompanyAPI";
 import companyCode from "../../../helpers/companyCode";
 import { selectorApplications } from "../../../redux/slice/applicationSlice";
 import { useSelector } from "react-redux";
+import { InputNumber } from "antd";
 
 const UpdateCompany = ({setShowUpdate, showUpdate, setReload, reload}) => {
     const [error, setError] = useState(false);
@@ -55,7 +56,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate, setReload, reload}) => {
             name: e.target.name.value,
             title: e.target.code.value,
             phone: e.target.phone.value,
-            money: +e.target.money.value,
+            money: +e.target.money.ariaValueNow,
             startDate: e.target.startDate.value,
             status: e.target.status.value,
             applicationId: app
@@ -169,12 +170,21 @@ const UpdateCompany = ({setShowUpdate, showUpdate, setReload, reload}) => {
                                     <div className='label'>
                                         <label htmlFor="">Số vốn</label>
                                     </div>
-                                    <input 
+                                    {/* <input 
                                         type="number" 
                                         name="money"
                                         className='form-control form-money' 
                                         defaultValue={showUpdate.money}
                                         onChange={handleChange}
+                                        onKeyDown={handleKeyDown}
+                                    /> */}
+                                    <InputNumber
+                                        name="money"
+                                        className='form-control form-money form-number'
+                                        defaultValue={showUpdate.money}
+                                        formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                        parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
+                                        placeholder='Nhập số vốn'
                                         onKeyDown={handleKeyDown}
                                     />
                                     <span className='money'>VND</span>

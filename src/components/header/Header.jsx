@@ -15,7 +15,6 @@ const Header = ({reload}) => {
     
 	const cookies = new Cookies();
     const access_token = cookies.get('access_token');
-    const userName = access_token?.userName;
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const userCompanies = useSelector(selectorUserCompanies);
@@ -84,7 +83,7 @@ const Header = ({reload}) => {
                         <div className="d-flex dropdown text-end">
                             <a href="#" className="d-flex align-items-center avatar link-dark text-decoration-none p-1 border rounded" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src={img.avatar} alt="mdo" width="32" height="32" className="rounded-circle" />
-                                <span className='p-1'>{userName}</span>
+                                <span className='p-1'>{access_token?.userName}</span>
                                 <i className="fa-solid fa-angle-down p-1 mt-1"></i>
                             </a>
                             <ul className="p-0 dropdown-menu text-small">
@@ -106,7 +105,7 @@ const Header = ({reload}) => {
                             <div className='d-flex justify-content-between align-items-center'>
                                 <div>
                                     <img src={img.avatar} alt="mdo" width="32" height="32" className="rounded-circle" />
-                                    <span className='p-1'>{userName}</span>
+                                    <span className='p-1'>{access_token?.userName}</span>
                                 </div>
                                 <a href="#" className="link-dark text-decoration-none p-1" onClick={() => setShowMenu(false)}>
                                     <i className="close-icon fa-solid fa-xmark"></i>

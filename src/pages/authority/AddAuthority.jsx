@@ -23,7 +23,6 @@ const AddAuthority = () => {
     const [expanded, setExpanded] = useState(['all', '646f8a5a4e4fb00d95ee26aa', '646f8a924e4fb00d95ee26ac', '646f8ad04e4fb00d95ee26ae', '6478a3238cf76c1e8a41e7fe']);
     const [filterText, setFilterText] = useState('');
     const userCompanies = useSelector(selectorUserCompanies)
-    const permissions = useSelector(selectorPermissions)
     const menuDefault = useSelector(selectorMenuDefault)
     const nodes = [{
         value: 'all',
@@ -91,9 +90,6 @@ const AddAuthority = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const perIds = checked.filter(perId => perId !== 'all');
-        const aa = [...menuDefault]
-        console.log(aa);
-        
         const menu = menuApp(menuDefault,perIds)
         const data = {
             role: {
@@ -109,7 +105,7 @@ const AddAuthority = () => {
                 "menu": menu,
             }
         }
-        if(!e.target.name.value || !selectCompany?._id) {
+        if(!e.target.name.value || !selectCompany?._id || !perIds) {
             setError(true)
             setMessErr(null)
         } else {

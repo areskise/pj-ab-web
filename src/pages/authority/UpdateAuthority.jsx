@@ -13,6 +13,7 @@ import { menuActions, selectorMenuDefault } from '../../redux/slice/menuSlice';
 import { NavLink } from "react-router-dom";
 import MenuAPI from "../../API/MenuAPI";
 import { permissionActions } from "../../redux/slice/permissionSlice";
+import menuApp from "../../helpers/menuApp";
 
 const UpdateAuthority = () => {
     const [loading, setLoading] = useState(false);
@@ -119,13 +120,14 @@ const UpdateAuthority = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const perIds = checked.filter(perId => perId !== 'all');
+        const menu = menuApp(menuDefault,perIds)
         const data = {
             _id: selectRole?._id,
             name: e.target.name.value,
             permissionId: perIds,
         }
         
-        if(!e.target.name.value || !selectRole?._id) {
+        if(!e.target.name.value || !selectRole?._id || !perIds) {
             setError(true)
             setMessErr(null)
         } else {

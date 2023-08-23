@@ -3,11 +3,53 @@ import img from '../../images/Image';
 import Header from "../../components/header/Header";
 import SideBar from "../../components/sidebar/SideBar";
 import { useState, useEffect } from 'react';
+import HuiAPI from "../../API/HuiAPI";
+import CompanyAPI from "../../API/CompanyAPI";
+import Cookies from "universal-cookie";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectorSelectedCompany, selectorUserCompanies } from "../../redux/slice/companySlice";
 
 const Home = () => {
-    const [selectComany, setSelectCompany] = useState('');
-    const [subMenu, setSubMenu] = useState(false);
-    const [control, setControl] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [countCompany, setCountCompany] = useState(0);
+    const [countHui, setCountHui] = useState(0);
+    const [huiList, setHuiList] = useState([]);
+
+    const userCompanies = useSelector(selectorUserCompanies)
+    const selectedCompany = useSelector(selectorSelectedCompany)
+
+
+    const cookies = new Cookies();
+    const access_token = cookies.get('access_token');
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(access_token) {
+            const data = {
+                limit: 9999,
+                page: 1,
+                organizationId: selectedCompany?._id,
+            }
+            const fetchHui = async () => {
+                try {
+                    setLoading(true);
+                    const res = await HuiAPI.getList(data);
+                    const result = res.ResponseResult.Result;
+                    setHuiList(result);
+                    setCountHui(result.totalDocs);
+                    setCountCompany(userCompanies.length);
+                    setLoading(false);
+                } catch (error) {
+                    setLoading(false);
+                    console.error(error);
+                }
+            }
+            fetchHui();
+        } else {
+            navigate('/');
+        }
+    }, [selectedCompany]);
 
     return(
         <div className="body-container bg-light">
@@ -24,7 +66,7 @@ const Home = () => {
                                 </div>
                                 <div className="d-flex mt-2 justify-content-between">
                                     <img src={img.company} alt='logo' width="50" height="50" className='logo-img'/>
-                                    <div className="count">20</div>
+                                    <div className="count">{countCompany}</div>
                                 </div>                           
                             </div>
                         </div>
@@ -35,7 +77,7 @@ const Home = () => {
                                 </div>
                                 <div className="d-flex mt-2 justify-content-between">
                                     <img src={img.hui} alt='logo' width="50" height="50" className='logo-img'/>
-                                    <div className="count">5</div>
+                                    <div className="count">{countHui}</div>
                                 </div>  
                             </div>
                         </div>
@@ -45,30 +87,12 @@ const Home = () => {
                             <div className="mx-1 mb-4">
                                 Dây hụi đến sắp đến hạn
                             </div>
-                            <div className="hui-item">
-                                <div>Hụi thần tài - Kỳ 2</div>
-                                <p>Khui 09/06/2023</p>
-                            </div>
-                            <div className="hui-item">
-                                <div>Hụi thần tài - Kỳ 2</div>
-                                <p>Khui 09/06/2023</p>
-                            </div>
-                            <div className="hui-item">
-                                <div>Hụi thần tài - Kỳ 2</div>
-                                <p>Khui 09/06/2023</p>
-                            </div>
-                            <div className="hui-item">
-                                <div>Hụi thần tài - Kỳ 2</div>
-                                <p>Khui 09/06/2023</p>
-                            </div>
-                            <div className="hui-item">
-                                <div>Hụi thần tài - Kỳ 2</div>
-                                <p>Khui 09/06/2023</p>
-                            </div>
-                            <div className="hui-item">
-                                <div>Hụi thần tài - Kỳ 2</div>
-                                <p>Khui 09/06/2023</p>
-                            </div>
+                            {huiList.docs?.map((hui, i) => (
+                                <div key={i} className="hui-item">
+                                    <div>Hụi thần tài - Kỳ 2</div>
+                                    <p>Khui 09/06/2023</p>
+                                </div>
+                            ))}
                         </div>
                     </div>
 

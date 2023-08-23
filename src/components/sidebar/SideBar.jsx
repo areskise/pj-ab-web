@@ -1,125 +1,68 @@
 import './sidebar.css';
 import React, { useEffect, useState } from 'react';
-import { NavLink } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import MenuAPI from '../../API/MenuAPI';
-import { useDispatch } from 'react-redux';
-import { menuActions } from '../../redux/slice/menuSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { menuActions, selectorMenuDefault, selectorSelected } from '../../redux/slice/menuSlice';
+import { Layout, Menu } from 'antd';
+const { Header, Content, Footer, Sider } = Layout;
 
 const SideBar = () => {
-  const [navUser, setNavUser] = useState(false);
+  const menuDefault = useSelector(selectorMenuDefault)
+  const {pathname} = useLocation()
+  const selected = [pathname]
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [opened, setOpened] = useState([`/${pathname.split("/")[1]}`])
+
+  const items =  menuDefault.map(menu=>{
+    if(!menu.sub) {
+      return {
+        label: menu.label,
+        key: `/${menu.title}`,
+        value: menu.value
+      }
+    } else {
+      return {
+        label: menu.label,
+        key: `/${menu.title}`,
+        value: menu.value,
+        children: menu.children.map(child=>({
+          label: child.label,
+          key: `/${menu.title}/${child.title}`,
+          value: child.value,
+        }))
+      }
+    }
+  });
 
   useEffect(() => {
     const fetchMenu = async () => {
         const res = await MenuAPI.getDefault()
         const result = res.ResponseResult.Result[0]?.menu
-        const bb = [...result]
-        dispatch(menuActions.setDefault(bb))
+        dispatch(menuActions.setDefault(result))
     }
     fetchMenu();
 }, []);
 
   return(  
     <div className="sidebar flex-nowrap">
-      <div className="h-100 d-flex flex-column flex-shrink-0 p-3 bg-light sibar-container">
-        <ul className="nav nav-pills flex-column mb-auto">
-          <li
-            className='nav-item'
-          >
-            <NavLink 
-              to={"/trang-chu"} 
-              className="nav-link link-color"
-              activeclassname="active"        
-            >
-              Trang chủ
-            </NavLink>
-          </li>
-          <li
-            className='nav-item'
-          >
-            <NavLink 
-              to={"/quan-ly-cong-ty"} 
-              className="nav-link link-color"
-              activeclassname="active"
-            >
-              Quản lý công ty
-            </NavLink>
-          </li>
-          <li
-            className='nav-item'
-          >
-            <NavLink 
-              to={"/quan-ly-phan-quyen"} 
-              className="nav-link link-color"
-              activeclassname="active"
-            >
-              Quản lý phân quyền
-            </NavLink>
-          </li>
-          <li
-            className="nav-item nav-user"
-            onClick={()=>setNavUser(!navUser)}
-          >
-            <div className='link-color'>
-              <NavLink 
-                to={"/quan-ly-nguoi-dung"} 
-                className="d-flex nav-link justify-content-between align-items-center disabled"
-                >
-                Quản lý người dùng
-                <i className="fa-solid fa-angle-down mt-1"></i>
-              </NavLink>
-            </div>
-          </li>
-            {navUser &&
-            <ul>
-              <li 
-                className='nav-sub-item'
-              >
-                <NavLink 
-                to={"/quan-ly-nguoi-dung/nhan-vien"} 
-                className="nav-link link-color"
-                activeclassname="subActive"
-                >
-                  Nhân viên
-                </NavLink>
-              </li>
-              <li 
-                className='nav-sub-item'
-              >
-                <NavLink 
-                to={"/quan-ly-nguoi-dung/khach-hang"} 
-                className="nav-link link-color"
-                activeclassname="subActive"
-                >
-                  Khách hàng
-                </NavLink>
-              </li>
-            </ul>
-            }
-          <li
-            className='nav-item'
-          >
-            <NavLink 
-              to={"/quan-ly-hui"} 
-              className="nav-link link-color"
-              activeclassname="active"
-            >
-              Quản lý hụi
-            </NavLink>
-          </li>
-          <li
-            className='nav-item'
-          >
-            <NavLink 
-              to={"/bao-cao"} 
-              className="nav-link link-color"
-              activeclassname="active"
-            >
-              Báo cáo
-            </NavLink>
-          </li>
-        </ul>
-      </div>
+      <Sider>
+        <Menu 
+          onClick={({key})=>{
+            navigate(key);
+          }}
+          openKeys={opened}
+          onOpenChange={open=>{
+            setOpened(open);
+          }}
+          items={items}
+          mode="inline"
+          inlineCollapsed={false}
+          selectedKeys={selected}
+        />
+      </Sider>
     </div>
   )
 }

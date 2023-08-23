@@ -7,6 +7,7 @@ import companyCode from '../../../helpers/companyCode';
 import CompanyAPI from "../../../API/CompanyAPI";
 import { useSelector } from "react-redux";
 import { selectorApplications } from "../../../redux/slice/applicationSlice";
+import { InputNumber } from "antd";
 
 const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
     const [error, setError] = useState(false);
@@ -45,7 +46,7 @@ const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
             name: e.target.name.value,
             title: e.target.code.value,
             phone: e.target.phone.value,
-            money: +e.target.money.value,
+            money: +e.target.money.ariaValueNow,
             startDate: e.target.startDate.value,
             applicationId: app
         }
@@ -150,10 +151,18 @@ const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
                                     <div className='label'>
                                         <label htmlFor="">Số vốn</label>
                                     </div>
-                                    <input 
+                                    {/* <input 
                                         type="number" 
                                         name="money"
                                         className='form-control form-money' 
+                                        placeholder='Nhập số vốn'
+                                        onKeyDown={handleKeyDown}
+                                    /> */}
+                                    <InputNumber
+                                        name="money"
+                                        className='form-control form-money form-number'
+                                        formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                        parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
                                         placeholder='Nhập số vốn'
                                         onKeyDown={handleKeyDown}
                                     />

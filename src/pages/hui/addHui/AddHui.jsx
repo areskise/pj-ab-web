@@ -10,6 +10,7 @@ import CustomerAPI from "../../../API/CustomerAPI";
 import HuiAPI from "../../../API/HuiAPI";
 import { dayKhui } from "../../../helpers/dayKhui";
 import customerList from "../../../helpers/customerList";
+import { InputNumber } from "antd";
 
 const AddHui = ({setShowAdd, showAdd}) => {
     const [loading, setLoading] = useState(false);
@@ -120,7 +121,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                 num: typeKhui==='2'?selectDayKhui.num:+e.target.numKhui.value
             },
             partNum: +e.target.partNum.value,
-            money: +e.target.money.value,
+            money: +e.target.money.ariaValueNow,
             insureNum: +e.target.insureNum.value,
             staffInsures: inputStaffs,
             customers: cusAdd,
@@ -455,10 +456,18 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                     <label htmlFor="">Dây</label>
                                 </div>
                                 <div className="d-flex align-items-center select-dropdown">
-                                    <input 
+                                    {/* <input 
                                         type="number" 
                                         name="money"
                                         className='form-control mr-2 form-money' 
+                                        placeholder='Nhập số tiền' 
+                                        onKeyDown={handleKeyDown}
+                                    /> */}
+                                    <InputNumber
+                                        name="money"
+                                        className='form-control mr-2 form-money form-number'
+                                        formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                        parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
                                         placeholder='Nhập số tiền' 
                                         onKeyDown={handleKeyDown}
                                     />

@@ -196,10 +196,22 @@ tr>td:last-child {
   border-bottom-right-radius: 10px;
 }
 
-@media screen and (max-width: 1200px) {
-  .main-container {
-    left: 206px;
-  }
+.form-number {
+  padding: 4px 15px !important;
+} 
+
+.ant-input-number .ant-input-number-input {
+  padding: 0;
+}
+
+.ant-input-number-disabled, 
+.ant-input-number-disabled .ant-input-number-input {
+  background-color: #e9ecef;
+  cursor: default;
+}
+
+.ant-input-number .ant-input-number-handler-wrap {
+  display: none;
 }
 
 @media screen and (max-width: 992px) {

@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    default: []
+    default: [],
+    menu: []
 };
 
 const menuSlice = createSlice({
@@ -10,6 +11,9 @@ const menuSlice = createSlice({
     reducers: {
         setDefault(state, action) {
             state.default = action.payload
+        },
+        setMenu(state, action) {
+            state.menu = action.payload
         }
     }
 });
@@ -17,6 +21,7 @@ const menuSlice = createSlice({
 export const menuActions = menuSlice.actions;
 
 export const selectorMenuDefault = state => state.menu.default
+export const selectorMenu = state => state.menu.menu
 
 const menuReducer = menuSlice.reducer;
 export default menuReducer;

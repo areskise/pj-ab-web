@@ -2,6 +2,7 @@ import "./detailHuiPoint.css";
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import CompanyAPI from "../../../API/CompanyAPI";
+import { InputNumber } from 'antd';
 
 const DetailHuiPoint = ({selectedHui, selectCompany}) => {
     const [startDate, setStartDate] = useState(new Date());
@@ -49,9 +50,16 @@ const DetailHuiPoint = ({selectedHui, selectCompany}) => {
                         <label htmlFor="">Dây</label>
                     </div>
                     <div className="d-flex align-items-center select-dropdown">
-                        <input 
+                        {/* <input 
                             className='form-control mr-2 form-money' 
                             value={selectedHui.money}
+                            disabled
+                        /> */}
+                        <InputNumber
+                            value={selectedHui.money}
+                            className='form-control mr-2 form-number'
+                            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                            parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
                             disabled
                         />
                         VND

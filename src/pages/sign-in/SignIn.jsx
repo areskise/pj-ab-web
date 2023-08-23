@@ -23,7 +23,7 @@ const SignIn = () => {
 
   useEffect(() => {
     if(access_token){
-      navigate('/trang-chu');
+      navigate('/main');
     }
   }, [access_token, navigate]);
 
@@ -44,13 +44,13 @@ const SignIn = () => {
         if(res.ResponseResult.ErrorCode === 0) {
           if(remember) {
             cookies.set('access_token', result, {maxAge: 604800})  
-            navigate('/trang-chu');
-            window.location.reload();
+            navigate('/main');
+            // window.location.reload();
             setLoading(false);
           } else {
             cookies.set('access_token', result)
-            navigate('/trang-chu');
-            window.location.reload();
+            navigate('/main');
+            // window.location.reload();
             setLoading(false);
           }
         } else {

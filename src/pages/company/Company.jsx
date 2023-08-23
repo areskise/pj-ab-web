@@ -459,7 +459,7 @@ const Company = () => {
                                                 {currencyFormatter.format(company.money, {
                                                 symbol: 'VND',
                                                 decimal: '*',
-                                                thousand: '.',
+                                                thousand: ',',
                                                 precision: 0,
                                                 format: '%v %s' // %s is the symbol and %v is the value
                                                 })}</span>

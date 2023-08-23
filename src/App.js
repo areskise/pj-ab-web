@@ -20,16 +20,16 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<SignIn />} />
-        <Route path='/trang-chu' element={<Home />} />
-        <Route path='/quan-ly-cong-ty' element={<Company />} />
+        <Route path='/main' element={<Home />} />
+        <Route path='/manage-organization' element={<Company />} />
         <Route path='/quan-ly-phan-quyen' element={<Authority />} />
         <Route path='/quan-ly-phan-quyen/them-moi' element={<AddAuthority />} />
         <Route path='/quan-ly-phan-quyen/cap-nhat' element={<UpdateAuthority />} />
-        <Route path='/quan-ly-nguoi-dung/nhan-vien' element={<Employee />} />
-        <Route path='/quan-ly-nguoi-dung/khach-hang' element={<Customer />} />
-        <Route path='/quan-ly-hui' element={<Hui />} />
-        <Route path='/quan-ly-hui/chi-tiet-hui/:id' element={<HuiPoint />} />
-        <Route path='/bao-cao' element={<Report />} />
+        <Route path='/manage-user/staff' element={<Employee />} />
+        <Route path='/manage-user/customer' element={<Customer />} />
+        <Route path='/manage-hui/manage-hui' element={<Hui />} />
+        <Route path='/manage-hui/:id' element={<HuiPoint />} />
+        <Route path='/manage-hui/report' element={<Report />} />
       </Routes>
     </BrowserRouter> 
   );
