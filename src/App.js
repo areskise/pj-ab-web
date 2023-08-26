@@ -28,7 +28,7 @@ function App() {
         <Route path='/manage-user/staff' element={<Employee />} />
         <Route path='/manage-user/customer' element={<Customer />} />
         <Route path='/manage-hui/manage-hui' element={<Hui />} />
-        <Route path='/manage-hui/:id' element={<HuiPoint />} />
+        <Route path='/manage-hui/manage-hui/:id' element={<HuiPoint />} />
         <Route path='/manage-hui/report' element={<Report />} />
       </Routes>
     </BrowserRouter> 

@@ -7,6 +7,7 @@ import { companyActions, selectorUserCompanies } from "../../redux/slice/company
 import Cookies from 'universal-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import CompanyAPI from '../../API/CompanyAPI';
+import SideBar from '../sidebar/SideBar';
 
 const Header = ({reload}) => {
     const [showModal, setShowModal] = useState(false);
@@ -112,7 +113,7 @@ const Header = ({reload}) => {
                                 </a>
                             </div>
                             <hr />
-                            <ul className="nav nav-pills flex-column mb-auto">
+                            {/* <ul className="nav nav-pills flex-column mb-auto">
                                 <li
                                     className='nav-item'
                                 >
@@ -208,6 +209,23 @@ const Header = ({reload}) => {
                                     Báo cáo
                                     </NavLink>
                                 </li>
+                                <li
+                                    className='nav-item'
+                                    onClick={() => {
+                                        setShowModal(true)
+                                        setShowMenu(false)
+                                    }}
+                                >
+                                    <Link 
+                                    to={"#"} 
+                                    className="nav-link link-color"
+                                    >
+                                    Đăng xuất
+                                    </Link>
+                                </li>
+                            </ul> */}
+                            <SideBar/>
+                            <ul className="nav nav-pills flex-column mb-auto">
                                 <li
                                     className='nav-item'
                                     onClick={() => {

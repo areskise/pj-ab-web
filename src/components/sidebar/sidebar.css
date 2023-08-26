@@ -28,7 +28,6 @@ aside.ant-layout-sider.ant-layout-sider-dark {
 
 .ant-menu-light.ant-menu-inline .ant-menu-item {
   margin: 16px 8px;
-  width: auto;
 }
 
 .ant-menu-sub.ant-menu-inline .ant-menu-item {
@@ -57,6 +56,10 @@ aside.ant-layout-sider.ant-layout-sider-dark {
 
 @media screen and (max-width: 992px) {
   .sidebar {
-    display: none !important;
+    position: relative;
+    left: auto;
+    top: -16px;
+    right: 9px;
+    height: auto;
   }
 }

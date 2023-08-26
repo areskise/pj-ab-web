@@ -97,7 +97,17 @@ header .selected-company {
 }
 
 .sibar-menu {
-  width: 260px;
+  width: 272px;
+}
+
+.link-color {
+  color:  rgba(0, 0, 0, 0.88);
+  padding: 8px 24px;
+}
+
+.link-color:hover {
+  color:  rgba(0, 0, 0, 0.88);
+  background-color: rgba(0, 0, 0, 0.06);
 }
 
 @media screen and (max-width: 992px) {

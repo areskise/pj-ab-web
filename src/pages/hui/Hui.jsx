@@ -390,7 +390,7 @@ const Hui = () => {
                                                 ></i>
                                                 <i 
                                                     className="fa-regular fa-file-zipper p-1 m-1"  
-                                                    onClick={()=>navigate(`/manage-hui/${hui._id}`)}
+                                                    onClick={()=>navigate(`/manage-hui/manage-hui/${hui._id}`)}
                                                 ></i>
                                             </div>
                                         </td>

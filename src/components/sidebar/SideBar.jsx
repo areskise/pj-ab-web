@@ -10,7 +10,7 @@ const { Header, Content, Footer, Sider } = Layout;
 const SideBar = () => {
   const menuDefault = useSelector(selectorMenuDefault)
   const {pathname} = useLocation()
-  const selected = [pathname]
+  const selected = [`/${pathname.split("/")[1]}`,`/${pathname.split("/")[1]}`+`/${pathname.split("/")[2]}`]
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
