@@ -18,11 +18,12 @@ import partKhui from '../../helpers/partKhui';
 import periodics from '../../helpers/periodics';
 import alertify from 'alertifyjs';
 import { InputNumber } from 'antd';
+import SendGroup from './sendGroup/SendGroup';
 
 const HuiPoint = () => {
     const [loading, setLoading] = useState(false);
     const [reload, setReload] = useState(false);
-    const [showAdd, setShowAdd] = useState(false);
+    const [showSend, setShowSend] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
     const [selectedHui, setSelectedHui] = useState({});
     const [huiPoints, setHuiPoints] = useState([]);
@@ -41,7 +42,7 @@ const HuiPoint = () => {
     const huis = useSelector(selectorHuis)
     const userCompanies = useSelector(selectorUserCompanies)
     const { id } = useParams();
-console.log(huiPoints);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -94,7 +95,7 @@ console.log(huiPoints);
                     setSumLive(liveSum);
                     setSumDie(dieSum);
                     setSumGet(getSum);
-                    setSumInsure(liveSum+dieSum-getSum);
+                    setSumInsure((selectedHui?.insureNum/100)*(selectedHui?.money));
                 } else {
                     setSumLive(0);
                     setSumDie(0);
@@ -140,7 +141,7 @@ console.log(huiPoints);
             setLoading(true);  
             const data = {_id}
             await HuiPointAPI.unPush(data);
-            setPushed(false)
+            setPushed(true)
             setReload(!reload);
         } catch (error) {
             setLoading(false);
@@ -202,6 +203,7 @@ console.log(huiPoints);
         <div className="hui-point body-container bg-light">
             <Header/>
             <SideBar/>
+            <SendGroup showSend={showSend} setShowSend={setShowSend}/>
             <div className="main-container bg-light">
                 <h5 className="m-4">
                     Quản lý hụi 
@@ -262,8 +264,12 @@ console.log(huiPoints);
                     </div>
                     <div className="select-company-container">
                         <div className='func-icon'>
-                            <button className='btn btn-continue mx-3' disabled={pushed}>Đóng tất cả</button>
-                            <button className='btn btn-continue mx-3' disabled={pushed}>Gửi group nhắc hụi</button>
+                            <button className='btn btn-continue mx-3' disabled={!sumGet}>Đóng tất cả</button>
+                            <button 
+                                className='btn btn-continue mx-3' 
+                                onClick={()=>setShowSend(true)}
+                                disabled={!sumGet}
+                            >Gửi group nhắc hụi</button>
                         </div>
                     </div>
                     
@@ -312,19 +318,6 @@ console.log(huiPoints);
                                         <td data-label="Ngày đóng:">{format(new Date(huiPoint.paymentDate), 'dd/MM/yyyy')}</td>
                                         <td data-label="Số chân:">{huiPoint.cusNum}</td>
                                         <td data-label="Bỏ hụi:">
-                                            {/* <input 
-                                                type="number" 
-                                                name={`pushHui${i}`} 
-                                                id={`pushHui${i}`} 
-                                                className='form-control form-confirm' 
-                                                defaultValue={huiPoint.pushHui?huiPoint.pushHui:null}
-                                                onChange={(e)=>setHuiPush({
-                                                    value: +e.target.value, 
-                                                    huiPoint, 
-                                                    i
-                                                })}
-                                                // disabled={(!huiPush?.value ? false : (huiPush?.i===i && huiPush?.value ? false : true)) || huiPoint.statusConfirm}
-                                            /> */}
                                             <InputNumber
                                                 defaultValue={huiPoint.pushHui?huiPoint.pushHui:null}
                                                 name={`pushHui${i}`} 
@@ -372,12 +365,27 @@ console.log(huiPoints);
                                                     onClick={()=>unPush(huiPoint._id)}
                                                     disabled={huiPoint.statusConfirm}
                                                 >Bỏ chốt</button>}
-                                                {(huiPoint.status===1 || huiPoint.status===3) &&
+                                                {huiPoint.status===1 &&
                                                 <button 
                                                     className={'btn btn-cancle'}
                                                     onClick={()=>notify(huiPoint._id)}
                                                     disabled={huiPoint.statusConfirm}
                                                 >Nhắc hụi</button>}
+                                                {huiPoint.status===3 && <>
+                                                    {!sumGet?
+                                                        <button 
+                                                            className={'btn btn-continue'}
+                                                            onClick={()=>push(huiPoint, i)}
+                                                            disabled
+                                                        >Chốt hụi</button>
+                                                        :
+                                                        <button 
+                                                        className={'btn btn-cancle'}
+                                                        onClick={()=>notify(huiPoint._id)}
+                                                        disabled={huiPoint.statusConfirm}
+                                                        >Nhắc hụi</button>
+                                                    }
+                                                </>}
                                             </div>
                                         </td>
                                     </tr>

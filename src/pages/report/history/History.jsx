@@ -55,7 +55,7 @@ const History = () => {
             cusId: selectCus?._id,
         }
         
-        if (selectHui && selectCus) {
+        if (selectHui || selectCus) {
             const fetchReport = async () => {
                 try {
                     setLoading(true);

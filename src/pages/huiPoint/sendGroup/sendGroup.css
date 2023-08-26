@@ -1,0 +1,177 @@
+.send-group {
+    min-height: 100%;
+      width: 100%;
+      max-width: 805px;
+      margin: auto;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+  }
+  
+  .send-group>.modal-content {
+      width: auto;
+      border-radius: 40px;
+  
+  }
+  
+  .send-group .modal-body {
+      padding: 12px;
+  }
+  
+  .send-group .form-container {
+      display: flex;
+  }
+  
+  .send-group .form-container .select-company:hover {
+      cursor: pointer;
+    }
+    
+    .send-group .form-container .select-company:focus-visible {
+      outline-offset: 0;
+      outline: none;
+    }
+    
+    .send-group .form-container .form-control-dark {
+      border-color: var(--bs-gray);
+    }
+    .send-group .form-container .form-control-dark:focus {
+      border-color: #fff;
+      box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
+    }
+    
+    .send-group .form-container .dropdown-toggle {
+      outline: 0;
+    }
+    
+    .send-group .form-container .dropdown-menu {
+      --bs-dropdown-min-width: none;
+      width: 100%;
+    }
+    
+    .send-group .form-container .dropdown-item {
+      white-space: normal;
+    }
+    
+    .send-group .form-container .dropdown-item:hover {
+      border-radius: 0.375rem;
+      background-color: #D8E2E9;
+    }
+    
+    .send-group .form-container .selected-company {
+      display: flex;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 88%;
+      text-align: right;
+    }
+  
+  .send-group .form-control {
+      width: 242px;
+      height: 38px;
+      padding: 10px 15px;
+      border: 2px solid #D8E2E9;
+      border-radius: 20px;
+  }
+  
+  .send-group .form-textarea {
+    height: auto;
+  }
+  
+  .send-group .select-company {
+      padding: 0 12px;
+      height: 38px;    
+      width: 242px;
+      border: 2px solid #D8E2E9;
+      border-radius: 20px;
+  }
+  
+  .send-group .select-company:focus-visible {
+      outline: none;
+  }
+  
+  .send-group .form-money {
+      padding-right: 38px !important;
+  }
+  
+  .send-group .money {
+      position: absolute;
+      width: 38px;
+      height: 38px;
+      background-color: #D8E2E9;
+      margin-left: -1px;
+      border: 2px solid #D8E2E9;
+      border-radius: 20px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      line-height: 34px;
+  }
+  
+  .send-group .form-check {
+      border: 1px solid #D8E2E9;
+      border-radius: 20px;
+      margin: 16px 16px 0 16px;
+      padding-right: 1.5em;
+      padding-bottom: 1rem;
+  }
+  
+  .send-group .form-checkbox {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #454545;
+      border-radius: 2px;
+      margin-right: 12px;
+  }
+  
+  .send-group .label {
+      width: 148px;
+      height: 20px;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 20px;
+      color: #454545;
+      display: flex;
+      text-align: start;
+  }
+  
+  .send-group .toggle-password {
+      position: absolute;
+      width: 38px;
+      height: 38px;
+      background-color: #D8E2E9;
+      margin-left: -1px;
+      border: 2px solid #D8E2E9;
+      border-radius: 20px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      line-height: 36px;
+      opacity: 0.8;
+  }
+  
+  .send-group .toggle-password:hover {
+    cursor: pointer;
+    opacity: 1;
+  }
+  
+  .send-group .form-check .form-control {
+      max-width: 100%;
+  }
+  
+  @media screen and (max-width: 992px) {
+      .send-group .form-container {
+          display: block;
+      }
+  }
+  
+  @media screen and (max-width: 576px) {
+      .send-group .form-control,
+      .send-group .select-company {
+          width: 100%;
+          max-width: 240px;
+      }
+  
+      .send-group .form-container .select-dropdown {
+          width: 100%;
+          max-width: 240px;
+          justify-content: end;
+      }
+  }
