@@ -34,55 +34,66 @@ const SendGroup = ({setShowSend, showSend}) => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = {
-            organizationId: selectCompany?._id,
-            code: e.target.code.value,
-            fullName: e.target.fullName.value,
-            phoneNumber: e.target.phoneNumber.value,
-            cccd: e.target.cccd.value,
-            idChanel: e.target.idChanel.value,
-            address: e.target.address.value,
+        // const data = {
+        //     organizationId: selectCompany?._id,
+        //     code: e.target.code.value,
+        //     fullName: e.target.fullName.value,
+        //     phoneNumber: e.target.phoneNumber.value,
+        //     cccd: e.target.cccd.value,
+        //     idChanel: e.target.idChanel.value,
+        //     address: e.target.address.value,
+        // }
+        // const type = "text/plain";
+        // const blob = new Blob(['text'], { type });
+        // const data = [new ClipboardItem({ [type]: blob })];
+        const data = document.getElementById('sendGroup').outerText
+        await navigator.clipboard.writeText(data).then(res=>{
+            // console.log(res);
         }
-        if(
-            !selectCompany?._id || 
-            !e.target.code.value || 
-            !e.target.fullName.value || 
-            !e.target.phoneNumber.value || 
-            !e.target.cccd.value || 
-            !e.target.idChanel.value || 
-            !e.target.address.value
-        ) {
-            setError(true)
-            setMessErr(null)
-        } else if(e.target.phoneNumber.value && e.target.phoneNumber.value.length !== 10) {
-            setError(null)
-            setMessErr('Số điện thoại phải gồm 10 chữ số')
-        } else {
-            try {
-                const res = await CustomerAPI.create(data);
-                if(res.ResponseResult.ErrorCode === 0){
-                    setShowSend(false)
-                    setError(false)
-                    setMessErr(null)
-                    alertify.set('notifier', 'position', 'top-right');
-                    alertify.success('Thêm mới thành công!');
-                } else {
-                    if(res.ResponseResult.Result.code === 11000) {
-                        setError(false)
-                        setMessErr('Tên đăng nhập hoặc Email đã tồn tại!')
-                    } else {
-                        console.error(res.ResponseResult.Message);
-                        setError(false)
-                        setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
-                    }
-                }
-            }
-            catch(err) {
-                console.error(err.me);
-                setError(false)
-                setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
-            }
-        }
+        ).catch((err)=>{console.log(err);})
+
+        const s = await navigator.clipboard.read()
+        console.log(JSON.stringify(s));
+        // if(
+        //     !selectCompany?._id || 
+        //     !e.target.code.value || 
+        //     !e.target.fullName.value || 
+        //     !e.target.phoneNumber.value || 
+        //     !e.target.cccd.value || 
+        //     !e.target.idChanel.value || 
+        //     !e.target.address.value
+        // ) {
+        //     setError(true)
+        //     setMessErr(null)
+        // } else if(e.target.phoneNumber.value && e.target.phoneNumber.value.length !== 10) {
+        //     setError(null)
+        //     setMessErr('Số điện thoại phải gồm 10 chữ số')
+        // } else {
+        //     try {
+        //         // const res = await CustomerAPI.create(data);
+        //         if(res.ResponseResult.ErrorCode === 0){
+        //             setShowSend(false)
+        //             setError(false)
+        //             setMessErr(null)
+        //             alertify.set('notifier', 'position', 'top-right');
+        //             alertify.success('Thêm mới thành công!');
+        //         } else {
+        //             if(res.ResponseResult.Result.code === 11000) {
+        //                 setError(false)
+        //                 setMessErr('Tên đăng nhập hoặc Email đã tồn tại!')
+        //             } else {
+        //                 console.error(res.ResponseResult.Message);
+        //                 setError(false)
+        //                 setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+        //             }
+        //         }
+        //     }
+        //     catch(err) {
+        //         console.error(err.me);
+        //         setError(false)
+        //         setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+        //     }
+        // }
     };
 
     const handleClose = (e) => {
@@ -109,7 +120,7 @@ const SendGroup = ({setShowSend, showSend}) => {
                     <Modal.Title className='title'>Nội dung tin nhắn</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className='w-100 m-auto text-center'>
-                    <div className='form-container'>
+                    <div id='sendGroup' className='form-container'>
                         <div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                 <div className='label'>
@@ -140,17 +151,14 @@ const SendGroup = ({setShowSend, showSend}) => {
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                 <div className='label'>
                                     <label htmlFor="">
+                                        Mã KH: asfafa
+                                    </label>
+                                </div>
+                                <div className='label'>
+                                    <label htmlFor="">
                                         Mã KH
                                     </label>
                                 </div>
-                                <input 
-                                    type="text" 
-                                    name="code"
-                                    className='form-control'
-                                    onKeyDown={handleKeyDown}
-                                    value={code}
-                                    disabled
-                                />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                 <div className='label'>
@@ -158,49 +166,35 @@ const SendGroup = ({setShowSend, showSend}) => {
                                         Tên KH
                                     </label>
                                 </div>
-                                <input 
-                                    type="text" 
-                                    name="fullName"
-                                    className='form-control'
-                                    placeholder="Nhập tên KH"
-                                    onKeyDown={handleKeyDown}
-                                />
+                                <div className='label'>
+                                    <label htmlFor="">
+                                        Tên KH
+                                    </label>
+                                </div>
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                 <div className='label'>
                                     <label htmlFor="">Số điện thoại</label>
                                 </div>
-                                <input 
-                                    type="number" 
-                                    name="phoneNumber"
-                                    className='form-control' 
-                                    placeholder='Nhập SĐT' 
-                                    onKeyDown={handleKeyDown}
-                                />
+                                <div className='label'>
+                                    <label htmlFor="">Số điện thoại</label>
+                                </div>
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                 <div className='label'>
                                     <label htmlFor="">CMND/CCCD</label>
                                 </div>
-                                <input 
-                                    type="number" 
-                                    name="cccd"
-                                    className='form-control' 
-                                    placeholder='Nhập CMND/CCCD' 
-                                    onKeyDown={handleKeyDown}
-                                />
+                                <div className='label'>
+                                    <label htmlFor="">Số điện thoại</label>
+                                </div>
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                 <div className='label'>
                                     <label htmlFor="">ID Telegram</label>
                                 </div>
-                                <input 
-                                    type="text" 
-                                    name="idChanel"
-                                    className='form-control' 
-                                    placeholder='Nhập ID Telegram' 
-                                    onKeyDown={handleKeyDown}
-                                />
+                                <div className='label'>
+                                    <label htmlFor="">Số điện thoại</label>
+                                </div>
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                 <div className='label'>

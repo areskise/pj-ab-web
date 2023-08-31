@@ -7,6 +7,7 @@ html, body, #root {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
+  -webkit-user-select: none;
 }
 
 code {
@@ -54,6 +55,7 @@ input::-webkit-inner-spin-button {
 }
 input[type=number] {
   -moz-appearance: textfield;
+  -webkit-appearance: textfield;
 }
 
 .btn:active,
@@ -153,6 +155,7 @@ i:hover {
 
 .table tbody {
   user-select: text;
+  -webkit-user-select: text;
 }
 
 .spinner-loading {
