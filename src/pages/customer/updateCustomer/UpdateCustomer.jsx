@@ -196,7 +196,7 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                                 <div className='label'>
-                                    <label htmlFor="">Đại chỉ</label>
+                                    <label htmlFor="">Địa chỉ</label>
                                 </div>
                                 <textarea 
                                     rows="4"

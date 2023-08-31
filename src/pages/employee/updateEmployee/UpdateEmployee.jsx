@@ -127,7 +127,7 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
-                            {selectCompany==='all'?
+                            {/* {selectCompany==='all'?
                                 <div className="d-flex dropdown select-dropdown text-end">
                                     <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span className='selected-company p-2'>{selectedCompany?selectedCompany?.name:'Loading...'}</span>
@@ -155,7 +155,14 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                                 >
                                     <option value={selectedCompany?._id} >{selectedCompany?.name}</option>
                                 </select>
-                            }
+                            } */}
+                                <select 
+                                    name="company" 
+                                    className='form-select select-company'
+                                    disabled
+                                >
+                                    <option value={selectedCompany?._id} >{selectedCompany?.name}</option>
+                                </select>
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
                             <div className='label'>

@@ -39,9 +39,13 @@ const SideBar = () => {
 
   useEffect(() => {
     const fetchMenu = async () => {
-        const res = await MenuAPI.getDefault()
-        const result = res.ResponseResult.Result[0]?.menu
-        dispatch(menuActions.setDefault(result))
+        const resDefault = await MenuAPI.getDefault()
+        const resultDefault = resDefault.ResponseResult.Result[0]?.menu
+        dispatch(menuActions.setDefault(resultDefault))
+        const resMenu = await MenuAPI.getMenu()
+        console.log(resMenu);
+        // const resultDefault = resDefault.ResponseResult.Result[0]?.menu
+        // dispatch(menuActions.setDefault(resultDefault))
     }
     fetchMenu();
 }, []);

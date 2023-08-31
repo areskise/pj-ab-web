@@ -23,7 +23,7 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
             }
             fetchCode();
         }
-    },[selectCompany]);
+    },[selectCompany,showAdd]);
 
     const handleKeyDown = (e) => {
         if(e.key === "Enter") {
@@ -64,6 +64,8 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
                     setShowAdd(false)
                     setError(false)
                     setMessErr(null)
+                    setSelectCompany(null)
+                    setCode(null)
                     alertify.set('notifier', 'position', 'top-right');
                     alertify.success('Thêm mới thành công!');
                 } else {

@@ -356,7 +356,7 @@ const HuiPoint = () => {
                                                     <button 
                                                         className={'btn btn-continue'}
                                                         onClick={()=>push(huiPoint, i)}
-                                                        disabled={huiPush?.i===i && huiPush?.value ? false : true || huiPoint.statusConfirm}
+                                                        disabled={huiPush?.i===i && (huiPush?.value || huiPush?.value===0) ? false : true || huiPoint.statusConfirm}
                                                     >Chốt hụi</button>
                                                 }
                                                 {huiPoint.status===2 &&
