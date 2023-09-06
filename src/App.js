@@ -22,9 +22,9 @@ function App() {
         <Route path='/' element={<SignIn />} />
         <Route path='/main' element={<Home />} />
         <Route path='/manage-organization' element={<Company />} />
-        <Route path='/quan-ly-phan-quyen' element={<Authority />} />
-        <Route path='/quan-ly-phan-quyen/them-moi' element={<AddAuthority />} />
-        <Route path='/quan-ly-phan-quyen/cap-nhat' element={<UpdateAuthority />} />
+        <Route path='/manage-permission' element={<Authority />} />
+        <Route path='/manage-permission/add' element={<AddAuthority />} />
+        <Route path='/manage-permission/update' element={<UpdateAuthority />} />
         <Route path='/manage-user/staff' element={<Employee />} />
         <Route path='/manage-user/customer' element={<Customer />} />
         <Route path='/manage-hui/manage-hui' element={<Hui />} />

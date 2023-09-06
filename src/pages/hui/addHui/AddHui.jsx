@@ -114,7 +114,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
             organizationId: selectCompany?._id,
             code: e.target.code.value,
             name: e.target.name.value,
-            idChanel: e.target.idChanel.value,
+            // idChanel: e.target.idChanel.value,
             type: {
                 type: +typeKhui,
                 name: typeName,
@@ -132,7 +132,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
             !selectCompany?._id || 
             !data.code || 
             !data.name || 
-            !data.idChanel || 
+            // !data.idChanel || 
             !data.partNum || 
             !data.money || 
             !data.insureNum || 
@@ -140,10 +140,12 @@ const AddHui = ({setShowAdd, showAdd}) => {
         ) {
             setError(true)
             setMessErr(null)
-        } else if(!inputStaffs[0].userId || !inputStaffs[0].insureNum) {
-            setMessErr('Vui lòng hoàn tất nhập liệu thông tin nhân viên tham gia.')
-            setError(false)
-        } else if(data.partNum !== cusAdd.length) {
+        } 
+        // else if(!inputStaffs[0].userId || !inputStaffs[0].insureNum) {
+        //     setMessErr('Vui lòng hoàn tất nhập liệu thông tin nhân viên tham gia.')
+        //     setError(false)
+        // } 
+        else if(data.partNum !== cusAdd.length) {
             setMessErr('Tổng số chân hụi viên tham gia không hợp lệ. Vui lòng kiểm tra lại.')
             setError(false)
         } else {
@@ -328,7 +330,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                     onKeyDown={handleKeyDown}
                                 />
                             </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
+                            {/* <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
                                 <div className='label'>
                                     <label htmlFor="">
                                         Group nhắc hụi
@@ -341,7 +343,7 @@ const AddHui = ({setShowAdd, showAdd}) => {
                                     placeholder="Nhập ID group nhắc hụi"
                                     onKeyDown={handleKeyDown}
                                 />
-                            </div>
+                            </div> */}
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
                                 <div className='label'>
                                     <label htmlFor="">

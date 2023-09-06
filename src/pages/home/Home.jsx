@@ -9,16 +9,19 @@ import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectorSelectedCompany, selectorUserCompanies } from "../../redux/slice/companySlice";
+import countKhui from "../../helpers/countKhui";
+import partKhui from "../../helpers/partKhui";
+import periodics from "../../helpers/periodics";
+import { format } from "date-fns";
 
 const Home = () => {
     const [loading, setLoading] = useState(false);
     const [countCompany, setCountCompany] = useState(0);
     const [countHui, setCountHui] = useState(0);
-    const [huiList, setHuiList] = useState([]);
+    const [huiSoons, setHuiSoons] = useState([]);
 
     const userCompanies = useSelector(selectorUserCompanies)
     const selectedCompany = useSelector(selectorSelectedCompany)
-
 
     const cookies = new Cookies();
     const access_token = cookies.get('access_token');
@@ -36,7 +39,16 @@ const Home = () => {
                     setLoading(true);
                     const res = await HuiAPI.getList(data);
                     const result = res.ResponseResult.Result;
-                    setHuiList(result);
+                    const resSoon = await HuiAPI.getListComingSoon();
+                    const resultHuis = resSoon.ResponseResult.Result;
+                    let resultSoon = []
+                    resultHuis.map(resultHui=> {
+                        resultHui.periodicHuis.map(res=>{
+                            res.name = resultHui.name
+                            resultSoon.push(res) 
+                        })                     
+                    })
+                    setHuiSoons(resultSoon.sort((a,b)=>new Date(a.openDate)-new Date(b.openDate)));
                     setCountHui(result.totalDocs);
                     setCountCompany(userCompanies.length);
                     setLoading(false);
@@ -87,10 +99,10 @@ const Home = () => {
                             <div className="mx-1 mb-4">
                                 Dây hụi đến sắp đến hạn
                             </div>
-                            {huiList.docs?.map((hui, i) => (
+                            {huiSoons?.map((hui, i) => (
                                 <div key={i} className="hui-item">
-                                    <div>Hụi thần tài - Kỳ 2</div>
-                                    <p>Khui 09/06/2023</p>
+                                    <div>{hui.name} - Kỳ {hui.periodicHui}</div>
+                                    <p>Khui {format(hui.openDate?new Date(hui.openDate):new Date(), 'dd/MM/yyyy')}</p>
                                 </div>
                             ))}
                         </div>

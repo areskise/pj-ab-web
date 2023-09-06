@@ -6,6 +6,7 @@ import EmployeeAPI from "../../../API/EmployeeAPI";
 import { useSelector } from "react-redux";
 import { selectorUserCompanies } from "../../../redux/slice/companySlice";
 import CompanyAPI from "../../../API/CompanyAPI";
+import validator from "../../../helpers/valiadator";
 
 const AddEmployee = ({setShowAdd, showAdd}) => {
     const [selectCompany, setSelectCompany] = useState(null);
@@ -39,13 +40,17 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        data.append('organizationId', selectCompany?._id);
-        data.append('userName', e.target.userName.value);
-        data.append('password', e.target.password.value);
-        data.append('fullName', e.target.fullName.value);
-        data.append('email', e.target.email.value);
-        data.append('phoneNumber', e.target.phoneNumber.value);
-        data.append('roleId', selectRole?._id);
+        const data = {
+            organizationId: selectCompany?._id,
+            userName: e.target.userName.value,
+            password: e.target.password.value,
+            fullName: e.target.fullName.value,
+            email: e.target.email.value,
+            phoneNumber: e.target.phoneNumber.value,
+            roleId: selectRole?._id,
+        }
+        const isValid = validator(data)
+        console.log(isValid);
         if(
             !selectCompany?._id || 
             !e.target.userName.value || 
@@ -56,6 +61,10 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
         ) {
             setError(true)
             setMessErr(null)
+        } else if(isValid) {
+            console.log(isValid);
+            setMessErr(isValid.message)
+            setError(false)
         } else if(e.target.password.value !== e.target.rePassword.value) {
             setMessErr('Nhập lại mật khẩu không chính xác!')
             setError(false)
@@ -63,30 +72,30 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
             setError(null)
             setMessErr('Số điện thoại phải gồm 10 chữ số')
         } else {
-            try {
-                const res = await EmployeeAPI.create(data);
-                if(res.ResponseResult.ErrorCode === 0){
-                    setShowAdd(false)
-                    setError(false)
-                    setMessErr(null)
-                    alertify.set('notifier', 'position', 'top-right');
-                    alertify.success('Thêm mới thành công!');
-                } else {
-                    if(res.ResponseResult.Result.code === 11000) {
-                        setError(false)
-                        setMessErr('Tên đăng nhập hoặc Email đã tồn tại!')
-                    } else {
-                        console.error(res.ResponseResult.Message);
-                        setError(false)
-                        setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
-                    }
-                }
-            }
-            catch(err) {
-                console.error(err.me);
-                setError(false)
-                setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
-            }
+            // try {
+            //     const res = await EmployeeAPI.create(data);
+            //     if(res.ResponseResult.ErrorCode === 0){
+            //         setShowAdd(false)
+            //         setError(false)
+            //         setMessErr(null)
+            //         alertify.set('notifier', 'position', 'top-right');
+            //         alertify.success('Thêm mới thành công!');
+            //     } else {
+            //         if(res.ResponseResult.Result.code === 11000) {
+            //             setError(false)
+            //             setMessErr('Tên đăng nhập hoặc Email đã tồn tại!')
+            //         } else {
+            //             console.error(res.ResponseResult.Message);
+            //             setError(false)
+            //             setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+            //         }
+            //     }
+            // }
+            // catch(err) {
+            //     console.error(err.me);
+            //     setError(false)
+            //     setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+            // }
         }
     };
 
@@ -166,6 +175,8 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     className='form-control'
                                     placeholder="Nhập tên đăng nhập"
                                     onKeyDown={handleKeyDown}
+                                    min={5}
+                                    max={64}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -243,6 +254,8 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     className='form-control' 
                                     placeholder='Nhập SĐT' 
                                     onKeyDown={handleKeyDown}
+                                    minLength={10}
+                                    maxLength={10}
                                 />
                             </div>
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>

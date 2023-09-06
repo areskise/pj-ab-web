@@ -118,7 +118,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
             organizationId: showUpdate.organizationId,
             code: e.target.code.value,
             name: e.target.name.value,
-            idChanel: e.target.idChanel.value,
+            // idChanel: e.target.idChanel.value,
             type: {
                 type: +typeKhui,
                 name: typeName,
@@ -129,13 +129,15 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
             insureNum: +e.target.insureNum.value,
             staffInsures: inputStaffs,
             customers: cusAdd,
+            startDate: e.target.startDate.value,
+            endDate: e.target.endDate.value,
         }
         
         if(
             !showUpdate.organizationId || 
             !data.code || 
             !data.name || 
-            !data.idChanel || 
+            // !data.idChanel || 
             !data.partNum || 
             !data.money || 
             !data.insureNum || 
@@ -317,7 +319,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                     onKeyDown={handleKeyDown}
                                 />
                             </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
+                            {/* <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
                                 <div className='label'>
                                     <label htmlFor="">
                                         Group nhắc hụi
@@ -331,7 +333,7 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
                                     defaultValue={selectedHui.idChanel}
                                     onKeyDown={handleKeyDown}
                                 />
-                            </div>
+                            </div> */}
                             <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
                                 <div className='label'>
                                     <label htmlFor="">

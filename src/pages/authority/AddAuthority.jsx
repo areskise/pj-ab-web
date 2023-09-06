@@ -8,10 +8,8 @@ import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import alertify from 'alertifyjs';
 import { selectorUserCompanies } from '../../redux/slice/companySlice';
 import RoleAPI from '../../API/RoleAPI';
-import { menuActions, selectorMenuDefault } from '../../redux/slice/menuSlice';
+import { selectorMenuDefault } from '../../redux/slice/menuSlice';
 import { NavLink } from "react-router-dom";
-import MenuAPI from "../../API/MenuAPI";
-import { permissionActions, selectorPermissions } from "../../redux/slice/permissionSlice";
 import menuApp from "../../helpers/menuApp";
 
 const AddAuthority = () => {
@@ -31,20 +29,6 @@ const AddAuthority = () => {
         children: menuDefault,
     }]
     const [filteredNodes, setFilteredNodes] = useState(nodes);
-
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        const fetchMenu = async () => {
-            setLoading(true)
-            const res = await MenuAPI.getDefault()
-            const result = res.ResponseResult.Result[0]?.menu
-            dispatch(menuActions.setDefault(result))
-            dispatch(permissionActions.setPermissions())
-            setLoading(false)
-        }
-        fetchMenu();
-    }, []);
 
     useEffect(() => {
         filterTree();

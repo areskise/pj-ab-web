@@ -13,6 +13,10 @@ const HuiAPI = {
         return await axiosClient.get(`/hui/list?page=${page}&limit=${limit}`); 
     },
 
+    getListComingSoon: async () => {
+        return await axiosClient.get(`/hui/getListComingSoon`);
+    },
+
     getConst: async () => {
         return await axiosClient.get(`/const/list`);
     },

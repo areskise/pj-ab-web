@@ -122,9 +122,16 @@ const UpdateAuthority = () => {
         const perIds = checked.filter(perId => perId !== 'all');
         const menu = menuApp(menuDefault,perIds)
         const data = {
-            _id: selectRole?._id,
-            name: e.target.name.value,
-            permissionId: perIds,
+            role: {
+                _id: selectRole?._id,
+                organizationId: selectCompany?._id,
+                title: selectCompany?.title + '-' + e.target.name.value,
+                name: e.target.name.value,
+                permissionId: perIds,
+            },
+            menu: {
+                "menu": menu,
+            }
         }
         
         if(!e.target.name.value || !selectRole?._id || !perIds) {

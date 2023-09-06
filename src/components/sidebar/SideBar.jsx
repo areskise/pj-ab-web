@@ -3,12 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import MenuAPI from '../../API/MenuAPI';
 import { useDispatch, useSelector } from 'react-redux';
-import { menuActions, selectorMenuDefault, selectorSelected } from '../../redux/slice/menuSlice';
+import { menuActions, selectorMenu, selectorMenuDefault } from '../../redux/slice/menuSlice';
 import { Layout, Menu } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 
 const SideBar = () => {
-  const menuDefault = useSelector(selectorMenuDefault)
+  // const menu = useSelector(selectorMenu)
+  const menu = useSelector(selectorMenuDefault)
+  console.log(menu);
   const {pathname} = useLocation()
   const selected = [`/${pathname.split("/")[1]}`,`/${pathname.split("/")[1]}`+`/${pathname.split("/")[2]}`]
   const dispatch = useDispatch();
@@ -16,7 +18,7 @@ const SideBar = () => {
 
   const [opened, setOpened] = useState([`/${pathname.split("/")[1]}`])
 
-  const items =  menuDefault.map(menu=>{
+  const items =  menu.map(menu=>{
     if(!menu.sub) {
       return {
         label: menu.label,
@@ -43,9 +45,8 @@ const SideBar = () => {
         const resultDefault = resDefault.ResponseResult.Result[0]?.menu
         dispatch(menuActions.setDefault(resultDefault))
         const resMenu = await MenuAPI.getMenu()
-        console.log(resMenu);
-        // const resultDefault = resDefault.ResponseResult.Result[0]?.menu
-        // dispatch(menuActions.setDefault(resultDefault))
+        const resultMenu = resMenu.ResponseResult.Result[0]?.menu
+        dispatch(menuActions.setMenu(resultMenu))
     }
     fetchMenu();
 }, []);

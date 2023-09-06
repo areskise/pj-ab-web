@@ -42,7 +42,7 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
             cccd: e.target.cccd.value,
             idChanel: e.target.idChanel.value,
             address: e.target.address.value,
-        }
+        } 
         if(
             !selectCompany?._id || 
             !e.target.code.value || 
@@ -57,6 +57,9 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
         } else if(e.target.phoneNumber.value && e.target.phoneNumber.value.length !== 10) {
             setError(null)
             setMessErr('Số điện thoại phải gồm 10 chữ số')
+        } else if(e.target.cccd.value && !(e.target.cccd.value.length === 9 || e.target.cccd.value.length === 12)) {
+            setError(null)
+            setMessErr('Số CMND/CCCD không hợp lệ')
         } else {
             try {
                 const res = await CustomerAPI.create(data);

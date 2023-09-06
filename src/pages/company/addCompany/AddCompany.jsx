@@ -2,7 +2,6 @@ import "./addCompany.css";
 import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
 import { useState, useEffect } from 'react';
-import { useForm } from "react-hook-form";
 import { format } from 'date-fns';
 import companyCode from '../../../helpers/companyCode';
 import CompanyAPI from "../../../API/CompanyAPI";
@@ -11,8 +10,6 @@ import { selectorApplications } from "../../../redux/slice/applicationSlice";
 import { InputNumber } from "antd";
 
 const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
-     const { register, formState: { errors }, handleSubmit } = useForm();
-    console.log("errors", errors);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
     const [code, setCode] = useState(null);
@@ -35,9 +32,8 @@ const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
         setFormValues({...formValues, [name]: value})
     }
 
-    const onSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(e);
         const defaultApp = applications.find(app => app.title === 'default')
         const huiApp = applications.find(app => app.title === 'hui')
         const app = [defaultApp._id]
@@ -54,7 +50,6 @@ const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
             startDate: e.target.startDate.value,
             applicationId: app
         }
-        
         if(!e.target.name.value || !e.target.phone.value || !e.target.money.value || !e.target.startDate.value) {
             setError(true)
             setMessErr(null)
@@ -106,7 +101,7 @@ const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
 
     return (
         <Modal dialogClassName="modal-add" show={showAdd} onHide={onHide} keyboard={false}>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit}>
                 <Modal.Header className='justify-content-center'>
                     <Modal.Title className='title'>THÊM CÔNG TY</Modal.Title>
                 </Modal.Header>
@@ -125,7 +120,6 @@ const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
                                         placeholder='Nhập tên công ty'
                                         onChange={handleChange}
                                         onKeyDown={handleKeyDown}
-                                        {...register("name",{ required: true })}
                                     />
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -138,7 +132,6 @@ const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
                                         className='form-control' 
                                         defaultValue={code}
                                         disabled 
-                                        {...register("code",{ required: true })}
                                     />
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -151,7 +144,6 @@ const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
                                         className='form-control' 
                                         placeholder='Nhập SĐT' 
                                         onKeyDown={handleKeyDown}
-                                        {...register("phone",{ required: true })}
                                     />
                                 </div>
                                 <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
@@ -172,7 +164,6 @@ const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
                                         parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
                                         placeholder='Nhập số vốn'
                                         onKeyDown={handleKeyDown}
-                                        {...register("money",{ required: true })}
                                     />
                                     <span className='money'>VND</span>
                                 </div>
@@ -187,7 +178,6 @@ const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
                                         defaultValue={format(new Date(), 'yyyy-MM-dd')} 
                                         min={format(new Date(), 'yyyy-MM-dd')}
                                         onKeyDown={handleKeyDown}
-                                        {...register("startDate",{ required: true })}
                                     />
                                 </div>
                         </div>
@@ -209,7 +199,6 @@ const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
                                         id='hui' 
                                         name="hui"
                                         onKeyDown={handleKeyDown}
-                                        {...register("hui", { required: true })}
                                     />
                                     <div className="w-100">
                                         <label htmlFor="hui" className="w-100">Quản lý hụi</label>

@@ -255,7 +255,7 @@ const HuiPoint = () => {
                                                 date: peri?.date,
                                             })}
                                         >
-                                            Kỳ {peri?.periodic} - {format(peri.date?new Date(peri.date):new Date(), 'dd/MM/yyyy')}
+                                            Kỳ {peri?.periodic?peri?.periodic:1} - {format(peri.date?new Date(peri.date):new Date(), 'dd/MM/yyyy')}
                                         </button>
                                     </li>
                                 ))}
