@@ -58,33 +58,42 @@ input[type=number] {
   -webkit-appearance: textfield;
 }
 
-.btn:active,
+/* .btn:active,
 .btn:focus-visible {
   border-color: #B3CAD6 !important;
   background-color: #B3CAD6 !important;
-}
+} */
 
 .btn-cancle {
   background: #DBC898;
 }
-.btn-cancle:hover {
-  background: #d1b776;
+.btn-cancle:hover,
+.btn-cancle:active,
+.btn-cancle:focus-visible {
+  background: #d1b776 !important;
+  border-color: #d1b776 !important;
 }
 
 .btn-continue {
   background: #B3CAD6;
 }
-.btn-continue:hover {
-  background: #74afcf;
+.btn-continue:hover,
+.btn-continue:active,
+.btn-continue:focus-visible {
+  background: #74afcf !important;
+  border-color: #74afcf !important;
 }
 
 .btn-confirm {
   background: #526594;
   color: #fff;
 }
-.btn-confirm:hover {
-  background: #364E8B;
-  color: #fff;
+.btn-confirm:hover,
+.btn-confirm:active,
+.btn-confirm:focus-visible {
+  background: #364E8B !important;
+  border-color: #364E8B !important;
+  color: #fff !important;
 }
 
 .btn-control:hover {

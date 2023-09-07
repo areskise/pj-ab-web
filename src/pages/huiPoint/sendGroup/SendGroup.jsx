@@ -1,116 +1,28 @@
 import "./sendGroup.css";
 import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
-import { useEffect, useState } from 'react';
-import CustomerAPI from "../../../API/CustomerAPI";
-import { useSelector } from "react-redux";
-import { selectorUserCompanies } from "../../../redux/slice/companySlice";
-import CompanyAPI from "../../../API/CompanyAPI";
+import currencyFormatter from 'currency-formatter';
+import { format } from "date-fns";
 
-const SendGroup = ({setShowSend, showSend}) => {
-    const [selectCompany, setSelectCompany] = useState(null);
-    const [error, setError] = useState(false);
-    const [messErr, setMessErr] = useState(null);
-    const [code, setCode] = useState(null);
-    const userCompanies = useSelector(selectorUserCompanies)
-    
-    useEffect(() => {
-        if(selectCompany) {
-            const fetchCode = async () => {
-                const resCount = await CustomerAPI.getCount(selectCompany?._id)
-                const count = resCount.ResponseResult.Result.count+1
-                setCode('KH'+count+(selectCompany.title))
-            }
-            fetchCode();
-        }
-    },[selectCompany]);
-
-    const handleKeyDown = (e) => {
-        if(e.key === "Enter") {
-            e.preventDefault();
-            document.getElementById('submitBtn').click();
-        }
-    }
+const SendGroup = ({setShowSend, showSend, periodicHui, huiPoints, selectedHui}) => {
+    const pushHuis = huiPoints.filter(hui=>hui.getHui!==0)
+    const confirmHuis = huiPoints.filter(hui=>hui.getHui===0)
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // const data = {
-        //     organizationId: selectCompany?._id,
-        //     code: e.target.code.value,
-        //     fullName: e.target.fullName.value,
-        //     phoneNumber: e.target.phoneNumber.value,
-        //     cccd: e.target.cccd.value,
-        //     idChanel: e.target.idChanel.value,
-        //     address: e.target.address.value,
-        // }
-        // const type = "text/plain";
-        // const blob = new Blob(['text'], { type });
-        // const data = [new ClipboardItem({ [type]: blob })];
         const data = document.getElementById('sendGroup').outerText
-        await navigator.clipboard.writeText(data).then(res=>{
-            // console.log(res);
-        }
-        ).catch((err)=>{console.log(err);})
-
-        const s = await navigator.clipboard.read()
-        console.log(JSON.stringify(s));
-        // if(
-        //     !selectCompany?._id || 
-        //     !e.target.code.value || 
-        //     !e.target.fullName.value || 
-        //     !e.target.phoneNumber.value || 
-        //     !e.target.cccd.value || 
-        //     !e.target.idChanel.value || 
-        //     !e.target.address.value
-        // ) {
-        //     setError(true)
-        //     setMessErr(null)
-        // } else if(e.target.phoneNumber.value && e.target.phoneNumber.value.length !== 10) {
-        //     setError(null)
-        //     setMessErr('Số điện thoại phải gồm 10 chữ số')
-        // } else {
-        //     try {
-        //         // const res = await CustomerAPI.create(data);
-        //         if(res.ResponseResult.ErrorCode === 0){
-        //             setShowSend(false)
-        //             setError(false)
-        //             setMessErr(null)
-        //             alertify.set('notifier', 'position', 'top-right');
-        //             alertify.success('Thêm mới thành công!');
-        //         } else {
-        //             if(res.ResponseResult.Result.code === 11000) {
-        //                 setError(false)
-        //                 setMessErr('Tên đăng nhập hoặc Email đã tồn tại!')
-        //             } else {
-        //                 console.error(res.ResponseResult.Message);
-        //                 setError(false)
-        //                 setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
-        //             }
-        //         }
-        //     }
-        //     catch(err) {
-        //         console.error(err.me);
-        //         setError(false)
-        //         setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
-        //     }
-        // }
+        await navigator.clipboard.writeText(data)
+        alertify.set('notifier', 'position', 'top-center');
+        alertify.warning('Nội dung tin nhắn đã được copy!');       
     };
 
     const handleClose = (e) => {
         e.preventDefault();
-        setError(false)
         setShowSend(false)
-        setMessErr(null)
-        setSelectCompany(null)
-        setCode(null)
     }
 
     const onHide = () => {
-        setError(false)
         setShowSend(false)
-        setMessErr(null)
-        setSelectCompany(null)
-        setCode(null)
     }
 
     return (
@@ -122,101 +34,65 @@ const SendGroup = ({setShowSend, showSend}) => {
                 <Modal.Body className='w-100 m-auto text-center'>
                     <div id='sendGroup' className='form-container'>
                         <div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
-                                <div className='label'>
-                                    <label htmlFor="">
-                                        Công ty
-                                    </label>
+                            <div className='mx-md-3 mb-4'>
+                                <div>
+                                    Hụi [Bi Lai] xin phép báo số [{selectedHui?.name}]
                                 </div>
-                                <div className="d-flex dropdown select-dropdown text-end">
-                                    <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span className='selected-company p-2'>{selectCompany?selectCompany?.name:'Chọn công ty'}</span>
-                                    </a>
-                                    <ul className="p-0 my-1 dropdown-menu selected-dropdown text-small">
-                                        {userCompanies?.map((company, i) => (
-                                            <li key={i}>
-                                                <button 
-                                                    className='p-2 px-3 btn dropdown-item'
-                                                    type='button'
-                                                    style={selectCompany?._id===company._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                                    onClick={() => setSelectCompany(company)}
-                                                >
-                                                    {company.name}
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
+                                <div>
+                                    Khui ngày [{format(periodicHui?.date?new Date(periodicHui?.date):new Date(), 'dd/MM/yyyy')}]
+                                    <br/>
                                 </div>
                             </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
+                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-start'>
                                 <div className='label'>
                                     <label htmlFor="">
-                                        Mã KH: asfafa
-                                    </label>
-                                </div>
-                                <div className='label'>
-                                    <label htmlFor="">
-                                        Mã KH
+                                        Bỏ hụi
                                     </label>
                                 </div>
                             </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
-                                <div className='label'>
+                            {pushHuis?.map(hui=>(
+                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
+                                <div className="mx-3">
                                     <label htmlFor="">
-                                        Tên KH
+                                        - {hui.cusName} - {currencyFormatter.format(hui.pushHui, {
+                                            symbol: 'VND',
+                                            decimal: '*',
+                                            thousand: ',',
+                                            precision: 0,
+                                            format: '%v %s' // %s is the symbol and %v is the value
+                                        })}
+                                        <br/>
                                     </label>
                                 </div>
+                            </div>
+                            ))}
+                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-start'>
                                 <div className='label'>
                                     <label htmlFor="">
-                                        Tên KH
+                                        Đóng hụi
                                     </label>
                                 </div>
                             </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
-                                <div className='label'>
-                                    <label htmlFor="">Số điện thoại</label>
-                                </div>
-                                <div className='label'>
-                                    <label htmlFor="">Số điện thoại</label>
-                                </div>
-                            </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
-                                <div className='label'>
-                                    <label htmlFor="">CMND/CCCD</label>
-                                </div>
-                                <div className='label'>
-                                    <label htmlFor="">Số điện thoại</label>
-                                </div>
-                            </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
-                                <div className='label'>
-                                    <label htmlFor="">ID Telegram</label>
-                                </div>
-                                <div className='label'>
-                                    <label htmlFor="">Số điện thoại</label>
+                            {confirmHuis?.map((hui, i)=>(
+                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-between'>
+                                <div className="mx-3">
+                                    <label htmlFor="">
+                                        - {hui.cusName} - {currencyFormatter.format(hui.liveHui?hui.liveHui:hui.dieHui , {
+                                            symbol: 'VND',
+                                            decimal: '*',
+                                            thousand: ',',
+                                            precision: 0,
+                                            format: '%v %s' // %s is the symbol and %v is the value
+                                        })}
+                                        {confirmHuis?.length === i+1 && <br/>}
+                                    </label>
                                 </div>
                             </div>
-                            <div className='d-flex m-md-3 my-3 align-items-center justify-content-end'>
-                                <div className='label'>
-                                    <label htmlFor="">Địa chỉ</label>
-                                </div>
-                                <textarea 
-                                    rows="4"
-                                    name="address"
-                                    className='form-control form-textarea' 
-                                    placeholder='Nhập địa chỉ' 
-                                    onKeyDown={handleKeyDown}
-                                />
-                            </div>                            
+                            ))}
+                            <div className='mx-md-3 mt-4'>
+                                Cảm ơn Anh Chị đã ủng hộ Bi Lai ạ!
+                            </div>                           
                         </div>
-                    </div>
-                    <div className='m-auto mb-3 text-center'>
-                    {error && 
-                        <div className="error-text">Vui lòng nhập đầy đủ thông tin.</div>
-                    }
-                    {messErr &&
-                        <div className="error-text">{messErr}</div>
-                    }
                     </div>
                 </Modal.Body>
                 <Modal.Footer className='justify-content-center'>

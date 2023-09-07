@@ -52,7 +52,7 @@ const SideBar = () => {
 }, []);
 
   return(  
-    <div className="sidebar flex-nowrap">
+    <div className="bg-light sidebar flex-nowrap">
       <Sider>
         <Menu 
           onClick={({key})=>{

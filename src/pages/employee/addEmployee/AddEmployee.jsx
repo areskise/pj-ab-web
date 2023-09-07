@@ -16,7 +16,6 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
     const [roles, setRoles] = useState([]);
-    const data = new FormData();
     const userCompanies = useSelector(selectorUserCompanies)
     
     useEffect(() => {
@@ -72,30 +71,30 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
             setError(null)
             setMessErr('Số điện thoại phải gồm 10 chữ số')
         } else {
-            // try {
-            //     const res = await EmployeeAPI.create(data);
-            //     if(res.ResponseResult.ErrorCode === 0){
-            //         setShowAdd(false)
-            //         setError(false)
-            //         setMessErr(null)
-            //         alertify.set('notifier', 'position', 'top-right');
-            //         alertify.success('Thêm mới thành công!');
-            //     } else {
-            //         if(res.ResponseResult.Result.code === 11000) {
-            //             setError(false)
-            //             setMessErr('Tên đăng nhập hoặc Email đã tồn tại!')
-            //         } else {
-            //             console.error(res.ResponseResult.Message);
-            //             setError(false)
-            //             setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
-            //         }
-            //     }
-            // }
-            // catch(err) {
-            //     console.error(err.me);
-            //     setError(false)
-            //     setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
-            // }
+            try {
+                const res = await EmployeeAPI.create(data);
+                if(res.ResponseResult.ErrorCode === 0){
+                    setShowAdd(false)
+                    setError(false)
+                    setMessErr(null)
+                    alertify.set('notifier', 'position', 'top-right');
+                    alertify.success('Thêm mới thành công!');
+                } else {
+                    if(res.ResponseResult.Result.code === 11000) {
+                        setError(false)
+                        setMessErr('Tên đăng nhập hoặc Email đã tồn tại!')
+                    } else {
+                        console.error(res.ResponseResult.Message);
+                        setError(false)
+                        setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+                    }
+                }
+            }
+            catch(err) {
+                console.error(err.me);
+                setError(false)
+                setMessErr('Lỗi do hệ thống vui lòng liên hệ với admin!')
+            }
         }
     };
 

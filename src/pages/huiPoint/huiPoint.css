@@ -114,6 +114,7 @@
 .hui-point-container {
   padding: 2rem;
   padding-bottom: 0;
+  overflow: auto;
 }
 
 .hui-point-container .table {

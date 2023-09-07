@@ -42,7 +42,7 @@ const HuiPoint = () => {
     const huis = useSelector(selectorHuis)
     const userCompanies = useSelector(selectorUserCompanies)
     const { id } = useParams();
-
+console.log(huiPoints);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -85,6 +85,10 @@ const HuiPoint = () => {
                 }
                 const resHuiPoint = await HuiPointAPI.getChains(data);
                 const resultHuiPoint = resHuiPoint.ResponseResult.Result;
+                setSumLive(0);
+                setSumDie(0);
+                setSumGet(0);
+                setSumInsure(0);
                 if(resultHuiPoint[0]) {
                     const liveHuis = resultHuiPoint?.map(huiPoint => huiPoint.liveHui)
                     const dieHuis = resultHuiPoint?.map(huiPoint => huiPoint.dieHui)
@@ -96,11 +100,6 @@ const HuiPoint = () => {
                     setSumDie(dieSum);
                     setSumGet(getSum);
                     setSumInsure((selectedHui?.insureNum/100)*(selectedHui?.money));
-                } else {
-                    setSumLive(0);
-                    setSumDie(0);
-                    setSumGet(0);
-                    setSumInsure(0);
                 }
                 setHuiPoints(resultHuiPoint);
                 setHuiPush(null)
@@ -203,7 +202,7 @@ const HuiPoint = () => {
         <div className="hui-point body-container bg-light">
             <Header/>
             <SideBar/>
-            <SendGroup showSend={showSend} setShowSend={setShowSend}/>
+            <SendGroup showSend={showSend} setShowSend={setShowSend} periodicHui={periodicHui} huiPoints={huiPoints} selectedHui={selectedHui}/>
             <div className="main-container bg-light">
                 <h5 className="m-4">
                     Quản lý hụi 
