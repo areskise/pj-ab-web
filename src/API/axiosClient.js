@@ -4,23 +4,12 @@ import AuthAPI from './AuthAPI';
 
 const axiosClient = axios.create({
 	baseURL: 'http://118.69.111.40:8001/api/v1',
-	// baseURL: 'http://localhost:8001/api/v1',
 	headers: {
 		'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
 	},
 	withCredentials: true,
 });
-
-// axiosClient.interceptors.request.use(async (config) => {
-// 	// Handle token here ...
-// 	const cookies = new Cookies();
-// 	const token = cookies.get('token');
-// 	if (token) {
-// 		config.headers['Authorization'] = 'Bearer ' + token;
-// 	}
-// 	return config;
-// });
 
 // Add a request interceptor
 axiosClient.interceptors.request.use(
@@ -53,11 +42,12 @@ axiosClient.interceptors.response.use(
 				}
 				const res = await AuthAPI.refresh(data);
 				if(res.ResponseResult.ErrorCode === 0){
-						cookies.set('access_token', res.ResponseResult.Result)
+					cookies.set('access_token', res.ResponseResult.Result)
+					window.location.reload();
 				} else {
 					cookies.remove('access_token')
+					window.location.reload();
 				}
-				window.location.reload();
 				return res;
 			};
 			return response.data;

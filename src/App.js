@@ -14,6 +14,7 @@ import Customer from './pages/customer/Customer';
 import Hui from './pages/hui/Hui';
 import Report from './pages/report/Report';
 import HuiPoint from './pages/huiPoint/HuiPoint';
+import PageNotFound from './pages/error/PageNotFound';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path='/manage-hui/manage-hui' element={<Hui />} />
         <Route path='/manage-hui/manage-hui/:id' element={<HuiPoint />} />
         <Route path='/manage-hui/report' element={<Report />} />
+        <Route path='*' element={<PageNotFound />} />
       </Routes>
     </BrowserRouter> 
   );

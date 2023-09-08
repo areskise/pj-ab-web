@@ -49,7 +49,6 @@ export default function menuApp(menuDefault, perIds) {
                     children: menu.children.map(child=>{
                         if (perIds.includes(child.value)) {
                             if(!child.sub) {
-                                console.log(child.value);
                                 return {
                                     label: child.label,
                                     title: child.title,

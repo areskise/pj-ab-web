@@ -1,7 +1,7 @@
 import "./addHui.css";
 import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { useSelector } from "react-redux";
 import { selectorUserCompanies } from "../../../redux/slice/companySlice";
@@ -672,4 +672,4 @@ const AddHui = ({setShowAdd, showAdd}) => {
     )
 }
 
-export default AddHui;
+export default memo(AddHui);

@@ -1,11 +1,10 @@
 import "./addCustomer.css";
 import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import CustomerAPI from "../../../API/CustomerAPI";
 import { useSelector } from "react-redux";
 import { selectorUserCompanies } from "../../../redux/slice/companySlice";
-import CompanyAPI from "../../../API/CompanyAPI";
 
 const AddCustomer = ({setShowAdd, showAdd}) => {
     const [selectCompany, setSelectCompany] = useState(null);
@@ -243,4 +242,4 @@ const AddCustomer = ({setShowAdd, showAdd}) => {
     )
 }
 
-export default AddCustomer;
+export default memo(AddCustomer);

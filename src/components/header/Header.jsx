@@ -1,7 +1,7 @@
 import './header.css';
 import img from '../../images/Image';
-import { useEffect, useState } from 'react';
-import { useNavigate, NavLink, Link } from "react-router-dom";
+import { memo, useEffect, useState } from 'react';
+import { useNavigate, Link } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
 import { companyActions, selectorUserCompanies } from "../../redux/slice/companySlice";
 import Cookies from 'universal-cookie';
@@ -12,7 +12,6 @@ import SideBar from '../sidebar/SideBar';
 const Header = ({reload}) => {
     const [showModal, setShowModal] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
-    const [navUser, setNavUser] = useState(false);
     
 	const cookies = new Cookies();
     const access_token = cookies.get('access_token');
@@ -33,7 +32,7 @@ const Header = ({reload}) => {
         } else {
             navigate('/')
         }
-    }, [reload]);
+    }, [access_token, dispatch, navigate, reload]);
 
     useEffect(() => {
         if (selectCompany) {
@@ -42,7 +41,7 @@ const Header = ({reload}) => {
             }
             fetchSelectedCompany()
         }
-    }, [selectCompany]);
+    }, [dispatch, selectCompany]);
 
     const handleLogout = () => {
         cookies.remove('access_token');
@@ -157,4 +156,4 @@ const Header = ({reload}) => {
     )
 }
 
-export default Header;
+export default memo(Header);

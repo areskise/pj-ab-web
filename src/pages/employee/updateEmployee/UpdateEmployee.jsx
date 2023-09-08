@@ -1,11 +1,9 @@
 import "./updateEmployee.css";
 import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import EmployeeAPI from "../../../API/EmployeeAPI";
 import CompanyAPI from "../../../API/CompanyAPI";
-import { useSelector } from "react-redux";
-import { selectorUserCompanies } from "../../../redux/slice/companySlice";
 
 const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
     const [selectedCompany, setSelectedCompany] = useState(null);
@@ -14,7 +12,6 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
     const [messErr, setMessErr] = useState(null);
     const [roles, setRoles] = useState([]);
     const data = new FormData();
-    const userCompanies = useSelector(selectorUserCompanies)
 
     useEffect(() => {
         const fetchCompany = async () => {
@@ -45,7 +42,7 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
         }
         }
         fetchRole()
-    },[selectedCompany]);
+    },[selectedCompany, showUpdate]);
 
     const handleKeyDown = (e) => {
         if(e.key === "Enter") {
@@ -127,35 +124,6 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
                                     <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
-                            {/* {selectCompany==='all'?
-                                <div className="d-flex dropdown select-dropdown text-end">
-                                    <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span className='selected-company p-2'>{selectedCompany?selectedCompany?.name:'Loading...'}</span>
-                                    </a>
-                                    <ul className="p-0 my-1 dropdown-menu selected-dropdown text-small">
-                                        {userCompanies?.map((company, i) => (
-                                            <li key={i}>
-                                                <button 
-                                                    className='p-2 px-3 btn dropdown-item'
-                                                    type='button'
-                                                    style={selectedCompany?._id===company._id?{fontWeight:'500',backgroundColor:'#B3CAD6',borderRadius: '0.375rem'}:{}} 
-                                                    onClick={() => setSelectedCompany(company)}
-                                                >
-                                                    {company.name}
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                :
-                                <select 
-                                    name="company" 
-                                    className='form-select select-company'
-                                    disabled
-                                >
-                                    <option value={selectedCompany?._id} >{selectedCompany?.name}</option>
-                                </select>
-                            } */}
                                 <select 
                                     name="company" 
                                     className='form-select select-company'
@@ -334,4 +302,4 @@ const UpdateEmployee = ({selectCompany, setShowUpdate, showUpdate}) => {
     )
 }
 
-export default UpdateEmployee;
+export default memo(UpdateEmployee);

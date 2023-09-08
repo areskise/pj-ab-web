@@ -1,7 +1,7 @@
 import "./updateCompany.css";
 import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { format } from 'date-fns';
 import CompanyAPI from "../../../API/CompanyAPI";
 import companyCode from "../../../helpers/companyCode";
@@ -23,7 +23,7 @@ const UpdateCompany = ({setShowUpdate, showUpdate, setReload, reload}) => {
             const hui = showUpdate.applicationId.includes(huiApp._id)
             setSelectHui(hui)
         }
-    },[showUpdate]);
+    },[showUpdate, applications]);
 
     useEffect(() => {
         setCode(companyCode(formValues.name))
@@ -329,4 +329,4 @@ const UpdateCompany = ({setShowUpdate, showUpdate, setReload, reload}) => {
     )
 }
 
-export default UpdateCompany;
+export default memo(UpdateCompany);

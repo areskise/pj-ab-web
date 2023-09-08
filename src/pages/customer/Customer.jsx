@@ -56,7 +56,7 @@ const Customer = () => {
             }
         }
         fetchCustomer();
-    }, [page, limit, selectCompany, showAdd, showUpdate]);
+    }, [page, limit, selectCompany, showAdd, showUpdate, dispatch]);
 
     const nextPage = () => {
         if(customers.hasNextPage) {
@@ -202,7 +202,7 @@ const Customer = () => {
                             <tbody>
                                 {list?.map((customer, i) => (
                                     <tr key={i}>
-                                        <td scope="row" data-label="Mã KH:">
+                                        <td data-label="Mã KH:">
                                             {customer.code}
                                         </td>
                                         <td data-label="Tên khách hàng:">

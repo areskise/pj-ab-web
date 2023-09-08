@@ -1,7 +1,7 @@
 import "./addCompany.css";
 import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { format } from 'date-fns';
 import companyCode from '../../../helpers/companyCode';
 import CompanyAPI from "../../../API/CompanyAPI";
@@ -229,4 +229,4 @@ const AddCompany = ({setShowAdd, showAdd, setReload, reload}) => {
     )
 }
 
-export default AddCompany;
+export default memo(AddCompany);

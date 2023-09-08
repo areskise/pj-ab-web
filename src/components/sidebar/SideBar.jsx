@@ -1,18 +1,17 @@
 import './sidebar.css';
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import MenuAPI from '../../API/MenuAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import { menuActions, selectorMenu, selectorMenuDefault } from '../../redux/slice/menuSlice';
 import { Layout, Menu } from 'antd';
-const { Header, Content, Footer, Sider } = Layout;
+const { Sider } = Layout;
 
 const SideBar = () => {
-  // const menu = useSelector(selectorMenu)
-  const menu = useSelector(selectorMenuDefault)
-  console.log(menu);
+  const menu = useSelector(selectorMenu)
+  // const menu = useSelector(selectorMenuDefault)
   const {pathname} = useLocation()
-  const selected = [`/${pathname.split("/")[1]}`,`/${pathname.split("/")[1]}`+`/${pathname.split("/")[2]}`]
+  const selected = [`/${pathname.split("/")[1]}`,`/${pathname.split("/")[1]}` + `/${pathname.split("/")[2]}`]
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -49,7 +48,7 @@ const SideBar = () => {
         dispatch(menuActions.setMenu(resultMenu))
     }
     fetchMenu();
-}, []);
+}, [dispatch]);
 
   return(  
     <div className="bg-light sidebar flex-nowrap">
@@ -64,7 +63,6 @@ const SideBar = () => {
           }}
           items={items}
           mode="inline"
-          inlineCollapsed={false}
           selectedKeys={selected}
         />
       </Sider>
@@ -72,4 +70,4 @@ const SideBar = () => {
   )
 }
 
-export default SideBar;
+export default memo(SideBar);

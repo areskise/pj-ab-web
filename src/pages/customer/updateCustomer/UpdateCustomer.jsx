@@ -1,18 +1,14 @@
 import "./updateCustomer.css";
 import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import CustomerAPI from "../../../API/CustomerAPI";
-import CompanyAPI from "../../../API/CompanyAPI";
-import { useSelector } from "react-redux";
-import { selectorUserCompanies } from "../../../redux/slice/companySlice";
 
 const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
     const [selectedCompany, setSelectedCompany] = useState(null);
     const [customer, setCustomer] = useState(null);
     const [error, setError] = useState(false);
     const [messErr, setMessErr] = useState(null);
-    const userCompanies = useSelector(selectorUserCompanies)
 
     useEffect(() => {
         const fetchCompany = async () => {
@@ -231,4 +227,4 @@ const UpdateCustomer = ({selectCompany, setShowUpdate, showUpdate}) => {
     )
 }
 
-export default UpdateCustomer;
+export default memo(UpdateCustomer);

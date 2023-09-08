@@ -3,6 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
 import currencyFormatter from 'currency-formatter';
 import { format } from "date-fns";
+import { memo } from "react";
 
 const SendGroup = ({setShowSend, showSend, periodicHui, huiPoints, selectedHui}) => {
     const pushHuis = huiPoints.filter(hui=>hui.getHui!==0)
@@ -108,4 +109,4 @@ const SendGroup = ({setShowSend, showSend, periodicHui, huiPoints, selectedHui})
     )
 }
 
-export default SendGroup;
+export default memo(SendGroup);

@@ -1,7 +1,6 @@
 import "./detailEmployee.css";
 import Modal from 'react-bootstrap/Modal';
-import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { memo } from 'react';
 
 const DetailEmployee = ({employeeId, setShowDetail, showDetail}) => {
     return (
@@ -87,4 +86,4 @@ const DetailEmployee = ({employeeId, setShowDetail, showDetail}) => {
     )
 }
 
-export default DetailEmployee;
+export default memo(DetailEmployee);

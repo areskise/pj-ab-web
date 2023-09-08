@@ -1,10 +1,8 @@
 import "./updateHui.css";
 import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { format } from 'date-fns';
-import { useSelector } from "react-redux";
-import { selectorUserCompanies } from "../../../redux/slice/companySlice";
 import CompanyAPI from "../../../API/CompanyAPI";
 import CustomerAPI from "../../../API/CustomerAPI";
 import HuiAPI from "../../../API/HuiAPI";
@@ -33,8 +31,6 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
     const [messErr, setMessErr] = useState(null);
     const [staffs, setStaffs] = useState([]);
     const [customers, setCustomers] = useState([]);
-    const [code, setCode] = useState(null);
-    const userCompanies = useSelector(selectorUserCompanies)
 
     useEffect(() => {
         const fetchHui = async () => {
@@ -234,7 +230,6 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
         setShowUpdate(false)
         setMessErr(null)
         setSelectCompany(null)
-        setCode(null)
         setSelectCustomer([])
         setSelectedHui([])
         setStartDate(new Date());
@@ -251,7 +246,6 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
         setShowUpdate(false)
         setMessErr(null)
         setSelectCompany(null)
-        setCode(null)
         setSelectCustomer([])
         setSelectedHui([])
         setStartDate(new Date());
@@ -670,4 +664,4 @@ const UpdateHui = ({setShowUpdate, showUpdate}) => {
     )
 }
 
-export default UpdateHui;
+export default memo(UpdateHui);

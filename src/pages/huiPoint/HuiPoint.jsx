@@ -4,9 +4,6 @@ import Header from "../../components/header/Header";
 import SideBar from "../../components/sidebar/SideBar";
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { huiActions, selectorHuis } from '../../redux/slice/huiSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectorUserCompanies } from '../../redux/slice/companySlice';
 import currencyFormatter from 'currency-formatter';
 import { format } from 'date-fns';
 import HuiAPI from '../../API/HuiAPI';
@@ -28,7 +25,6 @@ const HuiPoint = () => {
     const [selectedHui, setSelectedHui] = useState({});
     const [huiPoints, setHuiPoints] = useState([]);
     const [huiPush, setHuiPush] = useState(null);
-    const [pushed, setPushed] = useState(true);
     const [sumLive, setSumLive] = useState(0);
     const [sumDie, setSumDie] = useState(0);
     const [sumGet, setSumGet] = useState(0);
@@ -36,13 +32,8 @@ const HuiPoint = () => {
     const [periodicHuis, setPeriodicHuis] = useState([]);
     const [periodicHui, setPeriodicHui] = useState({});
     const [selectCompany, setSelectCompany] = useState({});
-    const [page, setPage] = useState(1);
-    const limit = 5;
-    const dispatch = useDispatch();
-    const huis = useSelector(selectorHuis)
-    const userCompanies = useSelector(selectorUserCompanies)
     const { id } = useParams();
-console.log(huiPoints);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -73,9 +64,7 @@ console.log(huiPoints);
     useEffect(() => {
         const fetchData = async () => {
             try {
-                if (loading!==true) {
-                    setLoading(true);
-                }
+                setLoading(true);
                 const resHui = await HuiAPI.get(id);
                 const resultHui = resHui.ResponseResult.Result;
                 const periodicNow = countKhui(resultHui.type.num, resultHui.type.type, resultHui.startDate, resultHui.endDate)
@@ -110,7 +99,7 @@ console.log(huiPoints);
             }
         }
         fetchData();
-    }, [id, periodicHui, reload]);
+    }, [id, periodicHui, reload, selectedHui]);
 
     const push = async (huiPoint, i) => {
         try {
@@ -125,8 +114,7 @@ console.log(huiPoints);
                     pushHui: huiPush.value
                 }
                 await HuiPointAPI.push(data);
-                setPushed(false)
-                setReload(!reload);
+                setLoading(false);
                 
             }
         } catch (error) {
@@ -140,8 +128,7 @@ console.log(huiPoints);
             setLoading(true);  
             const data = {_id}
             await HuiPointAPI.unPush(data);
-            setPushed(true)
-            setReload(!reload);
+            setLoading(false);
         } catch (error) {
             setLoading(false);
             console.error(error);
@@ -182,21 +169,21 @@ console.log(huiPoints);
         }
     }
  
-    const nextPage = () => {
-        if(huis.hasNextPage) {
-            setPage(huis.nextPage)
-        } else {
-            setPage(1)
-        }
-    }
+    // const nextPage = () => {
+    //     if(huis.hasNextPage) {
+    //         setPage(huis.nextPage)
+    //     } else {
+    //         setPage(1)
+    //     }
+    // }
     
-    const prevPage = () => {
-        if(huis.hasPrevPage) {
-            setPage(huis.prevPage)
-        } else {
-            setPage(huis.totalPages)
-        }
-    }
+    // const prevPage = () => {
+    //     if(huis.hasPrevPage) {
+    //         setPage(huis.prevPage)
+    //     } else {
+    //         setPage(huis.totalPages)
+    //     }
+    // }
 
     return(
         <div className="hui-point body-container bg-light">
@@ -303,7 +290,7 @@ console.log(huiPoints);
                             <tbody>
                                 {huiPoints?.map((huiPoint, i) => (
                                     <tr key={i}>
-                                        <td scope="row" data-label="">
+                                        <td data-label="">
                                         <input 
                                             className='form-checkbox' 
                                             type="checkbox" 
@@ -311,7 +298,7 @@ console.log(huiPoints);
                                             defaultChecked={huiPoint?.statusConfirm}
                                         />
                                         </td>
-                                        <td scope="row" data-label="Tên hụi viên:">
+                                        <td data-label="Tên hụi viên:">
                                             {huiPoint.cusName}
                                         </td>
                                         <td data-label="Ngày đóng:">{format(new Date(huiPoint.paymentDate), 'dd/MM/yyyy')}</td>

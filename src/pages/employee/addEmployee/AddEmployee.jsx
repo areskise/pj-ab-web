@@ -1,7 +1,7 @@
 import "./addEmployee.css";
 import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import EmployeeAPI from "../../../API/EmployeeAPI";
 import { useSelector } from "react-redux";
 import { selectorUserCompanies } from "../../../redux/slice/companySlice";
@@ -49,7 +49,6 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
             roleId: selectRole?._id,
         }
         const isValid = validator(data)
-        console.log(isValid);
         if(
             !selectCompany?._id || 
             !e.target.userName.value || 
@@ -61,7 +60,6 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
             setError(true)
             setMessErr(null)
         } else if(isValid) {
-            console.log(isValid);
             setMessErr(isValid.message)
             setError(false)
         } else if(e.target.password.value !== e.target.rePassword.value) {
@@ -131,16 +129,6 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                         <label style={{color: 'red'}}>*</label>
                                     </label>
                                 </div>
-                                {/* <select 
-                                    name="company" 
-                                    className='form-select select-company' 
-                                    onChange={(e) => setSelectCompany(e.target.value)}
-                                >   
-                                    <option value={null} hidden>Chọn công ty</option>
-                                    {userCompanies?.map((company, i) => (
-                                        <option key={i} value={company._id}>{company.name}</option>
-                                    ))}
-                                </select> */}
                                 <div className="d-flex dropdown select-dropdown text-end">
                                     <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span className='selected-company p-2'>{selectCompany?selectCompany?.name:'Chọn công ty'}</span>
@@ -265,14 +253,6 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
                                     </label>
                                 </div>
                                 {selectCompany?
-                                    // <select 
-                                    //     className='form-select select-company' name="role"
-                                    // >
-                                    //     <option value='' hidden>Chọn nhóm quyền</option>
-                                    //     {roles && roles.map((role, i) => (
-                                    //         <option key={i} value={role._id}>{role.name}</option>
-                                    //     ))}
-                                    // </select>
                                     <div className="d-flex select-dropdown dropdown text-end">
                                         <a href="#" className="d-flex align-items-center link-dark text-decoration-none p-1 form-select select-company" data-bs-toggle="dropdown" aria-expanded="false">
                                             <span className='selected-company p-2'>{selectRole?selectRole?.name:'Chọn nhóm quyền'}</span>
@@ -325,4 +305,4 @@ const AddEmployee = ({setShowAdd, showAdd}) => {
     )
 }
 
-export default AddEmployee;
+export default memo(AddEmployee);

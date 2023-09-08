@@ -4,14 +4,10 @@ import Header from "../../components/header/Header";
 import SideBar from "../../components/sidebar/SideBar";
 import { useState, useEffect } from 'react';
 import HuiAPI from "../../API/HuiAPI";
-import CompanyAPI from "../../API/CompanyAPI";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectorSelectedCompany, selectorUserCompanies } from "../../redux/slice/companySlice";
-import countKhui from "../../helpers/countKhui";
-import partKhui from "../../helpers/partKhui";
-import periodics from "../../helpers/periodics";
 import { format } from "date-fns";
 
 const Home = () => {

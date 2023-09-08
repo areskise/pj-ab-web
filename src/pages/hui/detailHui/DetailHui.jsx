@@ -1,9 +1,8 @@
 import "./detailHui.css";
 import Modal from 'react-bootstrap/Modal';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { format } from 'date-fns';
 import CompanyAPI from "../../../API/CompanyAPI";
-import CustomerAPI from "../../../API/CustomerAPI";
 import HuiAPI from "../../../API/HuiAPI";
 import customerList from "../../../helpers/customerList";
 
@@ -297,4 +296,4 @@ const DetailHui = ({setShowDetail, showDetail}) => {
     )
 }
 
-export default DetailHui;
+export default memo(DetailHui);

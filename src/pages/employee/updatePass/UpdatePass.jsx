@@ -1,7 +1,7 @@
 import "./updatePass.css";
 import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import EmployeeAPI from "../../../API/EmployeeAPI";
 
 const UpdatePass = ({setUpdatePass, updatePass}) => {
@@ -160,4 +160,4 @@ const UpdatePass = ({setUpdatePass, updatePass}) => {
     )
 }
 
-export default UpdatePass;
+export default memo(UpdatePass);

@@ -2,6 +2,7 @@ import "./deleteHui.css";
 import Modal from 'react-bootstrap/Modal';
 import alertify from 'alertifyjs';
 import HuiAPI from "../../../API/HuiAPI";
+import { memo } from "react";
 
 const DeleteHui = ({setDeleteHui, deleteHui}) => {
 
@@ -46,4 +47,4 @@ const DeleteHui = ({setDeleteHui, deleteHui}) => {
     )
 }
 
-export default DeleteHui;
+export default memo(DeleteHui);

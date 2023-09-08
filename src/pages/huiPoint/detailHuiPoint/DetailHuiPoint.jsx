@@ -1,7 +1,6 @@
 import "./detailHuiPoint.css";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { format } from 'date-fns';
-import CompanyAPI from "../../../API/CompanyAPI";
 import { InputNumber } from 'antd';
 
 const DetailHuiPoint = ({selectedHui, selectCompany}) => {
@@ -50,11 +49,6 @@ const DetailHuiPoint = ({selectedHui, selectCompany}) => {
                         <label htmlFor="">Dây</label>
                     </div>
                     <div className="d-flex align-items-center select-dropdown">
-                        {/* <input 
-                            className='form-control mr-2 form-money' 
-                            value={selectedHui.money}
-                            disabled
-                        /> */}
                         <InputNumber
                             value={selectedHui.money}
                             className='form-control mr-2 form-number'
@@ -174,4 +168,4 @@ const DetailHuiPoint = ({selectedHui, selectCompany}) => {
     )
 }
 
-export default DetailHuiPoint;
+export default memo(DetailHuiPoint);
